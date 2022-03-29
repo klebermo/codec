@@ -32,8 +32,16 @@ void Pixmap::read_file(const char * file_name) {
   if (file.is_open()) {
     string line_one, line_two, line_three, line_pixels;
 
+    do {
+      getline(file, line_one);
+    } while (line_one.at(0) != '#');
+
     if (getline(file, line_one))
       this->magicNumber = new string(line_one);
+
+    do {
+      getline(file, line_two);
+    } while (line_one.at(0) != '#');
 
     if (getline(file, line_two)) {
       string width, height;
@@ -51,28 +59,54 @@ void Pixmap::read_file(const char * file_name) {
 
     pixels = new Matrix<struct Pixel>(height, width);
 
-    int line = 0;
-    while(getline(file, line_pixels)) {
-      string number;
-      stringstream ss(line_pixels);
-      for(int column=0; column<width; column++) {
-        struct Pixel pixel;
+    if(*this->magicNumber == "P3") {
+      int line = 0;
+      while(getline(file, line_pixels)) {
+        if(line_pixels.at(0) != '#') {
+          string number;
+          stringstream ss(line_pixels);
+          for(int column=0; column<width; column++) {
+            struct Pixel pixel;
 
-        if(getline(ss, number, ' ')) {
-          pixel.r = stoi(number);
+            if(getline(ss, number, ' ')) {
+              pixel.r = stoi(number);
+            }
+
+            if(getline(ss, number, ' ')) {
+              pixel.g = stoi(number);
+            }
+
+            if(getline(ss, number, ' ')) {
+              pixel.b = stoi(number);
+            }
+
+            this->pixels->set(line, column, pixel);
+          }
+          line++;
         }
-
-        if(getline(ss, number, ' ')) {
-          pixel.g = stoi(number);
-        }
-
-        if(getline(ss, number, ' ')) {
-          pixel.b = stoi(number);
-        }
-
-        pixels->set(line, column, pixel);
       }
-      line++;
+    } else {
+      int line = 0;
+      while(getline(file, line_pixels)) {
+        if(line_pixels.at(0) != '#') {
+          int column = 0;
+          for(int i=0; i<line_pixels.size(); i+=3) {
+            struct Pixel pixel;
+
+            unsigned char r = line_pixels.at(i);
+            pixel.r = (int)r;
+
+            unsigned char g = line_pixels.at(i+1);
+            pixel.g = (int)g;
+
+            unsigned char b = line_pixels.at(i+2);
+            pixel.b = (int)b;
+
+            this->pixels->set(line, column++, pixel);
+          }
+        }
+        line++;
+      }
     }
   }
 

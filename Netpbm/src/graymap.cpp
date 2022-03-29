@@ -28,8 +28,16 @@ void Graymap::read_file(const char * file_name) {
   if (file.is_open()) {
     string line_one, line_two, line_three, line_pixels;
 
+    do {
+      getline(file, line_one);
+    } while (line_one.at(0) != '#');
+
     if (getline(file, line_one))
       this->magicNumber = new string(line_one);
+
+    do {
+      getline(file, line_two);
+    } while (line_one.at(0) != '#');
 
     if (getline(file, line_two)) {
       string width, height;
@@ -47,13 +55,29 @@ void Graymap::read_file(const char * file_name) {
 
     pixels = new Matrix<int>(height, width);
 
-    int line = 0;
-    while(getline(file, line_pixels)) {
-      string number;
-      stringstream ss(line_pixels);
-      for(int column=0; column<width; column++)
-        if(getline(ss, number, ' ')) pixels->set(line, column, stoi(number));
-      line++;
+    if(*this->magicNumber == "P2") {
+      int line = 0;
+      while(getline(file, line_pixels)) {
+        if(line_pixels.at(0) != '#') {
+          string number;
+          stringstream ss(line_pixels);
+          for(int column=0; column<width; column++)
+            if(getline(ss, number, ' ')) pixels->set(line, column, stoi(number));
+          line++;
+        }
+      }
+    } else {
+      int line = 0;
+      while(getline(file, line_pixels)) {
+        if(line_pixels.at(0) != '#') {
+          int column = 0;
+          for(int i=0; i<line_pixels.size(); i++) {
+            unsigned char c = line_pixels.at(i);
+            pixels->set(line, column++, (int)c);
+          }
+        }
+        line++;
+      }
     }
   }
 
