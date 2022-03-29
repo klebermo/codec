@@ -1,12 +1,6 @@
 #ifndef LIB_NETPBM_H
 #define LIB_NETPBM_H
 
-#include <fstream>
-using namespace std;
-
-#include <vector>
-using namespace std;
-
 #include "matrix.h"
 
 struct Pixel {
@@ -23,8 +17,8 @@ public:
   ~Netpbm();
 
   virtual void dump_data() = 0;
-  virtual void read_file(string file_name) = 0;
-  virtual void write_file(string file_name) = 0;
+  virtual void read_file(const char * file_name) = 0;
+  virtual void write_file(const char * file_name) = 0;
   virtual float * toArray() = 0;
 };
 

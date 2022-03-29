@@ -1,9 +1,6 @@
 #ifndef LIB_NETPBM_H
 #define LIB_NETPBM_H
 
-#include <string>
-using namespace std;
-
 template<class T> class Matrix {};
 
 class Netpbm {
@@ -18,8 +15,8 @@ public:
   ~Bitmap();
 
   void dump_data();
-  void read_file(string file_name);
-  void write_file(string file_name);
+  void read_file(const char * file_name);
+  void write_file(const char * file_name);
 
   float * toArray();
 
@@ -33,8 +30,8 @@ public:
   ~Graymap();
 
   void dump_data();
-  void read_file(string file_name);
-  void write_file(string file_name);
+  void read_file(const char * file_name);
+  void write_file(const char * file_name);
 
   float * toArray();
 
@@ -48,8 +45,8 @@ public:
   ~Pixmap();
 
   void dump_data();
-  void read_file(string file_name);
-  void write_file(string file_name);
+  void read_file(const char * file_name);
+  void write_file(const char * file_name);
 
   float * toArray();
 

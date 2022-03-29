@@ -11,8 +11,8 @@ public:
   ~Bitmap();
 
   void dump_data();
-  void read_file(string file_name);
-  void write_file(string file_name);
+  void read_file(const char * file_name);
+  void write_file(const char * file_name);
 
   float * toArray();
 

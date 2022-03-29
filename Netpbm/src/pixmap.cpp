@@ -1,5 +1,8 @@
 #include "pixmap.h"
 
+#include <fstream>
+using namespace std;
+
 Pixmap::Pixmap() {
   //
 }
@@ -22,9 +25,9 @@ void Pixmap::dump_data() {
   }
 }
 
-void Pixmap::read_file(string file_name) {
+void Pixmap::read_file(const char * file_name) {
   fstream file;
-  file.open(file_name.c_str());
+  file.open(file_name);
 
   if (file.is_open()) {
     string line_one, line_two, line_three, line_pixels;
@@ -54,7 +57,6 @@ void Pixmap::read_file(string file_name) {
       stringstream ss(line_pixels);
       for(int column=0; column<width; column++) {
         struct Pixel pixel;
-        string r, g, b;
 
         if(getline(ss, number, ' ')) {
           pixel.r = stoi(number);
@@ -78,7 +80,7 @@ void Pixmap::read_file(string file_name) {
   dump_data();
 }
 
-void Pixmap::write_file(string file_name) {
+void Pixmap::write_file(const char * file_name) {
   fstream file;
   file.open(file_name, ios::out);
   if (file.is_open()) {
@@ -97,17 +99,19 @@ void Pixmap::write_file(string file_name) {
 }
 
 float * Pixmap::toArray() {
-  vector<float> result;
+  int size = 3 * (this->width * this->height);
+  float * result = new float[size];
 
+  int count = 0;
   for(int i=0; i<height; i++) {
     for(int j=0; j<width; j++) {
-      result.push_back(pixels->get(i, j).r / max_value);
-      result.push_back(pixels->get(i, j).g / max_value);
-      result.push_back(pixels->get(i, j).b / max_value);
+      result[count++] = pixels->get(i, j).r / max_value;
+      result[count++] = pixels->get(i, j).g / max_value;
+      result[count++] = pixels->get(i, j).b / max_value;
     }
   }
 
-  return result.data();
+  return result;
 }
 
 int Pixmap::getWidth() {

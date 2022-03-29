@@ -1,5 +1,8 @@
 #include "bitmap.h"
 
+#include <fstream>
+using namespace std;
+
 Bitmap::Bitmap() {
   //
 }
@@ -9,19 +12,18 @@ Bitmap::~Bitmap() {
 }
 
 void Bitmap::dump_data() {
-  cout << *magicNumber << endl;
-  cout << width << " " << height << endl;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      cout << pixels->get(i, j) << " ";
-    }
+  cout << *this->magicNumber << endl;
+  cout << this->width << " " << this->height << endl;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++)
+      cout << this->pixels->get(i, j) << " ";
     cout << endl;
   }
 }
 
-void Bitmap::read_file(string file_name) {
+void Bitmap::read_file(const char * file_name) {
   fstream file;
-  file.open(file_name.c_str());
+  file.open(file_name);
 
   if (file.is_open()) {
     string line_one, line_two, line_pixels;
@@ -53,36 +55,36 @@ void Bitmap::read_file(string file_name) {
   }
 
   file.close();
-  dump_data();
 }
 
-void Bitmap::write_file(string file_name) {
+void Bitmap::write_file(const char * file_name) {
   fstream file;
   file.open(file_name, ios::out);
   if (file.is_open()) {
     file << *magicNumber << endl;
     file << width << " " << height << endl;
     for(int i=0; i<height; i++) {
-      for(int j=0; j<width; j++) {
+      for(int j=0; j<width; j++)
         file << pixels->get(i, j) << " ";
-      }
       file << endl;
     }
   }
 }
 
 float * Bitmap::toArray() {
-  vector<float> result;
+  int size = 3 * (this->width * this->height);
+  float * result = new float[size];
 
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      result.push_back(pixels->get(i, j) * 1);
-      result.push_back(pixels->get(i, j) * 1);
-      result.push_back(pixels->get(i, j) * 1);
+  int count = 0;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++) {
+      result[count++] = pixels->get(i, j);
+      result[count++] = pixels->get(i, j);
+      result[count++] = pixels->get(i, j);
     }
   }
 
-  return result.data();
+  return result;
 }
 
 int Bitmap::getWidth() {

@@ -1,5 +1,8 @@
 #include "matrix.h"
 
+#include <sstream>
+using namespace std;
+
 template<class T>
 Matrix<T>::Matrix(int width, int height) {
   this->width = width;
@@ -201,7 +204,7 @@ void Matrix<T>::print() {
 }
 
 template<class T>
-string Matrix<T>::toString() {
+const char * Matrix<T>::toString() {
   string result = "\n";
 
   for(int i=0; i<this->width; i++) {
@@ -218,19 +221,15 @@ string Matrix<T>::toString() {
   }
   result = result + "\n";
 
-  return result;
+  return result.c_str();
 }
 
 template<class T>
 T * Matrix<T>::toArray() {
-  T * result = new T[width*height];
+  vector<T> result;
 
-  int count = 0;
-  for(int i=0; i<this->width; i++) {
-    for(int j=0; j<this->height; j++) {
-      result[count++] = values[i][j];
-    }
-  }
+  for(int i=0; i<this->width; i++)
+    for(int j=0; j<this->height; j++) result.push_back(values[i][j]);
 
-  return result;
+  return result.data();
 }

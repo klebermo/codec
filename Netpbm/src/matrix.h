@@ -7,10 +7,7 @@ using namespace std;
 #include <string>
 using namespace std;
 
-#include <sstream>
-using namespace std;
-
-#include <cmath>
+#include <vector>
 using namespace std;
 
 template<class T>
@@ -43,7 +40,7 @@ public:
     int getHeight();
 
     void print();
-    string toString();
+    const char * toString();
     T * toArray();
 };
 
