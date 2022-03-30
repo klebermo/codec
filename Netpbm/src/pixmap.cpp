@@ -3,26 +3,15 @@
 #include <fstream>
 using namespace std;
 
+#include <sstream>
+using namespace std;
+
 Pixmap::Pixmap() {
   //
 }
 
 Pixmap::~Pixmap() {
   delete pixels;
-}
-
-void Pixmap::dump_data() {
-  cout << *magicNumber << endl;
-  cout << width << " " << height << endl;
-  cout << max_value << endl;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      cout << pixels->get(i, j).r << " ";
-      cout << pixels->get(i, j).g << " ";
-      cout << pixels->get(i, j).b << " ";
-    }
-    cout << endl;
-  }
 }
 
 void Pixmap::read_file(const char * file_name) {
@@ -32,16 +21,8 @@ void Pixmap::read_file(const char * file_name) {
   if (file.is_open()) {
     string line_one, line_two, line_three, line_pixels;
 
-    do {
-      getline(file, line_one);
-    } while (line_one.at(0) != '#');
-
     if (getline(file, line_one))
       this->magicNumber = new string(line_one);
-
-    do {
-      getline(file, line_two);
-    } while (line_one.at(0) != '#');
 
     if (getline(file, line_two)) {
       string width, height;
@@ -86,32 +67,74 @@ void Pixmap::read_file(const char * file_name) {
         }
       }
     } else {
-      int line = 0;
+      //
+    }
+
+    if(*this->magicNumber == "P3") {
+      this->pixels= new Matrix<Pixel>(this->width, this->height);
+
+      string p;
       while(getline(file, line_pixels)) {
-        if(line_pixels.at(0) != '#') {
-          int column = 0;
-          for(int i=0; i<line_pixels.size(); i+=3) {
-            struct Pixel pixel;
+        for(int i=0; i<line_pixels.size(); i++)
+          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
+      }
+      int count = 0;
+      for(int i=0; i<this->height; i++) {
+        for(int j=0; j<this->width; j++) {
+          struct Pixel pixel;
 
-            unsigned char r = line_pixels.at(i);
-            pixel.r = (int)r;
+          int data = p.at(count++) - '0';
+          pixel.r = data;
 
-            unsigned char g = line_pixels.at(i+1);
-            pixel.g = (int)g;
+          data = p.at(count++) - '0';
+          pixel.g = data;
 
-            unsigned char b = line_pixels.at(i+2);
-            pixel.b = (int)b;
+          data = p.at(count++) - '0';
+          pixel.b = data;
 
-            this->pixels->set(line, column++, pixel);
-          }
+          this->pixels->set(i, j, pixel);
         }
-        line++;
+      }
+    } else {
+      this->pixels= new Matrix<Pixel>(this->width*8, this->height);
+
+      string p;
+      while(getline(file, line_pixels)) {
+        for(int i=0; i<line_pixels.size(); i++) {
+          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
+        }
+      }
+      int count = 0;
+      for(int i=0; i<height; i++) {
+        int column = 0;
+        for(int j=0; j<width; j++) {
+          struct Pixel pixel;
+
+          unsigned char r = p.at(count++);
+          for(int k=0; k<8; k++) {
+            int data = (r >> k) & 1;
+            pixel.r = data;
+          }
+
+          unsigned char g = p.at(count++);
+          for(int k=0; k<8; k++) {
+            int data = (g >> k) & 1;
+            pixel.g = data;
+          }
+
+          unsigned char b = p.at(count++);
+          for(int k=0; k<8; k++) {
+            int data = (b >> k) & 1;
+            pixel.b = data;
+          }
+
+          this->pixels->set(i, column++, pixel);
+        }
       }
     }
   }
 
   file.close();
-  dump_data();
 }
 
 void Pixmap::write_file(const char * file_name) {
@@ -133,15 +156,18 @@ void Pixmap::write_file(const char * file_name) {
 }
 
 float * Pixmap::toArray() {
-  int size = 3 * (this->width * this->height);
+  int size = 5 * (this->width * this->height);
   float * result = new float[size];
 
   int count = 0;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      result[count++] = pixels->get(i, j).r / max_value;
-      result[count++] = pixels->get(i, j).g / max_value;
-      result[count++] = pixels->get(i, j).b / max_value;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++) {
+      float x = (float)j/(float)this->width, y = (float)i/(float)this->height;
+      result[count++] = -1 + (2 * x);
+      result[count++] = 1 - (2 * y);
+      result[count++] = this->pixels->get(i, j).r / this->max_value;
+      result[count++] = this->pixels->get(i, j).g / this->max_value;
+      result[count++] = this->pixels->get(i, j).b / this->max_value;
     }
   }
 

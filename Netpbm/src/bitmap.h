@@ -10,7 +10,6 @@ public:
   Bitmap();
   ~Bitmap();
 
-  void dump_data();
   void read_file(const char * file_name);
   void write_file(const char * file_name);
 

@@ -1,15 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include <iostream>
-using namespace std;
-
-#include <string>
-using namespace std;
-
-#include <vector>
-using namespace std;
-
 template<class T>
 class Matrix
 {
@@ -19,31 +10,50 @@ protected:
     T ** values;
 public:
     Matrix(int width, int height);
-    Matrix(int width, int height, T values[]);
-    Matrix(void* value);
     ~Matrix();
-
-    ostream& operator<<(Matrix<T>& m);
-    Matrix<T>& operator<<(ostream& os);
-
-    Matrix<T>& operator=(Matrix<T>& other);
-    Matrix<T>& operator=(T other[]);
-    Matrix<T>& operator+(Matrix<T> other);
-    Matrix<T>& operator-(Matrix<T> other);
-    Matrix<T>& operator*(Matrix<T> other);
-    Matrix<T>& operator*(int number);
-    Matrix<T>& operator*(float number);
 
     T get(int i, int j);
     void set(int i, int j, T value);
+
     int getWidth();
     int getHeight();
-
-    void print();
-    const char * toString();
-    T * toArray();
 };
 
-#include "matrix.cpp"
+template<class T>
+Matrix<T>::Matrix(int width, int height) {
+  this->width = width;
+  this->height = height;
+
+  this->values = new T*[height];
+  for(int i=0; i<this->height; i++)
+    this->values[i] = new T[width];
+}
+
+template<class T>
+Matrix<T>::~Matrix() {
+  for(int i=0; i<this->height; i++)
+    delete [] this->values[i];
+  delete [] this->values;
+}
+
+template<class T>
+T Matrix<T>::get(int i, int j) {
+  return this->values[i][j];
+}
+
+template<class T>
+void Matrix<T>::set(int i, int j, T value) {
+  this->values[i][j] = value;
+}
+
+template<class T>
+int Matrix<T>::getWidth() {
+  return this->width;
+}
+
+template<class T>
+int Matrix<T>::getHeight() {
+  return this->height;
+}
 
 #endif //MATRIX_H

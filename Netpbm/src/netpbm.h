@@ -3,6 +3,9 @@
 
 #include "matrix.h"
 
+#include <string>
+using namespace std;
+
 struct Pixel {
   int r, g, b;
 };
@@ -16,9 +19,9 @@ public:
   Netpbm();
   ~Netpbm();
 
-  virtual void dump_data() = 0;
   virtual void read_file(const char * file_name) = 0;
   virtual void write_file(const char * file_name) = 0;
+
   virtual float * toArray() = 0;
 };
 

@@ -14,7 +14,6 @@ public:
   Bitmap();
   ~Bitmap();
 
-  void dump_data();
   void read_file(const char * file_name);
   void write_file(const char * file_name);
 
@@ -29,7 +28,6 @@ public:
   Graymap();
   ~Graymap();
 
-  void dump_data();
   void read_file(const char * file_name);
   void write_file(const char * file_name);
 
@@ -44,7 +42,6 @@ public:
   Pixmap();
   ~Pixmap();
 
-  void dump_data();
   void read_file(const char * file_name);
   void write_file(const char * file_name);
 

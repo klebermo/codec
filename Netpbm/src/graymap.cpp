@@ -3,22 +3,18 @@
 #include <fstream>
 using namespace std;
 
+#include <sstream>
+using namespace std;
+
+#include <vector>
+using namespace std;
+
 Graymap::Graymap() {
   //
 }
 
 Graymap::~Graymap() {
   delete pixels;
-}
-
-void Graymap::dump_data() {
-  cout << *magicNumber << endl;
-  cout << width << " " << height << endl;
-  cout << max_value << endl;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) cout << pixels->get(i, j) << " ";
-    cout << endl;
-  }
 }
 
 void Graymap::read_file(const char * file_name) {
@@ -28,16 +24,8 @@ void Graymap::read_file(const char * file_name) {
   if (file.is_open()) {
     string line_one, line_two, line_three, line_pixels;
 
-    do {
-      getline(file, line_one);
-    } while (line_one.at(0) != '#');
-
     if (getline(file, line_one))
       this->magicNumber = new string(line_one);
-
-    do {
-      getline(file, line_two);
-    } while (line_one.at(0) != '#');
 
     if (getline(file, line_two)) {
       string width, height;
@@ -53,36 +41,50 @@ void Graymap::read_file(const char * file_name) {
     if(getline(file, line_three))
       this->max_value = stoi(line_three);
 
-    pixels = new Matrix<int>(height, width);
-
     if(*this->magicNumber == "P2") {
-      int line = 0;
+      this->pixels= new Matrix<int>(this->width, this->height);
+
+      vector<int> p;
       while(getline(file, line_pixels)) {
-        if(line_pixels.at(0) != '#') {
-          string number;
-          stringstream ss(line_pixels);
-          for(int column=0; column<width; column++)
-            if(getline(ss, number, ' ')) pixels->set(line, column, stoi(number));
-          line++;
+        string number;
+        stringstream ss(line_pixels);
+        while(getline(ss, number, ' ')) {
+          int data = stoi(number);
+          p.push_back(data);
+        }
+      }
+      int count = 0;
+      for(int i=0; i<this->height; i++) {
+        for(int j=0; j<this->width; j++) {
+          int data = p[count++];
+          this->pixels->set(i, j, data);
         }
       }
     } else {
-      int line = 0;
+      this->pixels= new Matrix<int>(this->width*8, this->height);
+
+      string p;
       while(getline(file, line_pixels)) {
-        if(line_pixels.at(0) != '#') {
-          int column = 0;
-          for(int i=0; i<line_pixels.size(); i++) {
-            unsigned char c = line_pixels.at(i);
-            pixels->set(line, column++, (int)c);
-          }
+        for(int i=0; i<line_pixels.size(); i++) {
+          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
         }
-        line++;
+      }
+      int count = 0;
+      for(int i=0; i<height; i++) {
+        int column = 0;
+        for(int j=0; j<width; j++) {
+          for(int k=0; k<8; k++) {
+            unsigned char c = p.at(count);
+            int data = (c >> k) & 1;
+            this->pixels->set(i, column++, data);
+          }
+          count++;
+        }
       }
     }
   }
 
   file.close();
-  dump_data();
 }
 
 void Graymap::write_file(const char * file_name) {
@@ -102,15 +104,18 @@ void Graymap::write_file(const char * file_name) {
 }
 
 float * Graymap::toArray() {
-  int size = 3 * (this->width * this->height);
+  int size = 5 * (this->width * this->height);
   float * result = new float[size];
 
   int count = 0;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      result[count++] = pixels->get(i, j) / max_value;
-      result[count++] = pixels->get(i, j) / max_value;
-      result[count++] = pixels->get(i, j) / max_value;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++) {
+      float x = (float)j/(float)this->width, y = (float)i/(float)this->height;
+      result[count++] = -1 + (2 * x);
+      result[count++] = 1 - (2 * y);
+      result[count++] = (float)this->pixels->get(i, j) / (float)this->max_value;
+      result[count++] = (float)this->pixels->get(i, j) / (float)this->max_value;
+      result[count++] = (float)this->pixels->get(i, j) / (float)this->max_value;
     }
   }
 

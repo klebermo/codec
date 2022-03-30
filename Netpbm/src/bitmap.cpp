@@ -3,22 +3,15 @@
 #include <fstream>
 using namespace std;
 
+#include <sstream>
+using namespace std;
+
 Bitmap::Bitmap() {
   //
 }
 
 Bitmap::~Bitmap() {
   delete pixels;
-}
-
-void Bitmap::dump_data() {
-  cout << *this->magicNumber << endl;
-  cout << this->width << " " << this->height << endl;
-  for(int i=0; i<this->height; i++) {
-    for(int j=0; j<this->width; j++)
-      cout << this->pixels->get(i, j) << " ";
-    cout << endl;
-  }
 }
 
 void Bitmap::read_file(const char * file_name) {
@@ -28,16 +21,9 @@ void Bitmap::read_file(const char * file_name) {
   if (file.is_open()) {
     string line_one, line_two, line_pixels;
 
-    do {
-      getline(file, line_one);
-    } while(line_one.at(0) != '#');
-
-    if (getline(file, line_one))
+    if (getline(file, line_one)) {
       this->magicNumber = new string(line_one);
-
-    do {
-      getline(file, line_two);
-    } while(line_one.at(0) != '#');
+    }
 
     if (getline(file, line_two)) {
       string width, height;
@@ -50,30 +36,41 @@ void Bitmap::read_file(const char * file_name) {
         this->height = stoi(height);
     }
 
-    pixels = new Matrix<int>(height, width);
-
     if(*this->magicNumber == "P1") {
-      int line = 0;
+      this->pixels= new Matrix<int>(this->width, this->height);
+
+      string p;
       while(getline(file, line_pixels)) {
-        if(line_pixels.at(0) != '#') {
-          string number;
-          stringstream ss(line_pixels);
-          for(int column=0; column<width; column++)
-            if(getline(ss, number, ' ')) pixels->set(line, column, stoi(number));
-          line++;
+        for(int i=0; i<line_pixels.size(); i++)
+          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
+      }
+      int count = 0;
+      for(int i=0; i<this->height; i++) {
+        for(int j=0; j<this->width; j++) {
+          int data = p.at(count++) - '0';
+          this->pixels->set(i, j, data);
         }
       }
     } else {
-      int line = 0;
+      this->pixels= new Matrix<int>(this->width*8, this->height);
+
+      string p;
       while(getline(file, line_pixels)) {
-        if(line_pixels.at(0) != '#') {
-          int column = 0;
-          for(int i=0; i<line_pixels.size(); i++) {
-            unsigned char c = line_pixels.at(i);
-            this->pixels->set(line, column++, (c >> i) & 1);
-          }
+        for(int i=0; i<line_pixels.size(); i++) {
+          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
         }
-        line++;
+      }
+      int count = 0;
+      for(int i=0; i<height; i++) {
+        int column = 0;
+        for(int j=0; j<width; j++) {
+          for(int k=0; k<8; k++) {
+            unsigned char c = p.at(count);
+            int data = (c >> k) & 1;
+            this->pixels->set(i, column++, data);
+          }
+          count++;
+        }
       }
     }
   }
@@ -87,8 +84,8 @@ void Bitmap::write_file(const char * file_name) {
   if (file.is_open()) {
     file << *magicNumber << endl;
     file << width << " " << height << endl;
-    for(int i=0; i<height; i++) {
-      for(int j=0; j<width; j++)
+    for(int i=0; i<this->height; i++) {
+      for(int j=0; j<this->width; j++)
         file << pixels->get(i, j) << " ";
       file << endl;
     }
@@ -96,12 +93,15 @@ void Bitmap::write_file(const char * file_name) {
 }
 
 float * Bitmap::toArray() {
-  int size = 3 * (this->width * this->height);
+  int size = 5 * (this->width * this->height);
   float * result = new float[size];
 
   int count = 0;
   for(int i=0; i<this->height; i++) {
     for(int j=0; j<this->width; j++) {
+      float x = (float)j/(float)width, y = (float)i/(float)height;
+      result[count++] = -1 + (2 * x);
+      result[count++] = 1 - (2 * y);
       result[count++] = pixels->get(i, j);
       result[count++] = pixels->get(i, j);
       result[count++] = pixels->get(i, j);
