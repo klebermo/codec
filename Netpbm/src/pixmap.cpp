@@ -6,6 +6,12 @@ using namespace std;
 #include <sstream>
 using namespace std;
 
+#include <vector>
+using namespace std;
+
+#include <iostream>
+using namespace std;
+
 Pixmap::Pixmap() {
   //
 }
@@ -41,94 +47,59 @@ void Pixmap::read_file(const char * file_name) {
     pixels = new Matrix<struct Pixel>(height, width);
 
     if(*this->magicNumber == "P3") {
-      int line = 0;
-      while(getline(file, line_pixels)) {
-        if(line_pixels.at(0) != '#') {
-          string number;
-          stringstream ss(line_pixels);
-          for(int column=0; column<width; column++) {
-            struct Pixel pixel;
-
-            if(getline(ss, number, ' ')) {
-              pixel.r = stoi(number);
-            }
-
-            if(getline(ss, number, ' ')) {
-              pixel.g = stoi(number);
-            }
-
-            if(getline(ss, number, ' ')) {
-              pixel.b = stoi(number);
-            }
-
-            this->pixels->set(line, column, pixel);
-          }
-          line++;
-        }
-      }
-    } else {
-      //
-    }
-
-    if(*this->magicNumber == "P3") {
       this->pixels= new Matrix<Pixel>(this->width, this->height);
 
-      string p;
+      vector<int> p;
       while(getline(file, line_pixels)) {
-        for(int i=0; i<line_pixels.size(); i++)
-          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
+        string number;
+        stringstream ss(line_pixels);
+        while(getline(ss, number, ' ')) {
+          int data = stoi(number);
+          p.push_back(data);
+        }
       }
       int count = 0;
       for(int i=0; i<this->height; i++) {
         for(int j=0; j<this->width; j++) {
           struct Pixel pixel;
 
-          int data = p.at(count++) - '0';
-          pixel.r = data;
+          int r = p[count++];
+          pixel.r = r;
 
-          data = p.at(count++) - '0';
-          pixel.g = data;
+          int g = p[count++];
+          pixel.g = g;
 
-          data = p.at(count++) - '0';
-          pixel.b = data;
+          int b = p[count++];
+          pixel.b = b;
 
           this->pixels->set(i, j, pixel);
         }
       }
-    } else {
-      this->pixels= new Matrix<Pixel>(this->width*8, this->height);
+    }
 
-      string p;
+    if(*this->magicNumber == "P6") {
+      this->pixels= new Matrix<Pixel>(this->width, this->height);
+
+      vector<unsigned char> p;
       while(getline(file, line_pixels)) {
-        for(int i=0; i<line_pixels.size(); i++) {
-          if(line_pixels.at(i) != ' ') p = p + line_pixels.at(i);
-        }
+        for(int i=0; i<line_pixels.size(); i++)
+          p.push_back((unsigned char)line_pixels.at(i));
       }
       int count = 0;
-      for(int i=0; i<height; i++) {
-        int column = 0;
-        for(int j=0; j<width; j++) {
+      for(int i=0; i<this->height; i++) {
+        for(int j=0; j<this->width; j++) {
           struct Pixel pixel;
 
-          unsigned char r = p.at(count++);
-          for(int k=0; k<8; k++) {
-            int data = (r >> k) & 1;
-            pixel.r = data;
-          }
+          int r = (int)p.at(count);
+          pixel.r = r;
 
-          unsigned char g = p.at(count++);
-          for(int k=0; k<8; k++) {
-            int data = (g >> k) & 1;
-            pixel.g = data;
-          }
+          int g = (int)p.at(count++);
+          pixel.g = g;
 
-          unsigned char b = p.at(count++);
-          for(int k=0; k<8; k++) {
-            int data = (b >> k) & 1;
-            pixel.b = data;
-          }
+          int b = (int)p.at(count++);
+          pixel.b = b;
 
-          this->pixels->set(i, column++, pixel);
+          this->pixels->set(i, j, pixel);
         }
       }
     }
@@ -144,13 +115,29 @@ void Pixmap::write_file(const char * file_name) {
     file << *magicNumber << endl;
     file << width << " " << height << endl;
     file << max_value << endl;
-    for(int i=0; i<height; i++) {
-      for(int j=0; j<width; j++) {
-        file << pixels->get(i, j).r << " ";
-        file << pixels->get(i, j).g << " ";
-        file << pixels->get(i, j).b << " ";
+
+    if(*this->magicNumber == "P3") {
+      for(int i=0; i<height; i++) {
+        for(int j=0; j<width; j++) {
+          file << pixels->get(i, j).r << " ";
+          file << pixels->get(i, j).g << " ";
+          file << pixels->get(i, j).b << " ";
+        }
+        file << endl;
       }
-      file << endl;
+    }
+
+    if(*this->magicNumber == "P6") {
+      for(int i=0; i<height; i++) {
+        for(int j=0; j<width; j++) {
+          int r = pixels->get(i, j).r, g = pixels->get(i, j).g, b = pixels->get(i, j).b;
+          unsigned char data_r = 0x0, data_g = 0x0, data_b = 0x0;
+          file << data_r << " ";
+          file << data_g << " ";
+          file << data_b << " ";
+        }
+        file << endl;
+      }
     }
   }
 }
@@ -165,9 +152,9 @@ float * Pixmap::toArray() {
       float x = (float)j/(float)this->width, y = (float)i/(float)this->height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = this->pixels->get(i, j).r / this->max_value;
-      result[count++] = this->pixels->get(i, j).g / this->max_value;
-      result[count++] = this->pixels->get(i, j).b / this->max_value;
+      result[count++] = (float)this->pixels->get(i, j).r / (float)this->max_value;
+      result[count++] = (float)this->pixels->get(i, j).g / (float)this->max_value;
+      result[count++] = (float)this->pixels->get(i, j).b / (float)this->max_value;
     }
   }
 

@@ -51,8 +51,10 @@ void Bitmap::read_file(const char * file_name) {
           this->pixels->set(i, j, data);
         }
       }
-    } else {
-      this->pixels= new Matrix<int>(this->width*8, this->height);
+    }
+
+    if(*this->magicNumber == "P4") {
+      this->pixels= new Matrix<int>(this->width, this->height);
 
       string p;
       while(getline(file, line_pixels)) {
@@ -82,12 +84,26 @@ void Bitmap::write_file(const char * file_name) {
   fstream file;
   file.open(file_name, ios::out);
   if (file.is_open()) {
-    file << *magicNumber << endl;
-    file << width << " " << height << endl;
-    for(int i=0; i<this->height; i++) {
-      for(int j=0; j<this->width; j++)
-        file << pixels->get(i, j) << " ";
-      file << endl;
+    file << *this->magicNumber << endl;
+    file << this->width << " " << this->height << endl;
+
+    if(*this->magicNumber == "P1") {
+      for(int i=0; i<this->height; i++) {
+        for(int j=0; j<this->width; j++)
+          file << pixels->get(i, j) << " ";
+        file << endl;
+      }
+    }
+
+    if(*this->magicNumber == "P4") {
+      for(int i=0; i<this->height; i++) {
+        for(int j=0; j<this->width; j+=8) {
+          int data = pixels->get(i, j);
+          unsigned char c = 0x0;
+          file << c;
+        }
+        file << endl;
+      }
     }
   }
 }

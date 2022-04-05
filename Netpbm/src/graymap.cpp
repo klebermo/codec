@@ -60,8 +60,10 @@ void Graymap::read_file(const char * file_name) {
           this->pixels->set(i, j, data);
         }
       }
-    } else {
-      this->pixels= new Matrix<int>(this->width*8, this->height);
+    }
+
+    if(*this->magicNumber == "P5") {
+      this->pixels= new Matrix<int>(this->width, this->height);
 
       string p;
       while(getline(file, line_pixels)) {
@@ -94,11 +96,25 @@ void Graymap::write_file(const char * file_name) {
     file << *magicNumber << endl;
     file << width << " " << height << endl;
     file << max_value << endl;
-    for(int i=0; i<height; i++) {
-      for(int j=0; j<width; j++) {
-        file << pixels->get(i, j) << " ";
+
+    if(*this->magicNumber == "P2") {
+      for(int i=0; i<height; i++) {
+        for(int j=0; j<width; j++) {
+          file << pixels->get(i, j) << " ";
+        }
+        file << endl;
       }
-      file << endl;
+    }
+
+    if(*this->magicNumber == "P5") {
+      for(int i=0; i<height; i++) {
+        for(int j=0; j<width; j++) {
+          int data = pixels->get(i, j);
+          unsigned char c = 0x0;
+          file << data;
+        }
+        file << endl;
+      }
     }
   }
 }
