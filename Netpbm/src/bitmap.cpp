@@ -13,6 +13,10 @@ Bitmap::Bitmap() {
   //
 }
 
+Bitmap::Bitmap(char * file_name) {
+  this->read_file(file_name);
+}
+
 Bitmap::~Bitmap() {
   delete pixels;
 }
@@ -47,14 +51,17 @@ void Bitmap::read_file(const char * file_name) {
     }
 
     if(*this->magicNumber == "P1") {
-      this->pixels= new Matrix<int>(this->width, this->height);
+      this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
       while(getline(file, line_pixels)) {
         if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
           string number;
           stringstream ss(line_pixels);
-          while(getline(ss, number, ' ')) p.push_back(stoi(number));
+          while(getline(ss, number, ' ')) {
+            int data = stoi(number);
+            p.push_back(data);
+          }
         }
       }
 
@@ -67,21 +74,24 @@ void Bitmap::read_file(const char * file_name) {
     }
 
     if(*this->magicNumber == "P4") {
-      this->pixels= new Matrix<int>(this->width, this->height);
+      this->pixels = new Matrix<int>(this->width, this->height);
 
-      vector<unsigned char> p;
+      vector<int> p;
       while(getline(file, line_pixels)) {
         if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
-          string number;
+          string byte;
           stringstream ss(line_pixels);
-          while(getline(ss, number)) p.push_back((unsigned char)number.at(0));
+          while(getline(ss, byte)) {
+            unsigned char c = (unsigned char)byte.at(0);
+            for(int x=0; x != 8; x++) p.push_back( (c & (1 << x)) != 0 );
+          }
         }
       }
 
       int count = 0;
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
-          this->pixels->set(i, j, (int)p[count++]);
+          this->pixels->set(i, j, p[count++]);
         }
       }
     }

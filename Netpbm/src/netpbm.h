@@ -16,12 +16,8 @@ protected:
   int width;
   int height;
 public:
-  Netpbm();
-  ~Netpbm();
-
   virtual void read_file(const char * file_name) = 0;
   virtual void write_file(const char * file_name) = 0;
-
   virtual float * toArray() = 0;
 };
 

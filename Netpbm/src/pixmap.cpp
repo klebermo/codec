@@ -9,11 +9,12 @@ using namespace std;
 #include <vector>
 using namespace std;
 
-#include <iostream>
-using namespace std;
-
 Pixmap::Pixmap() {
   //
+}
+
+Pixmap::Pixmap(char * file_name) {
+  this->read_file(file_name);
 }
 
 Pixmap::~Pixmap() {
@@ -56,17 +57,18 @@ void Pixmap::read_file(const char * file_name) {
       }
     }
 
-    pixels = new Matrix<struct Pixel>(height, width);
-
     if(*this->magicNumber == "P3") {
-      this->pixels= new Matrix<Pixel>(this->width, this->height);
+      this->pixels = new Matrix<struct Pixel>(this->width, this->height);
 
       vector<int> p;
       while(getline(file, line_pixels)) {
         if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
           string number;
           stringstream ss(line_pixels);
-          while(getline(ss, number, ' ')) p.push_back(stoi(number));
+          while(getline(ss, number, ' ')) {
+            int data = stoi(number);
+            p.push_back(data);
+          }
         }
       }
 
@@ -83,14 +85,17 @@ void Pixmap::read_file(const char * file_name) {
     }
 
     if(*this->magicNumber == "P6") {
-      this->pixels= new Matrix<Pixel>(this->width, this->height);
+      this->pixels = new Matrix<struct Pixel>(this->width, this->height);
 
-      vector<unsigned char> p;
+      vector<int> p;
       while(getline(file, line_pixels)) {
         if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
-          string number;
+          string byte;
           stringstream ss(line_pixels);
-          while(getline(ss, number)) p.push_back((unsigned char)number.at(0));
+          while(getline(ss, byte)) {
+            unsigned char data = (unsigned char)byte.at(0);
+            p.push_back((int)data);
+          }
         }
       }
 
@@ -98,9 +103,9 @@ void Pixmap::read_file(const char * file_name) {
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
           struct Pixel pixel;
-          pixel.r = (int)p[count++];
-          pixel.g = (int)p[count++];
-          pixel.b = (int)p[count++];
+          pixel.r = p[count++];
+          pixel.g = p[count++];
+          pixel.b = p[count++];
           this->pixels->set(i, j, pixel);
         }
       }

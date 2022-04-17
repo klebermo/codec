@@ -8,11 +8,11 @@ private:
   Matrix<int> * pixels;
 public:
   Bitmap();
+  Bitmap(char * file_name);
   ~Bitmap();
 
   void read_file(const char * file_name);
   void write_file(const char * file_name);
-
   float * toArray();
 
   int getWidth();

@@ -13,6 +13,10 @@ Graymap::Graymap() {
   //
 }
 
+Graymap::Graymap(char * file_name) {
+  this->read_file(file_name);
+}
+
 Graymap::~Graymap() {
   delete pixels;
 }
@@ -54,7 +58,7 @@ void Graymap::read_file(const char * file_name) {
     }
 
     if(*this->magicNumber == "P2") {
-      this->pixels= new Matrix<int>(this->width, this->height);
+      this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
       while(getline(file, line_pixels)) {
@@ -74,21 +78,24 @@ void Graymap::read_file(const char * file_name) {
     }
 
     if(*this->magicNumber == "P5") {
-      this->pixels= new Matrix<int>(this->width, this->height);
+      this->pixels = new Matrix<int>(this->width, this->height);
 
-      vector<unsigned char> p;
+      vector<int> p;
       while(getline(file, line_pixels)) {
         if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
           string number;
           stringstream ss(line_pixels);
-          while(getline(ss, number)) p.push_back((unsigned char)number.at(0));
+          while(getline(ss, number)) {
+            unsigned char data = (unsigned char)number.at(0);
+            p.push_back((int)data);
+          }
         }
       }
 
       int count = 0;
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
-          this->pixels->set(i, j, (int)p[count++]);
+          this->pixels->set(i, j, p[count++]);
         }
       }
     }
