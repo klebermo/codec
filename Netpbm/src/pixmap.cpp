@@ -88,15 +88,12 @@ void Pixmap::read_file(const char * file_name) {
       this->pixels = new Matrix<struct Pixel>(this->width, this->height);
 
       vector<int> p;
-      while(getline(file, line_pixels)) {
-        if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
-          string byte;
-          stringstream ss(line_pixels);
-          while(getline(ss, byte)) {
-            unsigned char data = (unsigned char)byte.at(0);
-            p.push_back((int)data);
-          }
-        }
+      int size = 3 * width * height;
+      for(int i=0; i<size; i++) {
+        char byte[1];
+        file.read(byte, 1);
+        unsigned char c = (unsigned char)byte[0];
+        p.push_back( (int)c );
       }
 
       int count = 0;

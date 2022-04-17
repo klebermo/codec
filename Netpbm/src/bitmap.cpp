@@ -77,15 +77,13 @@ void Bitmap::read_file(const char * file_name) {
       this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
-      while(getline(file, line_pixels)) {
-        if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
-          string byte;
-          stringstream ss(line_pixels);
-          while(getline(ss, byte)) {
-            unsigned char c = (unsigned char)byte.at(0);
-            for(int x=0; x != 8; x++) p.push_back( (c & (1 << x)) != 0 );
-          }
-        }
+      int size = width * height;
+      for(int i=0; i<size; i++) {
+        char byte[1];
+        file.read(byte, 1);
+        unsigned char c = (unsigned char)byte[0];
+        for(int x=0; x != 8; x++)
+          p.push_back( (c & (1 << x)) != 0 );
       }
 
       int count = 0;

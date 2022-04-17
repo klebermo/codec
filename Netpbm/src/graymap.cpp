@@ -81,15 +81,12 @@ void Graymap::read_file(const char * file_name) {
       this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
-      while(getline(file, line_pixels)) {
-        if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
-          string number;
-          stringstream ss(line_pixels);
-          while(getline(ss, number)) {
-            unsigned char data = (unsigned char)number.at(0);
-            p.push_back((int)data);
-          }
-        }
+      int size = width * height;
+      for(int i=0; i<size; i++) {
+        char byte[1];
+        file.read(byte, 1);
+        unsigned char c = (unsigned char)byte[0];
+        p.push_back( (int)c );
       }
 
       int count = 0;
