@@ -6,6 +6,7 @@ private:
   //
 public:
   MTL();
+  MTL(char * file_name);
   ~MTL();
 };
 

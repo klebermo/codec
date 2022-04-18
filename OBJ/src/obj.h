@@ -6,6 +6,7 @@ private:
   //
 public:
   OBJ();
+  OBJ(char * file_name);
   ~OBJ();
 };
 

@@ -6,6 +6,7 @@ private:
   //
 public:
   PNG();
+  PNG(char * file_name);
   ~PNG();
 };
 

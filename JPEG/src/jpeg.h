@@ -6,6 +6,7 @@ private:
   //
 public:
   JPEG();
+  JPEG(char * file_name);
   ~JPEG();
 };
 
