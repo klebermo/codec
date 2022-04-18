@@ -164,11 +164,3 @@ float * Pixmap::toArray() {
 
   return result;
 }
-
-int Pixmap::getWidth() {
-  return this->width;
-}
-
-int Pixmap::getHeight() {
-  return this->height;
-}

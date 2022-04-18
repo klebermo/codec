@@ -149,11 +149,3 @@ float * Graymap::toArray() {
 
   return result;
 }
-
-int Graymap::getWidth() {
-  return this->width;
-}
-
-int Graymap::getHeight() {
-  return this->height;
-}

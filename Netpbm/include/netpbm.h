@@ -2,7 +2,17 @@
 #define LIB_NETPBM_H
 
 template<class T> class Matrix {};
-class Netpbm {};
+
+class Netpbm {
+public:
+  string * getMagicNumber();
+  int getWidth();
+  int getHeight();
+  
+  virtual void read_file(const char * file_name) = 0;
+  virtual void write_file(const char * file_name) = 0;
+  virtual float * toArray() = 0;
+};
 
 class Bitmap : public Netpbm {
 public:

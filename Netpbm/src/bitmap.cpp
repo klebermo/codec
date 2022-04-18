@@ -144,11 +144,3 @@ float * Bitmap::toArray() {
 
   return result;
 }
-
-int Bitmap::getWidth() {
-  return this->width;
-}
-
-int Bitmap::getHeight() {
-  return this->height;
-}

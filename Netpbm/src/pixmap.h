@@ -15,9 +15,6 @@ public:
   void read_file(const char * file_name);
   void write_file(const char * file_name);
   float * toArray();
-
-  int getWidth();
-  int getHeight();
 };
 
 #endif  // PIXMAP_H

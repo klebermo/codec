@@ -16,6 +16,10 @@ protected:
   int width;
   int height;
 public:
+  string * getMagicNumber();
+  int getWidth();
+  int getHeight();
+
   virtual void read_file(const char * file_name) = 0;
   virtual void write_file(const char * file_name) = 0;
   virtual float * toArray() = 0;
