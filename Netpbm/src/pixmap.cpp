@@ -1,13 +1,40 @@
 #include "pixmap.h"
 
+Pixmap2::Pixmap2(std::string file_name) {
+  this->read_file(file_name);
+}
+
+void Pixmap2::read_file(std::string file_name) {
+  //
+}
+
+void Pixmap2::write_file(std::string file_name) {
+  //
+}
+
+float * Pixmap2::toArray() {
+  int size = 5 * (this->width * this->height);
+  float * result = new float[size];
+
+  int count = 0;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++) {
+      float x = (float)j/(float)this->width, y = (float)i/(float)this->height;
+      result[count++] = -1 + (2 * x);
+      result[count++] = 1 - (2 * y);
+      result[count++] = (float)this->pixels[i][j].r / (float)this->max_value;
+      result[count++] = (float)this->pixels[i][j].g / (float)this->max_value;
+      result[count++] = (float)this->pixels[i][j].b / (float)this->max_value;
+    }
+  }
+
+  return result;
+}
+
+/*
 #include <fstream>
-using namespace std;
-
 #include <sstream>
-using namespace std;
-
 #include <vector>
-using namespace std;
 
 Pixmap2::Pixmap2(char * file_name) {
   this->read_file(file_name);
@@ -166,3 +193,4 @@ float * Pixmap2::toArray() {
 
   return result;
 }
+*/

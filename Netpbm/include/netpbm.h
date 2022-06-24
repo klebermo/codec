@@ -3,59 +3,41 @@
 
 #include <string>
 
-template<class T> class Matrix {};
-
 class Netpbm {
 public:
-  std::string * getMagicNumber();
   int getWidth();
   int getHeight();
   
-  virtual void read_file(const char * file_name) = 0;
-  virtual void write_file(const char * file_name) = 0;
+  virtual void read_file(std::string file_name) = 0;
+  virtual void write_file(std::string file_name) = 0;
   virtual float * toArray() = 0;
 };
 
 class Bitmap : public Netpbm {
 public:
-  Bitmap(char * file_name);
-  ~Bitmap();
+  Bitmap(std::string file_name);
 
-  void read_file(const char * file_name);
-  void write_file(const char * file_name);
-
+  void read_file(std::string file_name);
+  void write_file(std::string file_name);
   float * toArray();
-
-  int getWidth();
-  int getHeight();
 };
 
 class Graymap : public Netpbm {
 public:
-  Graymap(char * file_name);
-  ~Graymap();
+  Graymap(std::string file_name);
 
-  void read_file(const char * file_name);
-  void write_file(const char * file_name);
-
+  void read_file(std::string file_name);
+  void write_file(std::string file_name);
   float * toArray();
-
-  int getWidth();
-  int getHeight();
 };
 
 class Pixmap2 : public Netpbm {
 public:
-  Pixmap2(char * file_name);
-  ~Pixmap2();
+  Pixmap2(std::string file_name);
 
-  void read_file(const char * file_name);
-  void write_file(const char * file_name);
-
+  void read_file(std::string file_name);
+  void write_file(std::string file_name);
   float * toArray();
-
-  int getWidth();
-  int getHeight();
 };
 
 #endif  // LIB_NETPBM_H

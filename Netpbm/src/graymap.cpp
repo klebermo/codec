@@ -1,13 +1,40 @@
 #include "graymap.h"
 
+Graymap::Graymap(std::string file_name) {
+  this->read_file(file_name);
+}
+
+void Graymap::read_file(std::string file_name) {
+  //
+}
+
+void Graymap::write_file(std::string file_name) {
+  //
+}
+
+float * Graymap::toArray() {
+  int size = 5 * (this->width * this->height);
+  float * result = new float[size];
+
+  int count = 0;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++) {
+      float x = (float)j/(float)this->width, y = (float)i/(float)this->height;
+      result[count++] = -1 + (2 * x);
+      result[count++] = 1 - (2 * y);
+      result[count++] = (float)this->pixels[i][j] / (float)this->max_value;
+      result[count++] = (float)this->pixels[i][j] / (float)this->max_value;
+      result[count++] = (float)this->pixels[i][j] / (float)this->max_value;
+    }
+  }
+
+  return result;
+}
+
+/*
 #include <fstream>
-using namespace std;
-
 #include <sstream>
-using namespace std;
-
 #include <vector>
-using namespace std;
 
 Graymap::Graymap(char * file_name) {
   this->read_file(file_name);
@@ -151,3 +178,4 @@ float * Graymap::toArray() {
 
   return result;
 }
+*/

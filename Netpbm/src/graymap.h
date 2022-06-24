@@ -6,13 +6,12 @@
 class Graymap : public Netpbm {
 private:
   int max_value;
-  Matrix<int> * pixels;
+  std::vector<std::vector<int>> pixels;
 public:
-  Graymap(char * file_name);
-  ~Graymap();
+  Graymap(std::string file_name);
 
-  void read_file(const char * file_name);
-  void write_file(const char * file_name);
+  void read_file(std::string file_name);
+  void write_file(std::string file_name);
   float * toArray();
 };
 

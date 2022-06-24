@@ -1,16 +1,89 @@
 #include "bitmap.h"
 
-#include <fstream>
-using namespace std;
-
-#include <sstream>
-using namespace std;
-
-#include <vector>
-using namespace std;
-
 #include <iostream>
-using namespace std;
+
+Bitmap::Bitmap(std::string file_name) {
+  read_file(file_name);
+}
+
+void Bitmap::read_file(std::string file_name) {
+  std::ifstream file(file_name);
+
+  std::string line_one, line_two, line_pixels;
+  
+  while(getline(file, line_one)) {
+    if(line_one.at(0) != '#') {
+      this->magicNumber = new char[line_one.length() + 1];
+      this->magicNumber = line_one.data();
+      break;
+    }
+  }
+
+  while(getline(file, line_two)) {
+    std::string width, height;
+    std::stringstream ss(line_two);
+
+    if(line_two.at(0) != '#') {
+      if(getline(ss, width, ' '))
+        this->width = stoi(width);
+
+      if(getline(ss, height, ' '))
+        this->height = stoi(height);
+
+      break;
+    }
+  }
+
+  pixels = new int * [height];
+  for(int i=0; i<height; i++) {
+    pixels[i] = new int [width];
+  }
+  for(int i=0; i<height; i++) {
+    for(int j=0; j<width; j++) {
+      pixels[i][j] = 0;
+    }
+  }
+
+  if(this->magicNumber == "P1") {
+    //
+  }
+
+  if(this->magicNumber == "P4") {
+    //
+  }
+}
+
+void Bitmap::write_file(std::string file_name) {
+  std::fstream file(file_name, std::ios_base::out);
+  if(!file.is_open()) return;
+
+  file.close();
+}
+
+float * Bitmap::toArray() {
+  int size = 5 * (this->width * this->height);
+  float * result = new float[size];
+
+  int count = 0;
+  for(int i=0; i<this->height; i++) {
+    for(int j=0; j<this->width; j++) {
+      float x = (float)j/(float)width, y = (float)i/(float)height;
+      result[count++] = -1 + (2 * x);
+      result[count++] = 1 - (2 * y);
+      result[count++] = pixels[i][j];
+      result[count++] = pixels[i][j];
+      result[count++] = pixels[i][j];
+    }
+  }
+
+  return result;
+}
+
+/*
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <iostream>
 
 Bitmap::Bitmap(char * file_name) {
   this->read_file(file_name);
@@ -148,3 +221,4 @@ float * Bitmap::toArray() {
 
   return result;
 }
+*/

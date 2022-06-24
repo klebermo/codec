@@ -1,31 +1,29 @@
 #ifndef LIB_NETPBM_H
 #define LIB_NETPBM_H
 
-#include "matrix.h"
+//#include "matrix.h"
 
 #include <string>
-using namespace std;
+#include <vector>
+#include <fstream>
+#include <sstream>
 
 struct Pixel {
   int r, g, b;
 };
-
-enum MagicNumber {
-  P1, P2, P3, P4, P5, P6
-};
+typedef struct Pixel pixel;
 
 class Netpbm {
 protected:
-  MagicNumber magicNumber;
+  char * magicNumber;
   int width;
   int height;
 public:
-  MagicNumber getMagicNumber();
   int getWidth();
   int getHeight();
 
-  virtual void read_file(const char * file_name) = 0;
-  virtual void write_file(const char * file_name) = 0;
+  virtual void read_file(std::string file_name) = 0;
+  virtual void write_file(std::string file_name) = 0;
   virtual float * toArray() = 0;
 };
 

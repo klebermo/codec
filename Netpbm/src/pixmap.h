@@ -6,13 +6,12 @@
 class Pixmap2 : public Netpbm {
 private:
   int max_value;
-  Matrix<struct Pixel> * pixels;
+  std::vector<std::vector<pixel>> pixels;
 public:
-  Pixmap2(char * file_name);
-  ~Pixmap2();
+  Pixmap2(std::string file_name);
 
-  void read_file(const char * file_name);
-  void write_file(const char * file_name);
+  void read_file(std::string file_name);
+  void write_file(std::string file_name);
   float * toArray();
 };
 

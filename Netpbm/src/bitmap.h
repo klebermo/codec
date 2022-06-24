@@ -5,13 +5,13 @@
 
 class Bitmap : public Netpbm {
 private:
-  Matrix<int> * pixels;
+  //std::vector<std::vector<int>> pixels;
+  int ** pixels;
 public:
-  Bitmap(char * file_name);
-  ~Bitmap();
+  Bitmap(std::string file_name);
 
-  void read_file(const char * file_name);
-  void write_file(const char * file_name);
+  void read_file(std::string file_name);
+  void write_file(std::string file_name);
   float * toArray();
 };
 
