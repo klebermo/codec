@@ -8,7 +8,6 @@ private:
   int max_value;
   Matrix<int> * pixels;
 public:
-  Graymap();
   Graymap(char * file_name);
   ~Graymap();
 

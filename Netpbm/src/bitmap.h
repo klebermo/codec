@@ -7,7 +7,6 @@ class Bitmap : public Netpbm {
 private:
   Matrix<int> * pixels;
 public:
-  Bitmap();
   Bitmap(char * file_name);
   ~Bitmap();
 

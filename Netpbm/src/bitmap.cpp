@@ -9,9 +9,8 @@ using namespace std;
 #include <vector>
 using namespace std;
 
-Bitmap::Bitmap() {
-  //
-}
+#include <iostream>
+using namespace std;
 
 Bitmap::Bitmap(char * file_name) {
   this->read_file(file_name);
@@ -22,15 +21,17 @@ Bitmap::~Bitmap() {
 }
 
 void Bitmap::read_file(const char * file_name) {
-  fstream file;
-  file.open(file_name);
+  fstream file(file_name, ios_base::in);
 
   if (file.is_open()) {
     string line_one, line_two, line_pixels;
 
     while(getline(file, line_one)) {
       if(line_one.at(0) != '#') {
-        this->magicNumber = new string(line_one);
+        if(line_one == "P1")
+          this->magicNumber = P1;
+        else
+          this->magicNumber = P4;
         break;
       }
     }
@@ -50,7 +51,7 @@ void Bitmap::read_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P1") {
+    if(this->magicNumber == P1) {
       this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
@@ -73,7 +74,7 @@ void Bitmap::read_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P4") {
+    if(this->magicNumber == P4) {
       this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
@@ -99,13 +100,16 @@ void Bitmap::read_file(const char * file_name) {
 }
 
 void Bitmap::write_file(const char * file_name) {
-  fstream file;
-  file.open(file_name, ios::out);
+  fstream file(file_name, ios_base::out);
+
   if (file.is_open()) {
-    file << *this->magicNumber << endl;
+    if(this->magicNumber == P1)
+      file << "P1" << endl;
+    else
+      file << "P4" << endl;
     file << this->width << " " << this->height << endl;
 
-    if(*this->magicNumber == "P1") {
+    if(this->magicNumber == P1) {
       for(int i=0; i<this->height; i++) {
         for(int j=0; j<this->width; j++)
           file << pixels->get(i, j) << " ";
@@ -113,7 +117,7 @@ void Bitmap::write_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P4") {
+    if(this->magicNumber == P4) {
       for(int i=0; i<this->height; i++) {
         for(int j=0; j<this->width; j+=8) {
           int data = pixels->get(i, j);

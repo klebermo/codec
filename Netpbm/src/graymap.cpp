@@ -9,10 +9,6 @@ using namespace std;
 #include <vector>
 using namespace std;
 
-Graymap::Graymap() {
-  //
-}
-
 Graymap::Graymap(char * file_name) {
   this->read_file(file_name);
 }
@@ -30,7 +26,10 @@ void Graymap::read_file(const char * file_name) {
 
     while(getline(file, line_one)) {
       if(line_one.at(0) != '#') {
-        this->magicNumber = new string(line_one);
+        if(line_one == "P2")
+          this->magicNumber = P2;
+        else
+          this->magicNumber = P5;
         break;
       }
     }
@@ -57,7 +56,7 @@ void Graymap::read_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P2") {
+    if(this->magicNumber == P2) {
       this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
@@ -77,7 +76,7 @@ void Graymap::read_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P5") {
+    if(this->magicNumber == P5) {
       this->pixels = new Matrix<int>(this->width, this->height);
 
       vector<int> p;
@@ -105,11 +104,14 @@ void Graymap::write_file(const char * file_name) {
   fstream file;
   file.open(file_name, ios::out);
   if (file.is_open()) {
-    file << *magicNumber << endl;
+    if(this->magicNumber == P2)
+      file << "P2" << endl;
+    else
+      file <<  "P5" << endl;
     file << width << " " << height << endl;
     file << max_value << endl;
 
-    if(*this->magicNumber == "P2") {
+    if(this->magicNumber == P2) {
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
           file << pixels->get(i, j) << " ";
@@ -118,7 +120,7 @@ void Graymap::write_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P5") {
+    if(this->magicNumber == P5) {
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
           int data = pixels->get(i, j);

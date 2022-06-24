@@ -1,11 +1,13 @@
 #ifndef LIB_NETPBM_H
 #define LIB_NETPBM_H
 
+#include <string>
+
 template<class T> class Matrix {};
 
 class Netpbm {
 public:
-  string * getMagicNumber();
+  std::string * getMagicNumber();
   int getWidth();
   int getHeight();
   
@@ -16,7 +18,6 @@ public:
 
 class Bitmap : public Netpbm {
 public:
-  Bitmap();
   Bitmap(char * file_name);
   ~Bitmap();
 
@@ -31,7 +32,6 @@ public:
 
 class Graymap : public Netpbm {
 public:
-  Graymap();
   Graymap(char * file_name);
   ~Graymap();
 
@@ -44,11 +44,10 @@ public:
   int getHeight();
 };
 
-class Pixmap : public Netpbm {
+class Pixmap2 : public Netpbm {
 public:
-  Pixmap();
-  Pixmap(char * file_name);
-  ~Pixmap();
+  Pixmap2(char * file_name);
+  ~Pixmap2();
 
   void read_file(const char * file_name);
   void write_file(const char * file_name);

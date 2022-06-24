@@ -10,13 +10,17 @@ struct Pixel {
   int r, g, b;
 };
 
+enum MagicNumber {
+  P1, P2, P3, P4, P5, P6
+};
+
 class Netpbm {
 protected:
-  string * magicNumber;
+  MagicNumber magicNumber;
   int width;
   int height;
 public:
-  string * getMagicNumber();
+  MagicNumber getMagicNumber();
   int getWidth();
   int getHeight();
 

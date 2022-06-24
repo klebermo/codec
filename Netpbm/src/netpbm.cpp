@@ -1,6 +1,6 @@
 #include "netpbm.h"
 
-string * Netpbm::getMagicNumber() {
+MagicNumber Netpbm::getMagicNumber() {
   return this->magicNumber;
 }
 

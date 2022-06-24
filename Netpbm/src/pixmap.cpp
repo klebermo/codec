@@ -9,19 +9,15 @@ using namespace std;
 #include <vector>
 using namespace std;
 
-Pixmap::Pixmap() {
-  //
-}
-
-Pixmap::Pixmap(char * file_name) {
+Pixmap2::Pixmap2(char * file_name) {
   this->read_file(file_name);
 }
 
-Pixmap::~Pixmap() {
+Pixmap2::~Pixmap2() {
   delete pixels;
 }
 
-void Pixmap::read_file(const char * file_name) {
+void Pixmap2::read_file(const char * file_name) {
   fstream file;
   file.open(file_name);
 
@@ -30,7 +26,10 @@ void Pixmap::read_file(const char * file_name) {
 
     while(getline(file, line_one)) {
       if(line_one.at(0) != '#') {
-        this->magicNumber = new string(line_one);
+        if(line_one == "P3")
+          this->magicNumber = P3;
+        else
+          this->magicNumber = P6;
         break;
       }
     }
@@ -57,7 +56,7 @@ void Pixmap::read_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P3") {
+    if(this->magicNumber == P3) {
       this->pixels = new Matrix<struct Pixel>(this->width, this->height);
 
       vector<int> p;
@@ -84,7 +83,7 @@ void Pixmap::read_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P6") {
+    if(this->magicNumber == P6) {
       this->pixels = new Matrix<struct Pixel>(this->width, this->height);
 
       vector<int> p;
@@ -112,15 +111,18 @@ void Pixmap::read_file(const char * file_name) {
   file.close();
 }
 
-void Pixmap::write_file(const char * file_name) {
+void Pixmap2::write_file(const char * file_name) {
   fstream file;
   file.open(file_name, ios::out);
   if (file.is_open()) {
-    file << *magicNumber << endl;
+    if(magicNumber == P3)
+      file << "P3" << endl;
+    else
+      file << "P6" << endl;
     file << width << " " << height << endl;
     file << max_value << endl;
 
-    if(*this->magicNumber == "P3") {
+    if(this->magicNumber == P3) {
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
           file << pixels->get(i, j).r << " ";
@@ -131,7 +133,7 @@ void Pixmap::write_file(const char * file_name) {
       }
     }
 
-    if(*this->magicNumber == "P6") {
+    if(this->magicNumber == P6) {
       for(int i=0; i<height; i++) {
         for(int j=0; j<width; j++) {
           int r = pixels->get(i, j).r, g = pixels->get(i, j).g, b = pixels->get(i, j).b;
@@ -146,7 +148,7 @@ void Pixmap::write_file(const char * file_name) {
   }
 }
 
-float * Pixmap::toArray() {
+float * Pixmap2::toArray() {
   int size = 5 * (this->width * this->height);
   float * result = new float[size];
 

@@ -3,14 +3,13 @@
 
 #include "netpbm.h"
 
-class Pixmap : public Netpbm {
+class Pixmap2 : public Netpbm {
 private:
   int max_value;
   Matrix<struct Pixel> * pixels;
 public:
-  Pixmap();
-  Pixmap(char * file_name);
-  ~Pixmap();
+  Pixmap2(char * file_name);
+  ~Pixmap2();
 
   void read_file(const char * file_name);
   void write_file(const char * file_name);
