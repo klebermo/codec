@@ -13,4 +13,4 @@ ${obj_dir}/graymap.o: src/graymap.cpp
 	g++ -g -fPIC -c src/graymap.cpp -o ${obj_dir}/graymap.o
 
 ${obj_dir}/pixmap.o: src/pixmap.cpp
-	g++ -g -fsanitize=address -fPIC -c src/pixmap.cpp -o ${obj_dir}/pixmap.o
+	g++ -g -fPIC -c src/pixmap.cpp -o ${obj_dir}/pixmap.o

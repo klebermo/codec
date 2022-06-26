@@ -12,7 +12,7 @@ public:
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
-  float * toArray();
+  std::vector<float> toArray();
 };
 
 #endif  // GRAYMAP_H
