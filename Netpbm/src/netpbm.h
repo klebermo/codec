@@ -23,7 +23,7 @@ public:
 
   virtual void read_file(std::string file_name) = 0;
   virtual void write_file(std::string file_name) = 0;
-  virtual std::vector<float> toArray() = 0;
+  virtual float * toArray() = 0;
 };
 
 #endif  // LIB_NETPBM_H

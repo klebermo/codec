@@ -44,7 +44,7 @@ void Graymap::write_file(std::string file_name) {
   std::ofstream file(file_name);
 }
 
-std::vector<float> Graymap::toArray() {
+float * Graymap::toArray() {
   std::vector<float> result;
 
   int count = 0;
@@ -59,5 +59,5 @@ std::vector<float> Graymap::toArray() {
     }
   }
 
-  return result;
+  return result.data();
 }

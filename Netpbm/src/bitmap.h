@@ -3,6 +3,8 @@
 
 #include "netpbm.h"
 
+#include <iostream>
+
 class Bitmap : public Netpbm {
 private:
   std::vector<std::vector<int>> pixels;
@@ -11,7 +13,7 @@ public:
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
-  std::vector<float> toArray();
+  float * toArray();
 };
 
 #endif  // BITMAP_H

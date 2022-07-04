@@ -44,7 +44,7 @@ void Pixmap2::write_file(std::string file_name) {
   std::ofstream file(file_name);
 }
 
-std::vector<float> Pixmap2::toArray() {
+float * Pixmap2::toArray() {
   std::vector<float> result;
 
   int count = 0;
@@ -59,5 +59,5 @@ std::vector<float> Pixmap2::toArray() {
     }
   }
 
-  return result;
+  return result.data();
 }

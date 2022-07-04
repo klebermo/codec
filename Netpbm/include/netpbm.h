@@ -11,7 +11,7 @@ public:
   
   virtual void read_file(std::string file_name) = 0;
   virtual void write_file(std::string file_name) = 0;
-  virtual std::vector<float> toArray() = 0;
+  virtual float * toArray() = 0;
 };
 
 class Bitmap : public Netpbm {
@@ -20,7 +20,7 @@ public:
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
-  std::vector<float> toArray();
+  float * toArray();
 };
 
 class Graymap : public Netpbm {
@@ -29,7 +29,7 @@ public:
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
-  std::vector<float> toArray();
+  float * toArray();
 };
 
 class Pixmap2 : public Netpbm {
@@ -38,7 +38,7 @@ public:
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
-  std::vector<float> toArray();
+  float * toArray();
 };
 
 #endif  // LIB_NETPBM_H

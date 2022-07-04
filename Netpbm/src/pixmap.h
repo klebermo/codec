@@ -12,7 +12,7 @@ public:
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
-  std::vector<float> toArray();
+  float * toArray();
 };
 
 #endif  // PIXMAP_H
