@@ -6,9 +6,10 @@
 class Graymap : public Netpbm {
 private:
   int max_value;
-  std::vector<std::vector<int>> pixels;
+  int ** pixels;
 public:
   Graymap(std::string file_name);
+  ~Graymap();
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);

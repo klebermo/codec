@@ -6,9 +6,10 @@
 class Pixmap2 : public Netpbm {
 private:
   int max_value;
-  std::vector<std::vector<pixel>> pixels;
+  pixel ** pixels;
 public:
   Pixmap2(std::string file_name);
+  ~Pixmap2();
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);
