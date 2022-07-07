@@ -1,7 +1,7 @@
 #ifndef PIXMAP_H
 #define PIXMAP_H
 
-#include "netpbm.h"
+#include "netpbm.hpp"
 
 class Pixmap2 : public Netpbm {
 private:

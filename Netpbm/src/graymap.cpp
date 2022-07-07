@@ -1,4 +1,4 @@
-#include "graymap.h"
+#include "graymap.hpp"
 
 Graymap::Graymap(std::string file_name) {
   this->read_file(file_name);
@@ -6,8 +6,8 @@ Graymap::Graymap(std::string file_name) {
 
 Graymap::~Graymap() {
   for (int i = 0; i < this->height; i++)
-    delete[] this->pixels[i];
-  delete[] this->pixels;
+    delete[] pixels[i];
+  delete[] pixels;
 }
 
 void Graymap::read_file(std::string file_name) {
@@ -38,38 +38,34 @@ void Graymap::read_file(std::string file_name) {
   }
 
   pixels = new int*[height];
-  for(int i=0; i<height; i++) pixels[i] = new int[width];
+  for(int i=0; i<height; i++) {
+    pixels[i] = new int[width];
+  }
 
   if(this->magicNumber == "P2") {
-    int row=0;
-    while(getline(file, line_pixels)) {
-      std::string number;
-      std::stringstream ss(line_pixels);
-
-      int * line = new int[width];
-      int column=0;
-      while(getline(ss, number, ' '))
-        line[column++] = stoi(number);
-      pixels[row] = line;
-    }
+    //
   }
 
   if(this->magicNumber == "P5") {
-    for(int i=0; i<height; i++) {
-      int * row = new int[width];
-      for(int j=0; j<width; j++) {
-        char c;
-        file.read(&c, 1);
-        int bit = (int) c;
-        row[j] = bit;
-      }
-      pixels[i] = row;
-    }
+    //
   }
 }
 
 void Graymap::write_file(std::string file_name) {
   std::ofstream file(file_name);
+  file << magicNumber << std::endl;
+  file << width << " " << height << std::endl;
+  file << max_value << std::endl;
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      if(magicNumber == "P2") {
+        file << pixels[i][j] << " ";
+      } else {
+        file << pixels[i][j];
+      }
+    }
+    file << std:: endl;
+  }
 }
 
 float * Graymap::toArray() {
@@ -81,9 +77,9 @@ float * Graymap::toArray() {
       float x = (float)j/(float)width, y = (float)i/(float)height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = (float)this->pixels[i][j] / (float)this->max_value;
-      result[count++] = (float)this->pixels[i][j] / (float)this->max_value;
-      result[count++] = (float)this->pixels[i][j] / (float)this->max_value;
+      result[count++] = (float)pixels[i][j] / (float)max_value;
+      result[count++] = (float)pixels[i][j] / (float)max_value;
+      result[count++] = (float)pixels[i][j] / (float)max_value;
     }
   }
 

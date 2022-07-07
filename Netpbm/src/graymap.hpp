@@ -1,7 +1,7 @@
 #ifndef GRAYMAP_H
 #define GRAYMAP_H
 
-#include "netpbm.h"
+#include "netpbm.hpp"
 
 class Graymap : public Netpbm {
 private:

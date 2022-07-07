@@ -1,4 +1,4 @@
-#include "netpbm.h"
+#include "netpbm.hpp"
 
 int Netpbm::getWidth() {
   return this->width;

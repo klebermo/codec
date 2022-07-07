@@ -1,9 +1,7 @@
 #ifndef BITMAP_H
 #define BITMAP_H
 
-#include "netpbm.h"
-
-#include <iostream>
+#include "netpbm.hpp"
 
 class Bitmap : public Netpbm {
 private:

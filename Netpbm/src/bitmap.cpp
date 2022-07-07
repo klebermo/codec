@@ -1,4 +1,4 @@
-#include "bitmap.h"
+#include "bitmap.hpp"
 
 Bitmap::Bitmap(std::string file_name) {
   read_file(file_name);
@@ -38,40 +38,33 @@ void Bitmap::read_file(std::string file_name) {
   }
 
   pixels = new int*[height];
-  for(int i=0; i<height; i++) pixels[i] = new int[width];
+  for(int i=0; i<height; i++) {
+    pixels[i] = new int[width];
+  }
 
   if(this->magicNumber == "P1") {
-    int row=0;
-    while(getline(file, line_pixels)) {
-      std::string number;
-      std::stringstream ss(line_pixels);
-
-      int * line = new int[width];
-      int column=0;
-      while(getline(ss, number, ' '))
-        line[column++] = stoi(number);
-      pixels[row] = line;
-    }
+    //
   }
 
   if(this->magicNumber == "P4") {
-    for(int i=0; i<height; i++) {
-      int * row = new int[width];
-      for(int j=0; j<width; j++) {
-        char c;
-        file.read(&c, 1);
-        for(int k=0; k<8; k++) {
-          int bit = (c >> k) & 1;
-          row[j] = bit;
-        }
-      }
-      pixels[i] = row;
-    }
+    //
   }
 }
 
 void Bitmap::write_file(std::string file_name) {
   std::ofstream file(file_name);
+  file << magicNumber << std::endl;
+  file << width << " " << height << std::endl;
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      if(magicNumber == "P1") {
+        file << pixels[i][j] << " ";
+      } else {
+        //
+      }
+    }
+    file << std::endl;
+  }
 }
 
 float * Bitmap::toArray() {
