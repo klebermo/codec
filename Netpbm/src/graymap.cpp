@@ -4,12 +4,6 @@ Graymap::Graymap(std::string file_name) {
   this->read_file(file_name);
 }
 
-Graymap::~Graymap() {
-  for (int i = 0; i < this->height; i++)
-    delete[] pixels[i];
-  delete[] pixels;
-}
-
 void Graymap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;
@@ -37,11 +31,6 @@ void Graymap::read_file(std::string file_name) {
     }
   }
 
-  pixels = new int*[height];
-  for(int i=0; i<height; i++) {
-    pixels[i] = new int[width];
-  }
-
   if(this->magicNumber == "P2") {
     //
   }
@@ -53,18 +42,26 @@ void Graymap::read_file(std::string file_name) {
 
 void Graymap::write_file(std::string file_name) {
   std::ofstream file(file_name);
+
   file << magicNumber << std::endl;
   file << width << " " << height << std::endl;
   file << max_value << std::endl;
-  for (int i = 0; i < height; i++) {
-    for (int j = 0; j < width; j++) {
-      if(magicNumber == "P2") {
-        file << pixels[i][j] << " ";
-      } else {
-        file << pixels[i][j];
+
+  if(magicNumber == "P2") {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        file << pixels[i][j].r << " ";
       }
+      file << std::endl;
     }
-    file << std:: endl;
+  }
+  else {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        file << pixels[i][j].r << " ";
+      }
+      file << std::endl;
+    }
   }
 }
 
@@ -77,9 +74,9 @@ float * Graymap::toArray() {
       float x = (float)j/(float)width, y = (float)i/(float)height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = (float)pixels[i][j] / (float)max_value;
-      result[count++] = (float)pixels[i][j] / (float)max_value;
-      result[count++] = (float)pixels[i][j] / (float)max_value;
+      result[count++] = (float)pixels[i][j].r / (float)max_value;
+      result[count++] = (float)pixels[i][j].g / (float)max_value;
+      result[count++] = (float)pixels[i][j].b / (float)max_value;
     }
   }
 

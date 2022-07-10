@@ -17,6 +17,7 @@ protected:
   char * magicNumber;
   int width;
   int height;
+  std::vector<std::vector<pixel>> pixels;
 public:
   int getWidth();
   int getHeight();

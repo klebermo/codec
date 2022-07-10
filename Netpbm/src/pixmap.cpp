@@ -4,12 +4,6 @@ Pixmap2::Pixmap2(std::string file_name) {
   this->read_file(file_name);
 }
 
-Pixmap2::~Pixmap2() {
-  for (int i = 0; i < this->getHeight(); i++)
-    delete[] pixels[i];
-  delete[] pixels;
-}
-
 void Pixmap2::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;
@@ -37,11 +31,6 @@ void Pixmap2::read_file(std::string file_name) {
     }
   }
 
-  pixels = new pixel*[height];
-  for(int i=0; i<height; i++) {
-    pixels[i] = new pixel[width];
-  }
-
   if(this->magicNumber == "P3") {
     //
   }
@@ -53,18 +42,23 @@ void Pixmap2::read_file(std::string file_name) {
 
 void Pixmap2::write_file(std::string file_name) {
   std::ofstream file(file_name);
+
   file << magicNumber << std::endl;
   file << width << " " << height << std::endl;
-  for (int i = 0; i < height; i++) {
-    for (int j = 0; j < width; j++) {
-      if(magicNumber == "P3") {
-        file << pixels[i][j].r << " " << pixels[i][j].g << " " << pixels[i][j].b;
-      }
-      else {
-        file << pixels[i][j].r << pixels[i][j].g << pixels[i][j].b;
+
+  if(magicNumber == "P3") {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        file << pixels[i][j].r << " " << pixels[i][j].g << " " << pixels[i][j].b << std::endl;
       }
     }
-    file << std::endl;
+  } else {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        file << pixels[i][j].r << " " << pixels[i][j].g << " " << pixels[i][j].b << " ";
+      }
+      file << std::endl;
+    }
   }
 }
 

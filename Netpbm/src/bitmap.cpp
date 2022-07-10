@@ -4,12 +4,6 @@ Bitmap::Bitmap(std::string file_name) {
   read_file(file_name);
 }
 
-Bitmap::~Bitmap() {
-  for (int i = 0; i < height; i++)
-    delete[] pixels[i];
-  delete[] pixels;
-}
-
 void Bitmap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;
@@ -37,11 +31,6 @@ void Bitmap::read_file(std::string file_name) {
     }
   }
 
-  pixels = new int*[height];
-  for(int i=0; i<height; i++) {
-    pixels[i] = new int[width];
-  }
-
   if(this->magicNumber == "P1") {
     //
   }
@@ -53,17 +42,24 @@ void Bitmap::read_file(std::string file_name) {
 
 void Bitmap::write_file(std::string file_name) {
   std::ofstream file(file_name);
+
   file << magicNumber << std::endl;
   file << width << " " << height << std::endl;
-  for (int i = 0; i < height; i++) {
-    for (int j = 0; j < width; j++) {
-      if(magicNumber == "P1") {
-        file << pixels[i][j] << " ";
-      } else {
-        //
+
+  if(magicNumber == "P1") {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        file << pixels[i][j].r << " ";
       }
+      file << std::endl;
     }
-    file << std::endl;
+  } else {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        file << pixels[i][j].r << " ";
+      }
+      file << std::endl;
+    }
   }
 }
 
@@ -76,9 +72,9 @@ float * Bitmap::toArray() {
       float x = (float)j/(float)width, y = (float)i/(float)height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = pixels[i][j];
-      result[count++] = pixels[i][j];
-      result[count++] = pixels[i][j];
+      result[count++] = pixels[i][j].r;
+      result[count++] = pixels[i][j].g;
+      result[count++] = pixels[i][j].b;
     }
   }
 

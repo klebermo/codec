@@ -2,7 +2,6 @@
 #define LIB_NETPBM_H
 
 #include <string>
-#include <vector>
 
 class Netpbm {
 public:
