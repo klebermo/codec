@@ -32,11 +32,38 @@ void Graymap::read_file(std::string file_name) {
   }
 
   if(this->magicNumber == "P2") {
-    //
+    std::cout << "P2" << std::endl;
+    while(getline(file, line_pixels)) {
+      if(line_pixels.at(0) != '#') {
+        std::string data;
+        std::stringstream ss;
+
+        std::vector<pixel> row;
+        while(getline(ss, data, ' ')) {
+          pixel p;
+          p.r = p.g = p.b = stoi(data) / max_value;
+          row.push_back(p);
+        }
+        pixels.push_back(row);
+      }
+    }
   }
 
   if(this->magicNumber == "P5") {
-    //
+    std::cout << "P5" << std::endl;
+    for(int i=0; i < height; i++) {
+      std::vector<pixel> row;
+      for(int j = 0; j < width; j++) {
+        unsigned char c;
+        file.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
+
+        pixel p;
+        p.r = p.g = p.b = static_cast<int>(c);
+
+        row.push_back(p);
+      }
+      pixels.push_back(row);
+    }
   }
 }
 
@@ -47,21 +74,12 @@ void Graymap::write_file(std::string file_name) {
   file << width << " " << height << std::endl;
   file << max_value << std::endl;
 
-  if(magicNumber == "P2") {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        file << pixels[i][j].r << " ";
-      }
-      file << std::endl;
-    }
+  if(this->magicNumber == "P2") {
+    //
   }
-  else {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        file << pixels[i][j].r << " ";
-      }
-      file << std::endl;
-    }
+
+  if(this->magicNumber == "P5") {
+    //
   }
 }
 
@@ -71,12 +89,12 @@ float * Graymap::toArray() {
   int count = 0;
   for(int i=0; i<height; i++) {
     for(int j=0; j<width; j++) {
-      float x = (float)j/(float)width, y = (float)i/(float)height;
+      float x = static_cast<float>(j)/static_cast<float>(width), y = static_cast<float>(i)/static_cast<float>(height);
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = (float)pixels[i][j].r / (float)max_value;
-      result[count++] = (float)pixels[i][j].g / (float)max_value;
-      result[count++] = (float)pixels[i][j].b / (float)max_value;
+      result[count++] = static_cast<float>(pixels[i][j].r) / static_cast<float>(max_value);
+      result[count++] = static_cast<float>(pixels[i][j].g) / static_cast<float>(max_value);
+      result[count++] = static_cast<float>(pixels[i][j].b) / static_cast<float>(max_value);
     }
   }
 

@@ -32,11 +32,55 @@ void Pixmap2::read_file(std::string file_name) {
   }
 
   if(this->magicNumber == "P3") {
-    //
+    std::cout << "P3" << std::endl;
+    for(int row=0; row < height; row++) {
+      getline(file, line_pixels);
+      if(line_pixels.at(0) != '#') {
+        std::stringstream ss(line_pixels);
+
+        std::vector<pixel> row;
+        for(int column=0; column < width; column++) {
+          std::string data;
+          pixel p;
+
+          getline(ss, data, ' ');
+          p.r = stoi(data) / max_value;
+          row.push_back(p);
+
+          getline(ss, data, ' ');
+          p.g = stoi(data) / max_value;
+          row.push_back(p);
+
+          getline(ss, data, ' ');
+          p.b = stoi(data) / max_value;
+          row.push_back(p);
+        }
+        pixels.push_back(row);
+      }
+    }
   }
 
   if(this->magicNumber == "P6") {
-    //
+    std::cout << "P6" << std::endl;
+    for(int i=0; i<height; i++) {
+      std::vector<pixel> row;
+      for(int j=0; j < width; j++) {
+        unsigned char c;
+        pixel p;
+
+        file.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
+        p.r = static_cast<int>(c) / max_value;
+
+        file.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
+        p.g = static_cast<int>(c) / max_value;
+
+        file.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
+        p.b = static_cast<int>(c) / max_value;
+
+        row.push_back(p);
+      }
+      pixels.push_back(row);
+    }
   }
 }
 
@@ -46,34 +90,27 @@ void Pixmap2::write_file(std::string file_name) {
   file << magicNumber << std::endl;
   file << width << " " << height << std::endl;
 
-  if(magicNumber == "P3") {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        file << pixels[i][j].r << " " << pixels[i][j].g << " " << pixels[i][j].b << std::endl;
-      }
-    }
-  } else {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        file << pixels[i][j].r << " " << pixels[i][j].g << " " << pixels[i][j].b << " ";
-      }
-      file << std::endl;
-    }
+  if(this->magicNumber == "P3") {
+    //
+  }
+
+  if(this->magicNumber == "P6") {
+    //
   }
 }
 
 float * Pixmap2::toArray() {
-  float * result;
+  float * result = new float[width * height * 5];
 
   int count = 0;
   for(int i=0; i<height; i++) {
     for(int j=0; j<width; j++) {
-      float x = (float)j/(float)width, y = (float)i/(float)height;
+      float x = static_cast<float>(j)/static_cast<float>(width), y = static_cast<float>(i)/static_cast<float>(height);
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = (float)pixels[i][j].r / (float)max_value;
-      result[count++] = (float)pixels[i][j].g / (float)max_value;
-      result[count++] = (float)pixels[i][j].b / (float)max_value;
+      result[count++] = static_cast<float>(pixels[i][j].r) / static_cast<float>(max_value);
+      result[count++] = static_cast<float>(pixels[i][j].g) / static_cast<float>(max_value);
+      result[count++] = static_cast<float>(pixels[i][j].b) / static_cast<float>(max_value);
     }
   }
 

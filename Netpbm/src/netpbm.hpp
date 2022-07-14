@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <bitset>
 
 struct Pixel {
   int r, g, b;
@@ -14,7 +15,7 @@ typedef struct Pixel pixel;
 
 class Netpbm {
 protected:
-  char * magicNumber;
+  std::string magicNumber;
   int width;
   int height;
   std::vector<std::vector<pixel>> pixels;
