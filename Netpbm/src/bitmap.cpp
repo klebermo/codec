@@ -33,33 +33,22 @@ void Bitmap::read_file(std::string file_name) {
   if(magicNumber == "P1") {
     std::cout << "P1" << std::endl;
     while(getline(file, line_pixels)) {
-      std::string data;
-      std::stringstream ss(line_pixels);
-      
-      std::vector<pixel> row;
-      while(getline(ss, data, ' ')) {
-        pixel p;
-        p.r = p.g = p.b = stoi(data);
-        row.push_back(p);
+      if(line_pixels.at(0) != '#') {
+        std::string data;
+        std::stringstream ss(line_pixels);
+        std::vector<pixel> row;
+        while(getline(ss, data, ' ')) {
+          pixel p;
+          p.r = p.g = p.b = stoi(data);
+          row.push_back(p);
+        }
+        pixels.push_back(row);
       }
-      pixels.push_back(row);
     }
   }
 
   if(magicNumber == "P4") {
     std::cout << "P4" << std::endl;
-    int row = 0, column = 0;
-    unsigned char c;
-    while(file.read(reinterpret_cast<char*>(&c), sizeof(unsigned char))) {
-      for(int i=0; i<8; i++) {
-        if((c & (1 << i)) != 0)
-          pixels[row][column].r = pixels[row][column].g = pixels[row][column].b = 1;
-        else
-          pixels[row][column].r = pixels[row][column].g = pixels[row][column].b = 0;
-      }
-      if(column < width) column++;
-      else { row++; column = 0; }
-    }
   }
 }
 
@@ -80,16 +69,14 @@ float * Bitmap::toArray() {
   float * result = new float[width * height * 5];
 
   int count = 0;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      float x = static_cast<float>(j)/static_cast<float>(width);
-      float y = static_cast<float>(i)/static_cast<float>(height);
-
+  for(float i=0; i<height; i++) {
+    for(float j=0; j<width; j++) {
+      float x = j/width, y=i/height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = static_cast<float>(pixels[i][j].r);
-      result[count++] = static_cast<float>(pixels[i][j].g);
-      result[count++] = static_cast<float>(pixels[i][j].b);
+      result[count++] = pixels[i][j].r;
+      result[count++] = pixels[i][j].g;
+      result[count++] = pixels[i][j].b;
     }
   }
 

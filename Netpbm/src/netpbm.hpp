@@ -9,7 +9,7 @@
 #include <bitset>
 
 struct Pixel {
-  int r, g, b;
+  float r, g, b;
 };
 typedef struct Pixel pixel;
 

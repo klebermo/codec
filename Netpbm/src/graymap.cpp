@@ -36,8 +36,7 @@ void Graymap::read_file(std::string file_name) {
     while(getline(file, line_pixels)) {
       if(line_pixels.at(0) != '#') {
         std::string data;
-        std::stringstream ss;
-
+        std::stringstream ss(line_pixels);
         std::vector<pixel> row;
         while(getline(ss, data, ' ')) {
           pixel p;
@@ -51,19 +50,6 @@ void Graymap::read_file(std::string file_name) {
 
   if(this->magicNumber == "P5") {
     std::cout << "P5" << std::endl;
-    for(int i=0; i < height; i++) {
-      std::vector<pixel> row;
-      for(int j = 0; j < width; j++) {
-        unsigned char c;
-        file.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
-
-        pixel p;
-        p.r = p.g = p.b = static_cast<int>(c);
-
-        row.push_back(p);
-      }
-      pixels.push_back(row);
-    }
   }
 }
 
@@ -87,14 +73,14 @@ float * Graymap::toArray() {
   float * result = new float[width * height * 5];
 
   int count = 0;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      float x = static_cast<float>(j)/static_cast<float>(width), y = static_cast<float>(i)/static_cast<float>(height);
+  for(float i=0; i<height; i++) {
+    for(float j=0; j<width; j++) {
+      float x = j/width, y = i/height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = static_cast<float>(pixels[i][j].r) / static_cast<float>(max_value);
-      result[count++] = static_cast<float>(pixels[i][j].g) / static_cast<float>(max_value);
-      result[count++] = static_cast<float>(pixels[i][j].b) / static_cast<float>(max_value);
+      result[count++] = pixels[i][j].r;
+      result[count++] = pixels[i][j].g;
+      result[count++] = pixels[i][j].b;
     }
   }
 
