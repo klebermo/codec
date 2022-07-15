@@ -37,6 +37,7 @@ void Pixmap2::read_file(std::string file_name) {
       if(line_pixels.at(0) != '#') {
         std::string data;
         std::stringstream ss(line_pixels);
+
         std::vector<pixel> row;
         while(getline(ss, data, ' ')) {
           pixel p;
@@ -65,30 +66,26 @@ void Pixmap2::write_file(std::string file_name) {
 
   file << magicNumber << std::endl;
   file << width << " " << height << std::endl;
+  file << max_value << std::endl;
 
   if(this->magicNumber == "P3") {
-    //
-  }
-
-  if(this->magicNumber == "P6") {
-    //
-  }
-}
-
-float * Pixmap2::toArray() {
-  float * result = new float[width * height * 5];
-
-  int count = 0;
-  for(float i=0; i<height; i++) {
-    for(float j=0; j<width; j++) {
-      float x = j/width, y = i/height;
-      result[count++] = -1 + (2 * x);
-      result[count++] = 1 - (2 * y);
-      result[count++] = pixels[i][j].r;
-      result[count++] = pixels[i][j].g;
-      result[count++] = pixels[i][j].b;
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j++) {
+        file << (int)(pixels[i][j].r * max_value) << " " << (int)(pixels[i][j].g * max_value) << " " << (int)(pixels[i][j].b * max_value) << " ";
+      }
     }
   }
 
-  return result;
+  if(this->magicNumber == "P6") {
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j++) {
+        unsigned char r = (unsigned char)(pixels[i][j].r * max_value);
+        file.write((char*)&r, 1);
+        unsigned char g = (unsigned char)(pixels[i][j].g * max_value);
+        file.write((char*)&g, 1);
+        unsigned char b = (unsigned char)(pixels[i][j].b * max_value);
+        file.write((char*)&b, 1);
+      }
+    }
+  }
 }

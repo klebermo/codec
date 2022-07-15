@@ -36,10 +36,12 @@ void Bitmap::read_file(std::string file_name) {
       if(line_pixels.at(0) != '#') {
         std::string data;
         std::stringstream ss(line_pixels);
+
         std::vector<pixel> row;
         while(getline(ss, data, ' ')) {
+          int number = data.at(0) - '0';
           pixel p;
-          p.r = p.g = p.b = stoi(data);
+          p.r = p.g = p.b = number;
           row.push_back(p);
         }
         pixels.push_back(row);
@@ -49,6 +51,31 @@ void Bitmap::read_file(std::string file_name) {
 
   if(magicNumber == "P4") {
     std::cout << "P4" << std::endl;
+    int row = 0, column = 0;
+    for(; row < height; row++) {
+      std::vector<pixel> line;
+      for(; column < width; column++)
+        line.push_back(pixel{0, 0, 0});
+      pixels.push_back(line);
+    }
+
+    unsigned char c;
+    row = 0, column = 0;
+    while(file.read((char*)&c, sizeof(unsigned char))) {
+      for(int k=0; k<8; k++) {
+        bool bit = (c & (1 << k));
+        
+        pixel p;
+        if(bit)
+          p.r = p.g = p.b = 1;
+        else
+          p.r = p.g = p.b = 0;
+        pixels[row][column] = p;
+
+        if(column < width) column++;
+        else {row++; column = 0;}
+      }
+    }
   }
 }
 
@@ -59,26 +86,25 @@ void Bitmap::write_file(std::string file_name) {
   file << width << " " << height << std::endl;
 
   if(magicNumber == "P1") {
-    //
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j++) {
+        file << (int)pixels[i][j].r << " ";
+      }
+      file << std::endl;
+    }
   } else {
-    //
-  }
-}
-
-float * Bitmap::toArray() {
-  float * result = new float[width * height * 5];
-
-  int count = 0;
-  for(float i=0; i<height; i++) {
-    for(float j=0; j<width; j++) {
-      float x = j/width, y=i/height;
-      result[count++] = -1 + (2 * x);
-      result[count++] = 1 - (2 * y);
-      result[count++] = pixels[i][j].r;
-      result[count++] = pixels[i][j].g;
-      result[count++] = pixels[i][j].b;
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j+=8) {
+        unsigned char c = 0x00;
+        for(int k=0; k<8; k++) {
+          float p = pixels[i][j+k].r;
+          if(p == 1)
+            c = 0xFF;
+          else
+            c = 0x00;
+        }
+        file.write((char*)&c, 1);
+      }
     }
   }
-
-  return result;
 }

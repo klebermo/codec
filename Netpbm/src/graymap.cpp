@@ -37,6 +37,7 @@ void Graymap::read_file(std::string file_name) {
       if(line_pixels.at(0) != '#') {
         std::string data;
         std::stringstream ss(line_pixels);
+
         std::vector<pixel> row;
         while(getline(ss, data, ' ')) {
           pixel p;
@@ -61,28 +62,20 @@ void Graymap::write_file(std::string file_name) {
   file << max_value << std::endl;
 
   if(this->magicNumber == "P2") {
-    //
-  }
-
-  if(this->magicNumber == "P5") {
-    //
-  }
-}
-
-float * Graymap::toArray() {
-  float * result = new float[width * height * 5];
-
-  int count = 0;
-  for(float i=0; i<height; i++) {
-    for(float j=0; j<width; j++) {
-      float x = j/width, y = i/height;
-      result[count++] = -1 + (2 * x);
-      result[count++] = 1 - (2 * y);
-      result[count++] = pixels[i][j].r;
-      result[count++] = pixels[i][j].g;
-      result[count++] = pixels[i][j].b;
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j++) {
+        file << (int)(pixels[i][j].r * max_value) << " ";
+      }
+      file << std::endl;
     }
   }
 
-  return result;
+  if(this->magicNumber == "P5") {
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j++) {
+        unsigned char c = (unsigned char)(pixels[i][j].r * max_value);
+        file.write((char*)&c, 1);
+      }
+    }
+  }
 }
