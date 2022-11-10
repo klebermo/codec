@@ -13,7 +13,7 @@ int Netpbm::getHeight() {
 }
 
 float * Netpbm::toArray() {
-  float * result = new float(width * height * 5);
+  float * result = new float[width * height * 5];
 
   int count = 0;
   for(int i=0; i<height; i++) {
@@ -21,9 +21,9 @@ float * Netpbm::toArray() {
       float x = j/width, y=i/height;
       result[count++] = -1 + (2 * x);
       result[count++] = 1 - (2 * y);
-      result[count++] = pixels[i][j]->r;
-      result[count++] = pixels[i][j]->g;
-      result[count++] = pixels[i][j]->b;
+      result[count++] = (*pixels)[i][j].r;
+      result[count++] = (*pixels)[i][j].g;
+      result[count++] = (*pixels)[i][j].b;
     }
   }
 

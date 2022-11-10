@@ -41,9 +41,7 @@ void Bitmap::read_file(std::string file_name) {
         for(int j=0; j<width; j++) {
           int value;
           file >> value;
-          pixel p;
-          p.r = p.g = p.b = value;
-          (*pixels)[i][j] = p;
+          (*pixels)[i][j].r = (*pixels)[i][j].g = (*pixels)[i][j].b = value;
         }
     }
   }
