@@ -4,14 +4,8 @@ Bitmap::Bitmap(std::string file_name) {
   read_file(file_name);
 }
 
-/*Bitmap::Bitmap(const Bitmap &other) {
-  this->magicNumber = other.magicNumber;
-  this->width = other.width;
-  this->height = other.height;
-}*/
-
 Bitmap::~Bitmap() {
-  delete pixels;
+  //
 }
 
 void Bitmap::read_file(std::string file_name) {
@@ -20,7 +14,7 @@ void Bitmap::read_file(std::string file_name) {
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
-      this->magicNumber = line_one.at(1);
+      setMagicNumber(line_one.at(1));
       break;
     }
   }
@@ -31,22 +25,23 @@ void Bitmap::read_file(std::string file_name) {
       std::stringstream ss(line_two);
 
       if(getline(ss, width, ' '))
-        this->width = stoi(width);
+        this->setWidth(stoi(width));
       
       if(getline(ss, height, ' '))
-        this->height = stoi(height);
+        this->setHeight(stoi(height));
       
       break;
     }
   }
 
-  pixels = new Matrix<pixel>(height, width);
+  setPixels(new Matrix<pixel>(getHeight(), getWidth()));
 
-  std::cout << "magicNumber: " << magicNumber << std::endl;
-  std::cout << "height: " << width << std::endl;
-  std::cout << "width: " << width << std::endl;
+  std::cout << "bitmap::read_file" << std::endl;
+  std::cout << "magicNumber: " << getMagicNumber() << std::endl;
+  std::cout << "width: " << getWidth() << std::endl;
+  std::cout << "height: " << getHeight() << std::endl;
 
-  if(magicNumber == '1') {
+  if(getMagicNumber() == '1') {
     std::vector<pixel> v;
 
     while(getline(file, line_pixels)) {
@@ -62,12 +57,12 @@ void Bitmap::read_file(std::string file_name) {
     }
 
     int counter = 0;
-    for(int i=0; i<height; i++)
-      for(int j=0; j<width; j++)
-        (*pixels)[i][j] = v[counter++];
+    for(int i=0; i<getHeight(); i++)
+      for(int j=0; j<getWidth(); j++)
+        (*getPixels())[i][j] = v[counter++];
   }
 
-  if(magicNumber == '4') {
+  if(getMagicNumber() == '4') {
     std::vector<pixel> v;
 
     while(!file.eof()) {
@@ -84,18 +79,19 @@ void Bitmap::read_file(std::string file_name) {
     }
 
     int counter = 0;
-    for(int i=0; i<height; i++)
-      for(int j=0; j<width; j++)
-        (*pixels)[i][j] = v[counter++];
+    for(int i=0; i<getHeight(); i++)
+      for(int j=0; j<getWidth(); j++)
+        (*getPixels())[i][j] = v[counter++];
   }
 }
 
 void Bitmap::write_file(std::string file_name) {
-  if(magicNumber == '1') {
+  if(getMagicNumber() == '1') {
     //
   }
 
-  if(magicNumber == '4') {
+  if(getMagicNumber() == '4') {
     //
   }
 }
+

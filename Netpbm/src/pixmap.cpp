@@ -4,14 +4,8 @@ Pixmap2::Pixmap2(std::string file_name) {
   this->read_file(file_name);
 }
 
-/*Pixmap2::Pixmap2(const Pixmap2 &other) {
-  this->magicNumber = other.magicNumber;
-  this->width = other.width;
-  this->height = other.height;
-}*/
-
 Pixmap2::~Pixmap2() {
-  delete pixels;
+  //delete pixels;
 }
 
 void Pixmap2::read_file(std::string file_name) {
@@ -20,7 +14,7 @@ void Pixmap2::read_file(std::string file_name) {
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
-      magicNumber = line_one.at(1);
+      setMagicNumber(line_one.at(1));
       break;
     }
   }
@@ -31,10 +25,10 @@ void Pixmap2::read_file(std::string file_name) {
       std::stringstream ss(line_two);
 
       if(getline(ss, width, ' '))
-        this->width = stoi(width);
+        setWidth(stoi(width));
       
       if(getline(ss, height, ' '))
-        this->height = stoi(height);
+        setHeight(stoi(height));
       
       break;
     }
@@ -47,21 +41,21 @@ void Pixmap2::read_file(std::string file_name) {
     }
   }
   
-  if(magicNumber == '3') {
+  if(getMagicNumber() == '3') {
     //
   }
 
-  if(magicNumber == '6') {
+  if(getMagicNumber() == '6') {
     //
   }
 }
 
 void Pixmap2::write_file(std::string file_name) {
-  if(magicNumber == '3') {
+  if(getMagicNumber() == '3') {
     //
   }
 
-  if(magicNumber == '6') {
+  if(getMagicNumber() == '6') {
     //
   }
 }

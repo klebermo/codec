@@ -1,31 +1,42 @@
 #include "netpbm.hpp"
 
-Netpbm::Netpbm() {}
-
-Netpbm::Netpbm(const Netpbm &other) {
-  this->magicNumber = other.magicNumber;
-  this->width = other.width;
-  this->height = other.height;
-}
-
-Netpbm::~Netpbm() {}
-
 char Netpbm::getMagicNumber() {
-  return this->magicNumber;
-}
-
-int Netpbm::getWidth() {
-  return this->width;
+  return magicNumber;
 }
 
 int Netpbm::getHeight() {
-  return this->height;
+  return height;
+}
+
+int Netpbm::getWidth() {
+  return width;
+}
+
+Matrix<pixel> * Netpbm::getPixels() {
+    return pixels;
+}
+
+void Netpbm::setMagicNumber(char value) {
+    this->magicNumber = value;
+}
+
+void Netpbm::setHeight(int value) {
+    this->height = value;
+}
+
+void Netpbm::setWidth(int value) {
+    this->width = value;
+}
+
+void Netpbm::setPixels(Matrix<pixel> * value) {
+    this->pixels = value;
 }
 
 float * Netpbm::toArray() {
+  std::cout << "bitmap::toArray" << std::endl;
   std::cout << "magicNumber: " << magicNumber << std::endl;
-  std::cout << "height: " << width << std::endl;
   std::cout << "width: " << width << std::endl;
+  std::cout << "height: " << height << std::endl;
   float * result = new float[width * height * 5];
 
   int count = 0;

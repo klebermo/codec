@@ -18,6 +18,7 @@ private:
     T ** values;
 public:
     Matrix(int height, int width) {
+        std::cout << "[matrix] constructor" << std::endl;
         values = new T*[height];
         for(int i=0; i<height; i++)
             values[i] = new T[width];
@@ -26,6 +27,7 @@ public:
     }
 
     Matrix(const Matrix<T> &other) {
+        std::cout << "[matrix] copy constructor" << std::endl;
         height = other.height;
         width = other.width;
         values = new T*[height];
@@ -37,6 +39,7 @@ public:
     }
 
     ~Matrix() {
+        std::cout << "[matrix] destructor" << std::endl;
         for(int i=0; i<height; i++)
             delete[] values[i];
         delete[] values;

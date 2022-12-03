@@ -1,32 +1,34 @@
-#ifndef LIB_NETPBM_H
-#define LIB_NETPBM_H
+#ifndef NETPBM_H
+#define NETPBM_H
 
 #include "matrix.hpp"
 
 struct Pixel {
-  float r, g, b;
+    float r, g, b;
 };
 typedef struct Pixel pixel;
 
 class Netpbm {
-protected:
+private:
   char magicNumber;
   int width;
   int height;
   Matrix<pixel> * pixels;
 public:
-  Netpbm();
-  Netpbm(const Netpbm &other);
-  virtual ~Netpbm() = 0;
-
   char getMagicNumber();
-  int getWidth();
   int getHeight();
+  int getWidth();
+  Matrix<pixel> * getPixels();
 
-  virtual void read_file(char * file_name) = 0;
-  virtual void write_file(char * file_name) = 0;
-  
+  void setMagicNumber(char value);
+  void setHeight(int value);
+  void setWidth(int value);
+  void setPixels(Matrix<pixel> * value);
+
+  virtual void read_file(std::string file_name) = 0;
+  virtual void write_file(std::string file_name) = 0;
+
   float * toArray();
 };
 
-#endif  // LIB_NETPBM_H
+#endif  // NETPBM_H

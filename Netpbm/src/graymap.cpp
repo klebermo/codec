@@ -4,14 +4,8 @@ Graymap::Graymap(std::string file_name) {
   this->read_file(file_name);
 }
 
-/*Graymap::Graymap(const Graymap &other) {
-  this->magicNumber = other.magicNumber;
-  this->width = other.width;
-  this->height = other.height;
-}*/
-
 Graymap::~Graymap() {
-  delete pixels;
+  //delete pixels;
 }
 
 void Graymap::read_file(std::string file_name) {
@@ -20,7 +14,7 @@ void Graymap::read_file(std::string file_name) {
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
-      magicNumber = line_one.at(1);
+      setMagicNumber(line_one.at(1));
       break;
     }
   }
@@ -31,10 +25,10 @@ void Graymap::read_file(std::string file_name) {
       std::stringstream ss(line_two);
 
       if(getline(ss, width, ' '))
-        this->width = stoi(width);
+        setWidth(stoi(width));
       
       if(getline(ss, height, ' '))
-        this->height = stoi(height);
+        setHeight(stoi(height));
       
       break;
     }
@@ -47,21 +41,21 @@ void Graymap::read_file(std::string file_name) {
     }
   }
 
-  if(magicNumber == '2') {
+  if(getMagicNumber() == '2') {
     //
   }
 
-  if(magicNumber == '5') {
+  if(getMagicNumber() == '5') {
     //
   }
 }
 
 void Graymap::write_file(std::string file_name) {
-  if(magicNumber == '2') {
+  if(getMagicNumber() == '2') {
     //
   }
 
-  if(magicNumber == '5') {
+  if(getMagicNumber() == '5') {
     //
   }
 }
