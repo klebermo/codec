@@ -16,8 +16,10 @@ protected:
   Matrix<pixel> * pixels;
 public:
   Netpbm();
-  ~Netpbm();
+  Netpbm(const Netpbm &other);
+  virtual ~Netpbm() = 0;
 
+  char getMagicNumber();
   int getWidth();
   int getHeight();
 

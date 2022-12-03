@@ -2,7 +2,17 @@
 
 Netpbm::Netpbm() {}
 
+Netpbm::Netpbm(const Netpbm &other) {
+  this->magicNumber = other.magicNumber;
+  this->width = other.width;
+  this->height = other.height;
+}
+
 Netpbm::~Netpbm() {}
+
+char Netpbm::getMagicNumber() {
+  return this->magicNumber;
+}
 
 int Netpbm::getWidth() {
   return this->width;
@@ -13,6 +23,9 @@ int Netpbm::getHeight() {
 }
 
 float * Netpbm::toArray() {
+  std::cout << "magicNumber: " << magicNumber << std::endl;
+  std::cout << "height: " << width << std::endl;
+  std::cout << "width: " << width << std::endl;
   float * result = new float[width * height * 5];
 
   int count = 0;

@@ -5,6 +5,7 @@
 
 class Netpbm {
 public:
+  char getMagicNumber();
   int getWidth();
   int getHeight();
   
