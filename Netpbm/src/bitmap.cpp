@@ -4,10 +4,6 @@ Bitmap::Bitmap(std::string file_name) {
   read_file(file_name);
 }
 
-Bitmap::~Bitmap() {
-  //
-}
-
 void Bitmap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;

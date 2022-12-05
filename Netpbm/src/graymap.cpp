@@ -4,10 +4,6 @@ Graymap::Graymap(std::string file_name) {
   this->read_file(file_name);
 }
 
-Graymap::~Graymap() {
-  //delete pixels;
-}
-
 void Graymap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_three, line_pixels;

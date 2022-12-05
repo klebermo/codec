@@ -4,10 +4,6 @@ Pixmap2::Pixmap2(std::string file_name) {
   this->read_file(file_name);
 }
 
-Pixmap2::~Pixmap2() {
-  //delete pixels;
-}
-
 void Pixmap2::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_three, line_pixels;

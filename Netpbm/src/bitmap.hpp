@@ -6,7 +6,6 @@
 class Bitmap : public Netpbm {
 public:
   Bitmap(std::string file_name);
-  ~Bitmap();
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);

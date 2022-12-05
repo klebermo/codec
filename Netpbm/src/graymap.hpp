@@ -8,7 +8,6 @@ private:
   int max_value;
 public:
   Graymap(std::string file_name);
-  ~Graymap();
 
   void read_file(std::string file_name);
   void write_file(std::string file_name);

@@ -15,6 +15,8 @@ private:
   int height;
   Matrix<pixel> * pixels;
 public:
+  ~Netpbm();
+
   char getMagicNumber();
   int getHeight();
   int getWidth();

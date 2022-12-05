@@ -1,5 +1,9 @@
 #include "netpbm.hpp"
 
+Netpbm::~Netpbm() {
+    delete pixels;
+}
+
 char Netpbm::getMagicNumber() {
   return magicNumber;
 }
@@ -29,7 +33,7 @@ void Netpbm::setWidth(int value) {
 }
 
 void Netpbm::setPixels(Matrix<pixel> * value) {
-    this->pixels = value;
+    pixels = value;
 }
 
 float * Netpbm::toArray() {
@@ -37,6 +41,7 @@ float * Netpbm::toArray() {
   std::cout << "magicNumber: " << magicNumber << std::endl;
   std::cout << "width: " << width << std::endl;
   std::cout << "height: " << height << std::endl;
+
   float * result = new float[width * height * 5];
 
   int count = 0;
