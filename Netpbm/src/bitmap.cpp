@@ -32,11 +32,6 @@ void Bitmap::read_file(std::string file_name) {
 
   setPixels(new Matrix<pixel>(getHeight(), getWidth()));
 
-  std::cout << "bitmap::read_file" << std::endl;
-  std::cout << "magicNumber: " << getMagicNumber() << std::endl;
-  std::cout << "width: " << getWidth() << std::endl;
-  std::cout << "height: " << getHeight() << std::endl;
-
   if(getMagicNumber() == '1') {
     std::vector<pixel> v;
 

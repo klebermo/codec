@@ -39,4 +39,4 @@ public:
   void write_file(std::string file_name);
 };
 
-#endif  // LIB_NETPBM_H
+#endif
