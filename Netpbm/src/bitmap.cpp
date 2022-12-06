@@ -1,17 +1,14 @@
 #include "bitmap.hpp"
 
-Bitmap::Bitmap(std::string file_name) {
-  read_file(file_name);
-}
-
 void Bitmap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;
+  char magicNumber;
   std::string width, height;
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
-      this->magicNumber = line_one.at(1);
+      magicNumber = line_one.at(1);
       break;
     }
   }
@@ -19,20 +16,13 @@ void Bitmap::read_file(std::string file_name) {
   while(getline(file, line_two)) {
     if(line_two.size() > 0 && line_two.at(0) != '#') {
       std::stringstream ss(line_two);
-
-      if(getline(ss, width, ' '))
-        this->width = stoi(width);
-      
-      if(getline(ss, height, ' '))
-        this->height = stoi(height);
-      
+      getline(ss, width, ' ');
+      getline(ss, height, ' ');
       break;
     }
   }
 
-  pixels.resize(stoi(height), stoi(width));
-
-  if(this->magicNumber == '1') {
+  if(magicNumber == '1') {
     std::vector<pixel> v;
 
     while(getline(file, line_pixels)) {
@@ -53,7 +43,7 @@ void Bitmap::read_file(std::string file_name) {
         pixels[i][j] = v[counter++];
   }
 
-  if(this->magicNumber == '4') {
+  if(magicNumber == '4') {
     std::vector<pixel> v;
 
     while(!file.eof()) {
@@ -72,17 +62,14 @@ void Bitmap::read_file(std::string file_name) {
     int counter = 0;
     for(int i=0; i<stoi(height); i++)
       for(int j=0; j<stoi(width); j++)
-        pixels[i][j] = v[counter++];
+        pixels[i][j] =  v[counter++];
   }
 }
 
-void Bitmap::write_file(std::string file_name) {
-  if(this->magicNumber == '1') {
-    //
-  }
-
-  if(this->magicNumber == '4') {
-    //
-  }
+void Bitmap::write_ascii_file(std::string file_name) {
+  //
 }
 
+void Bitmap::write_binary_file(std::string file_name) {
+  //
+}
