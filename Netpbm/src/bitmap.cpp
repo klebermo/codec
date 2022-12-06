@@ -7,32 +7,32 @@ Bitmap::Bitmap(std::string file_name) {
 void Bitmap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;
+  std::string width, height;
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
-      setMagicNumber(line_one.at(1));
+      this->magicNumber = line_one.at(1);
       break;
     }
   }
 
   while(getline(file, line_two)) {
     if(line_two.size() > 0 && line_two.at(0) != '#') {
-      std::string width, height;
       std::stringstream ss(line_two);
 
       if(getline(ss, width, ' '))
-        this->setWidth(stoi(width));
+        this->width = stoi(width);
       
       if(getline(ss, height, ' '))
-        this->setHeight(stoi(height));
+        this->height = stoi(height);
       
       break;
     }
   }
 
-  setPixels(new Matrix<pixel>(getHeight(), getWidth()));
+  pixels.resize(stoi(height), stoi(width));
 
-  if(getMagicNumber() == '1') {
+  if(this->magicNumber == '1') {
     std::vector<pixel> v;
 
     while(getline(file, line_pixels)) {
@@ -48,12 +48,12 @@ void Bitmap::read_file(std::string file_name) {
     }
 
     int counter = 0;
-    for(int i=0; i<getHeight(); i++)
-      for(int j=0; j<getWidth(); j++)
-        (*getPixels())[i][j] = v[counter++];
+    for(int i=0; i<stoi(height); i++)
+      for(int j=0; j<stoi(width); j++)
+        pixels[i][j] = v[counter++];
   }
 
-  if(getMagicNumber() == '4') {
+  if(this->magicNumber == '4') {
     std::vector<pixel> v;
 
     while(!file.eof()) {
@@ -70,18 +70,18 @@ void Bitmap::read_file(std::string file_name) {
     }
 
     int counter = 0;
-    for(int i=0; i<getHeight(); i++)
-      for(int j=0; j<getWidth(); j++)
-        (*getPixels())[i][j] = v[counter++];
+    for(int i=0; i<stoi(height); i++)
+      for(int j=0; j<stoi(width); j++)
+        pixels[i][j] = v[counter++];
   }
 }
 
 void Bitmap::write_file(std::string file_name) {
-  if(getMagicNumber() == '1') {
+  if(this->magicNumber == '1') {
     //
   }
 
-  if(getMagicNumber() == '4') {
+  if(this->magicNumber == '4') {
     //
   }
 }

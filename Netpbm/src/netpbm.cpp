@@ -1,53 +1,21 @@
 #include "netpbm.hpp"
 
-Netpbm::~Netpbm() {
-  delete pixels;
-}
+int Netpbm::getHeight() { return height; };
 
-char Netpbm::getMagicNumber() {
-  return magicNumber;
-}
+int Netpbm::getWidth() { return width; };
 
-int Netpbm::getHeight() {
-  return height;
-}
+std::vector<float> Netpbm::toArray() {
+  std::vector<float> result;
+  size_t h = pixels.getHeight(), w = pixels.getWidth();
 
-int Netpbm::getWidth() {
-  return width;
-}
-
-Matrix<pixel> * Netpbm::getPixels() {
-    return pixels;
-}
-
-void Netpbm::setMagicNumber(char value) {
-    this->magicNumber = value;
-}
-
-void Netpbm::setHeight(int value) {
-    this->height = value;
-}
-
-void Netpbm::setWidth(int value) {
-    this->width = value;
-}
-
-void Netpbm::setPixels(Matrix<pixel> * value) {
-    pixels = value;
-}
-
-float * Netpbm::toArray() {
-  float * result = new float[width * height * 5];
-
-  int count = 0;
-  for(int i=0; i<height; i++) {
-    for(int j=0; j<width; j++) {
-      float x = j/width, y=i/height;
-      result[count++] = -1 + (2 * x);
-      result[count++] = 1 - (2 * y);
-      result[count++] = (*pixels)[i][j].r;
-      result[count++] = (*pixels)[i][j].g;
-      result[count++] = (*pixels)[i][j].b;
+  for(size_t i=0; i<h; i++) {
+    for(size_t j=0; j<w; j++) {
+      float x = j/w, y=i/h;
+      result.push_back(-1 + (2 * x));
+      result.push_back(1 - (2 * y));
+      result.push_back(pixels[i][j].r);
+      result.push_back(pixels[i][j].g);
+      result.push_back(pixels[i][j].b);
     }
   }
 

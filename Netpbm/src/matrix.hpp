@@ -9,67 +9,82 @@
 #include <bitset>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
 
 template <class T>
 class Matrix {
 private:
-    int height;
-    int width;
+    size_t height;
+    size_t width;
     T ** values;
 public:
-    Matrix(int h, int w) {
-        height = h;
-        width = w;
-
-        values = new T*[h];
-        for(int i=0; i<h; i++)
-            values[i] = new T[w];
+    Matrix() {
+        height = width = 0;
+        values = nullptr;
     }
 
-    Matrix(const Matrix<T> &other) {
-        height = other.height;
-        width = other.width;
+    Matrix(int h, int w) : height(h), width(w), values(new T*[height]) {
+        for (size_t i {}; i < height; ++i) {
+            values[i] = new T[width];
+        }
+    }
 
-        values = new T*[other.height];
-        for(int i=0; i<other.height; i++)
-            values[i] = new T[other.width];
+    Matrix(const Matrix<T> &other) : Matrix(other.height, other.width) {
+        for(size_t ht {}; ht < height; ++ht)
+            std::copy_n(other.values[ht], width, values[ht]);
+    }
 
-        for(int i=0; i<other.height; i++)
-            for(int j=0; j<other.width; j++)
-                values[i][j] = other.values[i][j];
+    Matrix(Matrix &&other) {
+        swap(other);
+    }
+
+    Matrix &operator=(Matrix other) {
+        swap(other);
+        return *this;
+    }
+
+    size_t getHeight() const {
+        return height;
+    }
+
+    size_t getWidth() const {
+        return width;
     }
 
     ~Matrix() {
-        for(int i=0; i<height; i++) delete[] values[i];
+        clear();
+    }
+
+    void swap(Matrix &other) {
+        std::swap(height, other.height);
+        std::swap(width, other.width);
+        std::swap(values, other.values);
+    }
+
+    void clear() {
+        for (size_t i {}; i < height; ++i)
+            delete[] values[i];
         delete[] values;
+        height = width = 0;
+        values = nullptr;
     }
 
-    T* operator[](int index) {
-        return values[index];
-    }
-
-    Matrix<T>& operator=(const Matrix<T> &other) {
-        if(this == &other)
-            return *this;
-        
-        if(height != other.height || width != other.width) {
-            for(int i=0; i<height; i++)
-                delete[] values[i];
-            delete[] values;
-
-            height = other.height;
-            width = other.width;
-
-            values = new T*[other.height];
-            for(int i=0; i<other.height; i++)
-                values[i] = new T[other.width];
+    void resize(size_t h, size_t w) {
+        clear();
+        height = h;
+        width = w;
+        values = new T*[height];
+        for (size_t i {}; i < height; ++i) {
+            values[i] = new T[width];
         }
+    }
 
-        for(int i=0; i<height; i++)
-            for(int j=0; j<width; j++)
-                values[i][j] = other.values[i][j];
-        
-        return *this;
+    T* operator[](size_t i) {
+        return values[i];
+    }
+
+    const T* operator[](size_t i) const {
+        return values[i];
     }
 };
 

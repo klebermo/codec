@@ -5,13 +5,11 @@
 
 class Netpbm {
 public:
-  char getMagicNumber();
-  int getHeight();
-  int getWidth();
-
   virtual void read_file(std::string file_name) = 0;
   virtual void write_file(std::string file_name) = 0;
 
+  int getHeight();
+  int getWidth();  
   float * toArray();
 };
 
