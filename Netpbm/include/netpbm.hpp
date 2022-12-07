@@ -2,16 +2,17 @@
 #define LIB_NETPBM_H
 
 #include <string>
+#include <vector>
 
 class Netpbm {
 public:
   virtual void read_file(std::string file_name) = 0;
   virtual void write_ascii_file(std::string file_name) = 0;
   virtual void write_binary_file(std::string file_name) = 0;
-  
+
   int getHeight();
   int getWidth();
-  float * toArray();
+  std::vector<float> toArray();
 };
 
 class Bitmap : public Netpbm {

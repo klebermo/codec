@@ -38,9 +38,13 @@ void Bitmap::read_file(std::string file_name) {
     }
 
     int counter = 0;
-    for(int i=0; i<stoi(height); i++)
-      for(int j=0; j<stoi(width); j++)
-        pixels[i][j] = v[counter++];
+    for(int i=0; i<stoi(height); i++) {
+      std::vector<pixel> row;
+      for(int j=0; j<stoi(width); j++) {
+        row.push_back(v[counter++]);
+      }
+      pixels.push_back(row);
+    }
   }
 
   if(magicNumber == '4') {
@@ -60,9 +64,13 @@ void Bitmap::read_file(std::string file_name) {
     }
 
     int counter = 0;
-    for(int i=0; i<stoi(height); i++)
-      for(int j=0; j<stoi(width); j++)
-        pixels[i][j] =  v[counter++];
+    for(int i=0; i<stoi(height); i++) {
+      std::vector<pixel> row;
+      for(int j=0; j<stoi(width); j++) {
+        row.push_back(v[counter++]);
+      }
+      pixels.push_back(row);
+    }
   }
 }
 
