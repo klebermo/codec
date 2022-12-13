@@ -15,7 +15,7 @@ std::vector<float> Netpbm::toArray() {
 
   for(size_t i=0; i<h; i++) {
     for(size_t j=0; j<w; j++) {
-      float x = j/w, y=i/h;
+      float x = (float)j/(float)w, y = (float)i/(float)h;
       result.push_back(-1 + (2 * x));
       result.push_back(1 - (2 * y));
       result.push_back(this->pixels[i][j].r);
