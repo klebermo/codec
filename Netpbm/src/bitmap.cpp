@@ -3,6 +3,7 @@
 void Bitmap::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_pixels;
+
   char magicNumber;
   std::string width, height;
 
@@ -32,17 +33,18 @@ void Bitmap::read_file(std::string file_name) {
         while(getline(ss, value, ' ')) {
           pixel p;
           p.r = p.g = p.b = stoi(value);
-          v.push_back(p);
+          v.emplace_back(p);
         }
       }
     }
 
-    int counter = 0;
-    for(int i=0; i<stoi(height); i++) {
+    size_t h = stoi(height), w = stoi(width);
+
+    int index = 0;
+    for(size_t i=0; i<h; i++) {
       std::vector<pixel> row;
-      for(int j=0; j<stoi(width); j++) {
-        row.push_back(v[counter++]);
-      }
+      for(size_t j=0; j<w; j++)
+        row.push_back(v[index++]);
       pixels.push_back(row);
     }
   }
@@ -50,9 +52,8 @@ void Bitmap::read_file(std::string file_name) {
   if(magicNumber == '4') {
     std::vector<pixel> v;
 
-    while(!file.eof()) {
-      unsigned char data[1];
-      file.read((char*)data, 1);
+    unsigned char data[1];
+    while(file.read((char*)data, 1)) {
       for(int i=0; i<8; i++) {
         pixel p;
         if(data[0]&(1<<i))
@@ -66,9 +67,7 @@ void Bitmap::read_file(std::string file_name) {
     int counter = 0;
     for(int i=0; i<stoi(height); i++) {
       std::vector<pixel> row;
-      for(int j=0; j<stoi(width); j++) {
-        row.push_back(v[counter++]);
-      }
+      for(int j=0; j<stoi(width); j++) row.push_back(v[counter++]);
       pixels.push_back(row);
     }
   }
