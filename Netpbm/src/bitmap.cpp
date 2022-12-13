@@ -45,7 +45,7 @@ void Bitmap::read_file(std::string file_name) {
       std::vector<pixel> row;
       for(size_t j=0; j<w; j++)
         row.push_back(v[index++]);
-      pixels.push_back(row);
+      this->pixels.push_back(row);
     }
   }
 
@@ -68,7 +68,7 @@ void Bitmap::read_file(std::string file_name) {
     for(int i=0; i<stoi(height); i++) {
       std::vector<pixel> row;
       for(int j=0; j<stoi(width); j++) row.push_back(v[counter++]);
-      pixels.push_back(row);
+      this->pixels.push_back(row);
     }
   }
 }

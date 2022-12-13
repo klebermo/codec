@@ -10,4 +10,4 @@ public:
   void write_binary_file(std::string file_name);
 };
 
-#endif  // BITMAP_H
+#endif

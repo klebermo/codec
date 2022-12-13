@@ -28,4 +28,4 @@ public:
   std::vector<float> toArray();
 };
 
-#endif  // NETPBM_H
+#endif

@@ -12,4 +12,4 @@ public:
   void write_binary_file(std::string file_name);
 };
 
-#endif  // PIXMAP_H
+#endif

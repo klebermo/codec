@@ -1,8 +1,12 @@
 #include "netpbm.hpp"
 
-int Netpbm::getHeight() { return this->pixels.size(); };
+int Netpbm::getHeight() {
+  return this->pixels.size();
+}
 
-int Netpbm::getWidth() { return this->pixels.size() > 0 ? this->pixels[0].size() : 0; };
+int Netpbm::getWidth() {
+  return this->pixels.size() > 0 ? this->pixels[0].size() : 0;
+}
 
 std::vector<float> Netpbm::toArray() { 
   std::vector<float> result;

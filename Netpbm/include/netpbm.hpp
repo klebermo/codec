@@ -4,7 +4,14 @@
 #include <string>
 #include <vector>
 
+struct Pixel {
+    float r, g, b;
+};
+typedef struct Pixel pixel;
+
 class Netpbm {
+protected:
+  std::vector<std::vector<pixel>> pixels;
 public:
   virtual void read_file(std::string file_name) = 0;
   virtual void write_ascii_file(std::string file_name) = 0;
