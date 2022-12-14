@@ -4,23 +4,24 @@
 #include <string>
 #include <vector>
 
-template<class T> class Matrix {};
-
-struct Pixel_RGB {
-  float r, g, b;
-};
-typedef struct Pixel_RGB rgb;
+#include "../../common/matrix.hpp"
+#include "../../common/pixel_rgb.hpp"
 
 class PNG {
 private:
   Matrix<rgb> pixels;
 public:
-  PNG(std::vector<float> pixels);
-  PNG(std::string file_name);
-  ~PNG();
   void read(std::string file_name);
   void write(std::string file_name);
+
   Matrix<rgb> getPixels();
+  void setPixels(Matrix<rgb> pixels);
+
+  int getWidth();
+  int getHeight();
+
+  bool isAnimation();
+  std::vector<float> toArray();
 };
 
 #endif  // LIB_PNG_H
