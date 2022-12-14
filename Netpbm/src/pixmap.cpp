@@ -7,33 +7,41 @@ void Pixmap2::read_file(std::string file_name) {
   std::string magicNumber;
   int width, height;
 
-  while(getline(file, line_one)) {
-    if(line_one.size() > 0 && line_one.at(0) != '#') {
-      std::stringstream ss(line_one);
-      ss >> magicNumber;
-      break;
-    }
+  file >> magicNumber;
+
+  while(file.peek() == '\n') file.get();
+
+  if(file.peek() == '#') {
+    std::string comment;
+    getline(file, comment);
   }
 
-  while(getline(file, line_two)) {
-    if(line_two.size() > 0 && line_two.at(0) != '#') {
-      std::stringstream ss(line_two);
-      ss >> width >> height;
-      break;
-    }
+  file >> width;
+
+  while(file.peek() == '\n') file.get();
+
+  if(file.peek() == '#') {
+    std::string comment;
+    getline(file, comment);
   }
 
-  while(getline(file, line_three)) {
-    if(line_three.size() > 0 && line_three.at(0) != '#') {
-      std::stringstream ss(line_three);
-      ss >> this->max_value;
-      break;
-    }
+  file >> height;
+
+  while(file.peek() == '\n') file.get();
+
+  if(file.peek() == '#') {
+    std::string comment;
+    getline(file, comment);
   }
 
-  std::cout << magicNumber << std::endl;
-  std::cout << width << " " << height << std::endl;
-  std::cout << this->max_value << std::endl;
+  file >> this->max_value;
+
+  while(file.peek() == '\n') file.get();
+
+  if(file.peek() == '#') {
+    std::string comment;
+    getline(file, comment);
+  }
 
   if(magicNumber.at(1) == '3') {
     std::vector<pixel> v;
@@ -45,13 +53,13 @@ void Pixmap2::read_file(std::string file_name) {
         int x;
         while(ss >> x) {
           pixel p;
-          p.r = (float)x / (float)this->max_value;
+          p.r = (float)x;
 
           ss >> x;
-          p.g = (float)x / (float)this->max_value;
+          p.g = (float)x;
 
           ss >> x;
-          p.b = (float)x / (float)this->max_value;
+          p.b = (float)x;
 
           v.emplace_back(p);
         }
@@ -74,17 +82,17 @@ void Pixmap2::read_file(std::string file_name) {
       pixel p;
 
       int number = (unsigned char)c - '0';
-      p.r = (float)number / (float)this->max_value;
+      p.r = (float)number;
 
       file.get(c);
 
       number = (unsigned char)c - '0';
-      p.g = (float)number / (float)this->max_value;
+      p.g = (float)number;
 
       file.get(c);
 
       number = (unsigned char)c - '0';
-      p.b = (float)number / (float)this->max_value;
+      p.b = (float)number;
 
       v.push_back(p);
     }
@@ -99,9 +107,37 @@ void Pixmap2::read_file(std::string file_name) {
 }
 
 void Pixmap2::write_ascii_file(std::string file_name) {
-  //
+  std::ofstream file(file_name);
+  file << "P3" << std::endl;
+  file << this->getWidth() << " " << this->getHeight() << std::endl;
+  file << this->max_value << std::endl;
+  for(int i=0; i<this->getHeight(); i++) {
+    for(int j=0; j<this->getWidth(); j++) {
+      file << (int)(this->pixels[i][j].r) << " ";
+      file << (int)(this->pixels[i][j].g) << " ";
+      file << (int)(this->pixels[i][j].b) << " ";
+    }
+    file << std::endl;
+  }
 }
 
 void Pixmap2::write_binary_file(std::string file_name) {
-  //
+  std::ofstream file(file_name);
+  file << "P6" << std::endl;
+  file << this->getWidth() << " " << this->getHeight() << std::endl;
+  file << this->max_value << std::endl;
+  for(int i=0; i<this->getHeight(); i++) {
+    for(int j=0; j<this->getWidth(); j++) {
+      char r = (char)this->pixels[i][j].r;
+      file.write(&r, 1);
+      char g = (char)this->pixels[i][j].g;
+      file.write(&g, 1);
+      char b = (char)this->pixels[i][j].b;
+      file.write(&b, 1);
+    }
+  }
+}
+
+void Pixmap2::setMaxValue(int max_value) {
+  this->max_value = max_value;
 }

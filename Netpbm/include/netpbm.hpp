@@ -11,6 +11,7 @@ typedef struct Pixel pixel;
 
 class Netpbm {
 protected:
+  int max_value;
   std::vector<std::vector<pixel>> pixels;
 public:
   virtual void read_file(std::string file_name) = 0;
@@ -19,6 +20,7 @@ public:
 
   int getHeight();
   int getWidth();
+  void setPixels(std::vector<std::vector<pixel>> pixels);
   std::vector<float> toArray();
 };
 
@@ -36,6 +38,7 @@ public:
   void read_file(std::string file_name);
   void write_ascii_file(std::string file_name);
   void write_binary_file(std::string file_name);
+  void setMaxValue(int max_value);
 };
 
 class Pixmap2 : public Netpbm {
@@ -45,6 +48,7 @@ public:
   void read_file(std::string file_name);
   void write_ascii_file(std::string file_name);
   void write_binary_file(std::string file_name);
+  void setMaxValue(int max_value);
 };
 
 #endif
