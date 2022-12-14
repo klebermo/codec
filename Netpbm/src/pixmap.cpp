@@ -4,12 +4,13 @@ void Pixmap2::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_three, line_pixels;
 
-  char magicNumber;
+  std::string magicNumber;
   int width, height;
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
-      magicNumber = line_one.at(1);
+      std::stringstream ss(line_one);
+      ss >> magicNumber;
       break;
     }
   }
@@ -24,28 +25,33 @@ void Pixmap2::read_file(std::string file_name) {
 
   while(getline(file, line_three)) {
     if(line_three.size() > 0 && line_three.at(0) != '#') {
-      this->max_value = stoi(line_three);
+      std::stringstream ss(line_three);
+      ss >> this->max_value;
       break;
     }
   }
-  
-  if(magicNumber == '3') {
+
+  std::cout << magicNumber << std::endl;
+  std::cout << width << " " << height << std::endl;
+  std::cout << this->max_value << std::endl;
+
+  if(magicNumber.at(1) == '3') {
     std::vector<pixel> v;
 
     while(getline(file, line_pixels)) {
       if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
         std::stringstream ss(line_pixels);
-        std::string value;
 
-        while(getline(ss, value, ' ')) {
+        int x;
+        while(ss >> x) {
           pixel p;
-          p.r = stoi(value) / this->max_value;
+          p.r = (float)x / (float)this->max_value;
 
-          getline(ss, value, ' ');
-          p.g = stoi(value) / this->max_value;
+          ss >> x;
+          p.g = (float)x / (float)this->max_value;
 
-          getline(ss, value, ' ');
-          p.b = stoi(value) / this->max_value;
+          ss >> x;
+          p.b = (float)x / (float)this->max_value;
 
           v.emplace_back(p);
         }
@@ -60,25 +66,25 @@ void Pixmap2::read_file(std::string file_name) {
     }
   }
 
-  if(magicNumber == '6') {
+  if(magicNumber.at(1) == '6') {
     std::vector<pixel> v;
 
     char c;
     while(file.get(c)) {
       pixel p;
 
-      int number = c - '0';
-      p.r = number / this->max_value;
+      int number = (unsigned char)c - '0';
+      p.r = (float)number / (float)this->max_value;
 
       file.get(c);
 
-      number = c - '0';
-      p.g = number / this->max_value;
+      number = (unsigned char)c - '0';
+      p.g = (float)number / (float)this->max_value;
 
       file.get(c);
 
-      number = c - '0';
-      p.b = number / this->max_value;
+      number = (unsigned char)c - '0';
+      p.b = (float)number / (float)this->max_value;
 
       v.push_back(p);
     }

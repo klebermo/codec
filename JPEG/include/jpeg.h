@@ -1,11 +1,31 @@
 #ifndef LIB_JPEG_H
 #define LIB_JPEG_H
 
+#include <string>
+#include <vector>
+
+template<class T> class Matrix {};
+
+struct Pixel_RGB {
+  float r, g, b;
+};
+typedef struct Pixel_RGB rgb;
+
+struct Pixel_YCbCr {
+  float y, cb, cr;
+};
+typedef struct Pixel_YCbCr ycbcr;
+
 class JPEG {
+private:
+  Matrix<rgb> pixels;
 public:
-  JPEG();
-  JPEG(char * file_name);
+  JPEG(std::vector<float> pixels);
+  JPEG(std::string file_name);
   ~JPEG();
+  void read(std::string file_name);
+  void write(std::string file_name);
+  Matrix<rgb> getPixels();
 };
 
 #endif  // LIB_JPEG_H
