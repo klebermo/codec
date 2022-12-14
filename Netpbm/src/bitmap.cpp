@@ -5,7 +5,7 @@ void Bitmap::read_file(std::string file_name) {
   std::string line_one, line_two, line_pixels;
 
   char magicNumber;
-  std::string width, height;
+  int width, height;
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
@@ -17,8 +17,7 @@ void Bitmap::read_file(std::string file_name) {
   while(getline(file, line_two)) {
     if(line_two.size() > 0 && line_two.at(0) != '#') {
       std::stringstream ss(line_two);
-      getline(ss, width, ' ');
-      getline(ss, height, ' ');
+      ss >> width >> height;
       break;
     }
   }
@@ -32,18 +31,20 @@ void Bitmap::read_file(std::string file_name) {
         std::string value;
         while(getline(ss, value, ' ')) {
           pixel p;
-          p.r = p.g = p.b = stoi(value);
+          int x = stoi(value);
+          if(x == 0)
+            p.r = p.g = p.b = 1;
+          else
+            p.r = p.g = p.b = 0;
           v.emplace_back(p);
         }
       }
     }
 
-    size_t h = stoi(height), w = stoi(width);
-
     int index = 0;
-    for(size_t i=0; i<h; i++) {
+    for(int i=0; i<height; i++) {
       std::vector<pixel> row;
-      for(size_t j=0; j<w; j++) row.push_back(v[index++]);
+      for(int j=0; j<width; j++) row.push_back(v[index++]);
       this->pixels.push_back(row);
     }
   }
@@ -53,23 +54,22 @@ void Bitmap::read_file(std::string file_name) {
 
     char c;
     while(file.get(c)) {
-      for(int i=0; i<8; i++) {
-        pixel p;
-        if((c & (1 << i)) != 0)
-          p.r = p.g = p.b = 1;
-        else
-          p.r = p.g = p.b = 0;
-        v.push_back(p);
-      }
+        for(int i=0; i<8; i++) {
+            pixel p;
+            int x = (c & (1 << (i ^ 7))) != 0;
+            if(x == 0)
+              p.r = p.g = p.b = 1;
+            else
+              p.r = p.g = p.b = 0;
+            v.push_back(p);
+        }
     }
 
-    size_t h = stoi(height), w = stoi(width);
-
     int counter = 0;
-    for(size_t i=0; i<h; i++) {
-      std::vector<pixel> row;
-      for(size_t j=0; j<w; j++) row.push_back(v[counter++]);
-      this->pixels.push_back(row);
+    for(int i=0; i<height; i++) {
+        std::vector<pixel> row;
+        for(int j=0; j<((width + 7) & -8); j++) row.push_back(v[counter++]);
+        pixels.push_back(row);
     }
   }
 }

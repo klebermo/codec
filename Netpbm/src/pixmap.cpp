@@ -3,8 +3,9 @@
 void Pixmap2::read_file(std::string file_name) {
   std::ifstream file(file_name);
   std::string line_one, line_two, line_three, line_pixels;
+
   char magicNumber;
-  std::string width, height;
+  int width, height;
 
   while(getline(file, line_one)) {
     if(line_one.size() > 0 && line_one.at(0) != '#') {
@@ -16,8 +17,7 @@ void Pixmap2::read_file(std::string file_name) {
   while(getline(file, line_two)) {
     if(line_two.size() > 0 && line_two.at(0) != '#') {
       std::stringstream ss(line_two);
-      getline(ss, width, ' ');
-      getline(ss, height, ' ');
+      ss >> width >> height;
       break;
     }
   }
@@ -52,12 +52,10 @@ void Pixmap2::read_file(std::string file_name) {
       }
     }
 
-    size_t h = stoi(height), w = stoi(width);
-
     int index = 0;
-    for(size_t i=0; i<h; i++) {
+    for(int i=0; i<height; i++) {
       std::vector<pixel> row;
-      for(size_t j=0; j<w; j++) row.push_back(v[index++]);
+      for(int j=0; j<width; j++) row.push_back(v[index++]);
       this->pixels.push_back(row);
     }
   }
@@ -69,31 +67,26 @@ void Pixmap2::read_file(std::string file_name) {
     while(file.get(c)) {
       pixel p;
 
-      unsigned char uc = (unsigned char)c;
-      int number = (int)uc;
+      int number = c - '0';
       p.r = number / this->max_value;
 
       file.get(c);
 
-      uc = (unsigned char)c;
-      number = (int)uc;
+      number = c - '0';
       p.g = number / this->max_value;
 
       file.get(c);
 
-      uc = (unsigned char)c;
-      number = (int)uc;
+      number = c - '0';
       p.b = number / this->max_value;
 
       v.push_back(p);
     }
 
-    size_t h = stoi(height), w = stoi(width);
-
     int counter = 0;
-    for(size_t i=0; i<h; i++) {
+    for(int i=0; i<height; i++) {
       std::vector<pixel> row;
-      for(size_t j=0; j<w; j++) row.push_back(v[counter++]);
+      for(int j=0; j<width; j++) row.push_back(v[counter++]);
       this->pixels.push_back(row);
     }
   }
