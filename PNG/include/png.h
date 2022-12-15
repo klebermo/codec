@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../../common/matrix.hpp"
-#include "../../common/pixel_rgb.hpp"
+#include "../../common/pixel.hpp"
 
 class PNG {
 private:
@@ -15,7 +15,7 @@ public:
   void write(std::string file_name);
 
   Matrix<rgb> getPixels();
-  void setPixels(Matrix<rgb> pixels);
+  void setPixels(Matrix<RgbPixel> pixels);
 
   int getWidth();
   int getHeight();
