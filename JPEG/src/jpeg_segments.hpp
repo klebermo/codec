@@ -117,7 +117,7 @@ struct RST7 {
 typedef struct RST7 RST7;
 
 struct JFIF_APP0 {
-  unsigned char marker[2] = {0xFF, 0xE0};
+  unsigned char marker[2];
   unsigned char length[2];
   unsigned char identifier[5] = {'J', 'F', 'I', 'F', 0x00};
   unsigned char version[2] = {0x01, 0x01};
@@ -173,16 +173,5 @@ struct EOI {
   unsigned char marker[2] = {0xFF, 0xD9};
 };
 typedef struct EOI EOI;
-
-class JpegFile {
-public:   
-    virtual void readFile(std::string filename) = 0;
-    virtual void writeFile(std::string filename) = 0;
-
-    std::vector<float> toArray();
-};
-
-#include "jfif.hpp"
-#include "exif.hpp"
 
 #endif

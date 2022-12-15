@@ -1,6 +1,8 @@
 #ifndef JFIF_HPP
 #define JFIF_HPP
 
+#include "jpeg_file.hpp"
+
 class JFIF : public JpegFile {
 private:
     SOI soi;

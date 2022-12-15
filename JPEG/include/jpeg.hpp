@@ -1,7 +1,7 @@
-#ifndef LIB_JPEG_H
-#define LIB_JPEG_H
+#ifndef JPEG_H
+#define JPEG_H
 
-#include "jpeg_segments.hpp"
+#include "jpeg_file.hpp"
 
 class JPEG {
 private:
@@ -13,4 +13,4 @@ public:
   std::vector<float> toArray();
 };
 
-#endif  // LIB_JPEG_H
+#endif

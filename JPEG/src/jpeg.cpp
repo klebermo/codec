@@ -1,4 +1,4 @@
-#include "jpeg.h"
+#include "jpeg.hpp"
 
 void JPEG::read(std::string filename) {
   this->jpeg_file->readFile(filename);

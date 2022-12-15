@@ -1,7 +1,9 @@
 #ifndef EXIF_HPP
 #define EXIF_HPP
 
-class Exif : public JpegFile {
+#include "jpeg_file.hpp"
+
+class EXIF : public JpegFile {
 private:
     SOI soi;
     SOF0 sof0;

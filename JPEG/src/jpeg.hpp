@@ -1,7 +1,7 @@
 #ifndef JPEG_H
 #define JPEG_H
 
-#include "jpeg_segments.hpp"
+#include "jpeg_file.hpp"
 
 class JPEG {
 private:
