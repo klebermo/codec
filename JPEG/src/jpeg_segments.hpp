@@ -3,9 +3,16 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 #include "../../common/matrix.hpp"
 #include "../../common/pixel.hpp"
+
+enum jpeg_type {
+  JFIF,
+  EXIF
+};
 
 struct SOI {
   unsigned char marker[2] = {0xFF, 0xD8};

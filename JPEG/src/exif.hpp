@@ -3,7 +3,7 @@
 
 #include "jpeg_file.hpp"
 
-class EXIF : public JpegFile {
+class Exif : public JpegFile {
 private:
     SOI soi;
     SOF0 sof0;
@@ -18,7 +18,10 @@ private:
     EOI eoi;
 public:
     void readFile(std::string filename);
-    void writeFile(std::string filename);
+    void writeFile(std::string filename, Matrix<RgbPixel> pixels);
+
+    int getWidth();
+    int getHeight();
 };
 
 #endif

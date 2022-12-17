@@ -3,7 +3,7 @@
 
 #include "jpeg_file.hpp"
 
-class JFIF : public JpegFile {
+class Jfif : public JpegFile {
 private:
     SOI soi;
     JFIF_APP0 jfif_app0;
@@ -15,7 +15,10 @@ private:
     EOI eoi;
 public:
     void readFile(std::string filename);
-    void writeFile(std::string filename);
+    void writeFile(std::string filename, Matrix<RgbPixel> pixels);
+
+    int getWidth();
+    int getHeight();
 };
 
 #endif
