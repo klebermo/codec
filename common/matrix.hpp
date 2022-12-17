@@ -106,6 +106,146 @@ public:
     T* operator[](int row) {
         return matrix[row];
     };
+
+    T& operator=(const T& other) {
+        if (this != &other) {
+            for (int i = 0; i < rows; i++) {
+                delete[] matrix[i];
+            }
+            delete[] matrix;
+            rows = other.rows;
+            cols = other.cols;
+            matrix = new T*[rows];
+            for (int i = 0; i < rows; i++) {
+                matrix[i] = new T[cols];
+            }
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    matrix[i][j] = other.matrix[i][j];
+                }
+            }
+        }
+        return *this;
+    };
+
+    T& operator=(T&& other) {
+        if (this != &other) {
+            for (int i = 0; i < rows; i++) {
+                delete[] matrix[i];
+            }
+            delete[] matrix;
+            rows = other.rows;
+            cols = other.cols;
+            matrix = other.matrix;
+            other.rows = 0;
+            other.cols = 0;
+            other.matrix = nullptr;
+        }
+        return *this;
+    };
+
+    T& operator=(std::initializer_list<std::initializer_list<T>> list) {
+        for (int i = 0; i < rows; i++) {
+            delete[] matrix[i];
+        }
+        delete[] matrix;
+        rows = list.size();
+        cols = list.begin()->size();
+        matrix = new T*[rows];
+        for (int i = 0; i < rows; i++) {
+            matrix[i] = new T[cols];
+        }
+        int i = 0;
+        for (auto row : list) {
+            int j = 0;
+            for (auto col : row) {
+                matrix[i][j] = col;
+                j++;
+            }
+            i++;
+        }
+        return *this;
+    };
+
+    T& operator+=(const T& other) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] += other.matrix[i][j];
+            }
+        }
+        return *this;
+    };
+
+    T& operator-(const T& other) {
+        T result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    };
+
+    T& operator*(const T& other) {
+        T result(rows, other.cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                result.matrix[i][j] = 0;
+                for (int k = 0; k < cols; k++) {
+                    result.matrix[i][j] += matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    };
+
+    T& operator*(int scalar) {
+        T result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    };
+
+    T& operator/(const T& other) {
+        T result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = matrix[i][j] / other.matrix[i][j];
+            }
+        }
+        return result;
+    };
+
+    T& operator/(int scalar) {
+        T result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = matrix[i][j] / scalar;
+            }
+        }
+        return result;
+    };
+
+    T& operator++() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j]++;
+            }
+        }
+        return *this;
+    };
+
+    T& operator--() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j]--;
+            }
+        }
+        return *this;
+    };
 };
 
 #endif
