@@ -8,8 +8,8 @@ class JPEG {
 private:
   JpegFile * jpeg_file;
 public:
-  void read(std::string filename);
-  void write(std::string filename, Matrix<RgbPixel> pixels, jpeg_type type);
+  bool read(std::string filename);
+  bool write(std::string filename, Matrix<RgbPixel> pixels, jpeg_type type);
 
   int getWidth();
   int getHeight();

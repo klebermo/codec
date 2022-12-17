@@ -103,6 +103,10 @@ public:
         return cols;
     };
 
+    bool empty() {
+        return rows == 0 || cols == 0;
+    };
+
     T* operator[](int row) {
         return matrix[row];
     };

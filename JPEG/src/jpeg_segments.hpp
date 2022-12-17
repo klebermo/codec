@@ -124,7 +124,7 @@ struct RST7 {
 typedef struct RST7 RST7;
 
 struct JFIF_APP0 {
-  unsigned char marker[2];
+  unsigned char marker[2] = {0xFF, 0xE0};
   unsigned char length[2];
   unsigned char identifier[5] = {'J', 'F', 'I', 'F', 0x00};
   unsigned char version[2] = {0x01, 0x01};
@@ -133,7 +133,7 @@ struct JFIF_APP0 {
   unsigned char y_density[2];
   unsigned char x_thumbnail;
   unsigned char y_thumbnail;
-  std::vector<RgbPixel> thumbnail;
+  std::vector<unsigned char> thumbnail;
 };
 typedef struct JFIF_APP0 JFIF_APP0;
 
@@ -145,29 +145,6 @@ struct JFXX_APP0 {
   std::vector<unsigned char> data;
 };
 typedef struct JFXX_APP0 JFXX_APP0;
-
-struct APP0 {
-  unsigned char marker[2] = {0xFF, 0xE0};
-  unsigned char length[2];
-  unsigned char identifier[5] = {'J', 'F', 'I', 'F', 0x00};
-  unsigned char version[2] = {0x01, 0x01};
-  unsigned char units;
-  unsigned char x_density[2];
-  unsigned char y_density[2];
-  unsigned char x_thumbnail;
-  unsigned char y_thumbnail;
-  std::vector<RgbPixel> thumbnail;
-};
-typedef struct APP0 APP0;
-
-struct APP1 {
-  unsigned char marker[2] = {0xFF, 0xE1};
-  unsigned char length[2];
-  unsigned char identifier[5] = {'E', 'x', 'i', 'f', 0x00};
-  unsigned char format;
-  std::vector<unsigned char> data;
-};
-typedef struct APP1 APP1;
 
 struct COM {
   unsigned char marker[2] = {0xFF, 0xFE};

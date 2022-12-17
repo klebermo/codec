@@ -7,18 +7,21 @@ class Exif : public JpegFile {
 private:
     SOI soi;
     SOF0 sof0;
-    SOF2 sof2;
     DHT dht;
     DQT dqt;
     DRI dri;
     SOS sos;
-    APP0 app0;
-    APP1 app1;
+    JFIF_APP0 app0;
+    JFXX_APP0 app1;
     COM com;
+    std::vector<unsigned char> compressed_data;
     EOI eoi;
 public:
-    void readFile(std::string filename);
-    void writeFile(std::string filename, Matrix<RgbPixel> pixels);
+    bool encode();
+    bool decode();
+
+    bool readFile(std::string filename);
+    bool writeFile(std::string filename, Matrix<RgbPixel> pixels);
 
     int getWidth();
     int getHeight();

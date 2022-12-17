@@ -1,11 +1,11 @@
 #include "jpeg.hpp"
 
-void JPEG::read(std::string filename) {
+bool JPEG::read(std::string filename) {
   // Open the file for reading
   std::ifstream file(filename, std::ios::binary);
   if (!file.is_open()) {
     std::cerr << "Error: Could not open file" << std::endl;
-    exit(1);
+    return false;
   }
 
   // Read the first two bytes of the file
@@ -25,24 +25,24 @@ void JPEG::read(std::string filename) {
       this->jpeg_file = new Exif();
     } else {
       std::cout << "This is a JPEG file, but not a JFIF or EXIF file" << std::endl;
-      exit(1);
+      return false;
     }
   } else {
     std::cout << "This is not a JPEG file" << std::endl;
-    exit(1);
+    return false;
   }
 
-  this->jpeg_file->readFile(filename);
+  return this->jpeg_file->readFile(filename);
 }
 
-void JPEG::write(std::string filename, Matrix<RgbPixel> pixels, jpeg_type type) {
+bool JPEG::write(std::string filename, Matrix<RgbPixel> pixels, jpeg_type type) {
   if(type == JFIF) {
     this->jpeg_file = new Jfif();
   } else {
     this->jpeg_file = new Exif();
   }
 
-  this->jpeg_file->writeFile(filename, pixels);
+  return this->jpeg_file->writeFile(filename, pixels);
 }
 
 int JPEG::getWidth() {

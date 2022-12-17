@@ -1,20 +1,112 @@
 #include "jfif.hpp"
 
-void Jfif::readFile(std::string filename) {
-    ifstream file(filename, ios::binary);
-
-    file.read((char*)&soi, sizeof(SOI));
-    file.read((char*)&jfif_app0, sizeof(JFIF_APP0));
-    file.read((char*)&jfxx_app0, sizeof(JFXX_APP0));
-    file.read((char*)&sof0, sizeof(SOF0));
-    file.read((char*)&dht, sizeof(DHT));
-    file.read((char*)&com, sizeof(COM));
-    file.read((char*)&sos, sizeof(SOS));
-    file.read((char*)&eoi, sizeof(EOI));
+bool Jfif::encode() {
+    return false;
 }
 
-void Jfif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
-    //
+bool Jfif::decode() {
+    return false;
+}
+
+bool Jfif::readFile(std::string filename) {
+    std::ifstream file(filename, std::ios::binary);
+
+    if(!file.is_open()) {
+        return false;
+    }
+
+    unsigned char buffer[2];
+    while(file.read((char*)buffer, 2)) {
+        if(buffer[0] == 0xFF && buffer[1] == 0xD8) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&soi, sizeof(SOI));
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xC0) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&sof0, sizeof(SOF0));
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xC4) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&dht, sizeof(DHT));
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xDB) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&dqt, sizeof(DQT));
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xDD) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&dri, sizeof(DRI));
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xDA) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&sos, sizeof(SOS));
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xE0) {
+            file.seekg(2, std::ios::cur);
+            char id[5];
+            file.read(id, 5);
+
+            if(id[0] == 'J' && id[1] == 'F' && id[2] == 'I' && id[3] == 'F' && id[4] == '\0') {
+                file.seekg(-7, std::ios::cur);
+                file.read((char*)&app0, 18);
+            }
+
+            if(id[0] == 'J' && id[1] == 'F' && id[2] == 'X' && id[3] == 'X' && id[4] == '\0') {
+                file.seekg(-7, std::ios::cur);
+                file.read((char*)&app1, 10);
+            }
+        }
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xFE) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&com, sizeof(COM));
+        }
+
+        // Read the compressed data
+
+        if(buffer[0] == 0xFF && buffer[1] == 0xD9) {
+            file.seekg(-2, std::ios::cur);
+            file.read((char*)&eoi, sizeof(EOI));
+        }
+    }
+
+    return decode();
+}
+
+bool Jfif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
+    std::ofstream file(filename, std::ios::binary);
+
+    if(!file.is_open()) {
+        return false;
+    }
+
+    if(compressed_data.size() == 0) {
+        return false;
+    }
+
+    if(pixels.empty()) {
+        if(encode()) {
+            file.write((char*)&soi, sizeof(SOI));
+            file.write((char*)&sof0, sizeof(SOF0));
+            file.write((char*)&dqt, sizeof(DQT));
+            file.write((char*)&dht, sizeof(DHT));
+            file.write((char*)&app0, sizeof(JFIF_APP0));
+            file.write((char*)&app1, sizeof(JFXX_APP0));
+            file.write((char*)&com, sizeof(COM));
+            file.write((char*)&dri, sizeof(DRI));
+            file.write((char*)&sos, sizeof(SOS));
+            file.write((char*)compressed_data.data(), compressed_data.size()*sizeof(unsigned char));
+            file.write((char*)&eoi, sizeof(EOI));
+        }
+    }
+
+    return false;
 }
 
 int Jfif::getWidth() {
