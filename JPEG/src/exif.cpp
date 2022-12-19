@@ -45,6 +45,19 @@ bool Exif::readFile(std::string filename) {
         if(buffer[0] == 0xFF && buffer[1] == 0xDA) {
             file.seekg(-2, std::ios::cur);
             file.read((char*)&sos, sizeof(SOS));
+
+            // Read the compressed data
+            unsigned char marker[2];
+            while(file.read((char*)marker, 2)) {
+                if(marker[0] == 0xFF && marker[1] == 0xD9) {
+                    file.seekg(-2, std::ios::cur);
+                    file.read((char*)&eoi, sizeof(EOI));
+                    break;
+                } else {
+                    compressed_data.push_back(marker[0]);
+                    compressed_data.push_back(marker[1]);
+                }
+            }
         }
 
         if(buffer[0] == 0xFF && buffer[1] == 0xE1) {
@@ -61,13 +74,6 @@ bool Exif::readFile(std::string filename) {
         if(buffer[0] == 0xFF && buffer[1] == 0xFE) {
             file.seekg(-2, std::ios::cur);
             file.read((char*)&com, sizeof(COM));
-        }
-
-        // Read the compressed data
-
-        if(buffer[0] == 0xFF && buffer[1] == 0xD9) {
-            file.seekg(-2, std::ios::cur);
-            file.read((char*)&eoi, sizeof(EOI));
         }
     }
 
@@ -105,9 +111,11 @@ bool Exif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
 }
 
 int Exif::getWidth() {
-    return 0;
+    int result = (sof0.width[0] - '0') + (sof0.width[1] - '0');
+    return result;
 }
 
 int Exif::getHeight() {
-    return 0;
+    int result = (sof0.height[0] - '0') + (sof0.height[1] - '0');
+    return result;
 }

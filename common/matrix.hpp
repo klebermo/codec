@@ -1,8 +1,6 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-#include <initializer_list>
-
 template<class T>
 class Matrix {
 private:
@@ -66,6 +64,20 @@ public:
         }
     }
 
+    Matrix(std::vector<unsigned char> data, int rows, int cols) {
+        this->rows = rows;
+        this->cols = cols;
+        matrix = new T*[rows];
+        for (int i = 0; i < rows; i++) {
+            matrix[i] = new T[cols];
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = data[i * cols + j];
+            }
+        }
+    }
+
     Matrix(int rows, int cols, T ** values) {
         this->rows = rows;
         this->cols = cols;
@@ -105,6 +117,16 @@ public:
 
     bool empty() {
         return rows == 0 || cols == 0;
+    };
+
+    std::vector<T> to_vector() {
+        std::vector<T> result;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.push_back(matrix[i][j]);
+            }
+        }
+        return result;
     };
 
     T* operator[](int row) {

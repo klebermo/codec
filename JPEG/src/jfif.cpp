@@ -1,11 +1,57 @@
 #include "jfif.hpp"
 
 bool Jfif::encode() {
-    return false;
+    if(pixels.empty())
+        return false;
+    else {
+        int h = pixels.get_rows();
+        int w = pixels.get_cols();
+        std::vector<YCbCrPixel> ycbcr_pixels;
+        for(int i = 0; i < pixels.get_cols(); i++) {
+            for(int j=0; j < pixels.get_rows(); j++) {
+                RgbPixel rgb = pixels[i][j];
+                YCbCrPixel ycbcr = RgbToYCbCr(rgb);
+                ycbcr_pixels.push_back(ycbcr);
+            }
+        }
+
+        ycbcr_pixels = reduceChromaResolution(ycbcr_pixels, 2);
+        ycbcr_pixels = calculateDCT(ycbcr_pixels, h, w);
+        ycbcr_pixels = quantize(ycbcr_pixels, h, w, generateQuantizationMatrix(100));
+        
+        std::vector<uint8_t> image = compressQuantizedImage(ycbcr_pixels);
+        for(int i = 0; i < image.size(); i++) {
+            compressed_data.push_back(image[i]);
+        }
+
+        return true;
+    }
 }
 
 bool Jfif::decode() {
-    return false;
+    if(compressed_data.empty())
+        return false;
+    else {
+        int h = getHeight();
+        int w = getWidth();
+        std::vector<unsigned char> image = decompressQuantizedImage(compressed_data, h, w);
+        
+        //Matrix<YCbCrPixel> ycbcr_pixels(image, h, w);
+        std::vector<YCbCrPixel> ycbcr_pixels = reverseDCT(ycbcr_pixels);
+        ycbcr_pixels = reverseChromaResolutionReduction(ycbcr_pixels, 2);
+
+        //pixels = Matrix<RgbPixel>(h, w);
+        int index = 0;
+        for(int i=0; i<h; i++) {
+            for(int j=0; j<w; j++) {
+                YCbCrPixel ycbcr = ycbcr_pixels[index++];
+                RgbPixel rgb = YCbCrToRgb(ycbcr);
+                pixels[i][j] = rgb;
+            }
+        }
+
+        return true;
+    }
 }
 
 bool Jfif::readFile(std::string filename) {
@@ -45,6 +91,19 @@ bool Jfif::readFile(std::string filename) {
         if(buffer[0] == 0xFF && buffer[1] == 0xDA) {
             file.seekg(-2, std::ios::cur);
             file.read((char*)&sos, sizeof(SOS));
+
+            // Read the compressed data
+            unsigned char marker[2];
+            while(file.read((char*)marker, 2)) {
+                if(marker[0] == 0xFF && marker[1] == 0xD9) {
+                    file.seekg(-2, std::ios::cur);
+                    file.read((char*)&eoi, sizeof(EOI));
+                    break;
+                } else {
+                    compressed_data.push_back(marker[0]);
+                    compressed_data.push_back(marker[1]);
+                }
+            }
         }
 
         if(buffer[0] == 0xFF && buffer[1] == 0xE0) {
@@ -66,13 +125,6 @@ bool Jfif::readFile(std::string filename) {
         if(buffer[0] == 0xFF && buffer[1] == 0xFE) {
             file.seekg(-2, std::ios::cur);
             file.read((char*)&com, sizeof(COM));
-        }
-
-        // Read the compressed data
-
-        if(buffer[0] == 0xFF && buffer[1] == 0xD9) {
-            file.seekg(-2, std::ios::cur);
-            file.read((char*)&eoi, sizeof(EOI));
         }
     }
 
@@ -110,9 +162,11 @@ bool Jfif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
 }
 
 int Jfif::getWidth() {
-    return 0;
+    int result = (sof0.width[0] - '0') + (sof0.width[1] - '0');
+    return result;
 }
 
 int Jfif::getHeight() {
-    return 0;
+    int result = (sof0.height[0] - '0') + (sof0.height[1] - '0');
+    return result;
 }

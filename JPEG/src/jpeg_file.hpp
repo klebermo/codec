@@ -4,7 +4,7 @@
 #include "jpeg_segments.hpp"
 
 class JpegFile {
-private:
+protected:
     Matrix<RgbPixel> pixels;
 public:
     virtual bool encode() = 0;

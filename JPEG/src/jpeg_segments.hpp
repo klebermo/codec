@@ -5,9 +5,27 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <cmath>
+#include <array>
+#include <map>
+#include <initializer_list>
+#include <queue>
 
 #include "../../common/matrix.hpp"
 #include "../../common/pixel.hpp"
+#include "../../common/huffman.hpp"
+
+RgbPixel YCbCrToRgb(const YCbCrPixel& ycbcr);
+YCbCrPixel RgbToYCbCr(const RgbPixel& rgb);
+std::vector<YCbCrPixel> reduceChromaResolution(const std::vector<YCbCrPixel>& image, int n);
+std::vector<YCbCrPixel> calculateDCT(const std::vector<YCbCrPixel>& image, int width, int height);
+std::vector<YCbCrPixel> quantize(const std::vector<YCbCrPixel>& dct, int width, int height, const std::array<std::array<int, 8>, 8> quantization_matrix);
+std::array<std::array<int, 8>, 8> generateQuantizationMatrix(int quality_factor);
+std::vector<uint8_t> compressQuantizedImage(const std::vector<YCbCrPixel>& quantized);
+std::vector<unsigned char> decompressQuantizedImage(const std::vector<unsigned char>& compressed, int width, int height);
+std::array<std::array<float, 8>, 8> reverseDCTBlock(const std::array<std::array<float, 8>, 8>& block);
+std::vector<YCbCrPixel> reverseDCT(const std::vector<YCbCrPixel>& ycbcr);
+std::vector<YCbCrPixel> reverseChromaResolutionReduction(const std::vector<YCbCrPixel>& ycbcr, int n);
 
 enum jpeg_type {
   JFIF,
