@@ -5,16 +5,19 @@
 struct RgbPixel {
   float r, g, b;
 
-  bool operator==(const RgbPixel& other) const {
-    return r == other.r && g == other.g && b == other.b;
+  std::vector<unsigned char> data() {
+    std::vector<unsigned char> d;
+    d.push_back((unsigned char)(r * 255));
+    d.push_back((unsigned char)(g * 255));
+    d.push_back((unsigned char)(b * 255));
+    return d;
   }
 
-  bool operator<(const RgbPixel& other) const {
-    return r < other.r && g < other.g && b < other.b;
-  }
-
-  bool operator>(const RgbPixel& other) const {
-    return r > other.r && g > other.g && b > other.b;
+  RgbPixel operator=(unsigned char data[3]) {
+    r = data[0] / 255.0f;
+    g = data[1] / 255.0f;
+    b = data[2] / 255.0f;
+    return *this;
   }
 };
 
@@ -22,16 +25,19 @@ struct RgbPixel {
 struct YCbCrPixel {
   float y, cb, cr;
 
-  bool operator==(const YCbCrPixel& other) const {
-    return y == other.y && cb == other.cb && cr == other.cr;
+  std::vector<unsigned char> data() {
+    std::vector<unsigned char> d;
+    d.push_back((unsigned char)(y * 255));
+    d.push_back((unsigned char)(cb * 255));
+    d.push_back((unsigned char)(cr * 255));
+    return d;
   }
 
-  bool operator<(const YCbCrPixel& other) const {
-    return y < other.y && cb < other.cb && cr < other.cr;
-  }
-
-  bool operator>(const YCbCrPixel& other) const {
-    return y > other.y && cb > other.cb && cr > other.cr;
+  YCbCrPixel operator=(unsigned char data[3]) {
+    y = data[0] / 255.0f;
+    cb = data[1] / 255.0f;
+    cr = data[2] / 255.0f;
+    return *this;
   }
 };
 

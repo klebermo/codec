@@ -1,276 +1,89 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-template<class T>
+template <class T>
 class Matrix {
 private:
-  T ** matrix;
-  int rows;
-  int cols;
+    T ** data;
+    int width;
+    int height;
 public:
     Matrix() {
-        rows = 0;
-        cols = 0;
-        matrix = nullptr;
+        width = 0;
+        height = 0;
+        data = nullptr;
+    };
+    
+    Matrix(int width, int height) {
+        this->width = width;
+        this->height = height;
+        data = new T*[width];
+        for (int i = 0; i < width; i++) {
+            data[i] = new T[height];
+        }
     };
 
-    Matrix(int rows, int cols) {
-        this->rows = rows;
-        this->cols = cols;
-        matrix = new T*[rows];
-        for (int i = 0; i < rows; i++) {
-            matrix[i] = new T[cols];
+    Matrix(std::vector<T> data, int width, int height) {
+        this->width = width;
+        this->height = height;
+        this->data = new T*[width];
+        for (int i = 0; i < width; i++) {
+            this->data[i] = new T[height];
+        }
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                this->data[i][j] = data[i * height + j];
+            }
         }
     };
-
-    Matrix(const Matrix& other) {
-        rows = other.rows;
-        cols = other.cols;
-        matrix = new T*[rows];
-        for (int i = 0; i < rows; i++) {
-            matrix[i] = new T[cols];
-        }
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = other.matrix[i][j];
-            }
-        }
-    }
-
-    Matrix(Matrix&& other) {
-        rows = other.rows;
-        cols = other.cols;
-        matrix = other.matrix;
-        other.rows = 0;
-        other.cols = 0;
-        other.matrix = nullptr;
-    }
-
-    Matrix(std::initializer_list<std::initializer_list<T>> list) {
-        rows = list.size();
-        cols = list.begin()->size();
-        matrix = new T*[rows];
-        for (int i = 0; i < rows; i++) {
-            matrix[i] = new T[cols];
-        }
-        int i = 0;
-        for (auto row : list) {
-            int j = 0;
-            for (auto col : row) {
-                matrix[i][j] = col;
-                j++;
-            }
-            i++;
-        }
-    }
-
-    Matrix(std::vector<unsigned char> data, int rows, int cols) {
-        this->rows = rows;
-        this->cols = cols;
-        matrix = new T*[rows];
-        for (int i = 0; i < rows; i++) {
-            matrix[i] = new T[cols];
-        }
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = data[i * cols + j];
-            }
-        }
-    }
-
-    Matrix(int rows, int cols, T ** values) {
-        this->rows = rows;
-        this->cols = cols;
-        matrix = new T*[rows];
-        for (int i = 0; i < rows; i++) {
-            matrix[i] = new T[cols];
-        }
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = values[i][j];
-            }
-        }
-    }
 
     ~Matrix() {
-        for (int i = 0; i < rows; i++) {
-            delete[] matrix[i];
+        for (int i = 0; i < width; i++) {
+            delete[] data[i];
         }
-        delete[] matrix;
+        delete[] data;
     };
 
-    T get(int row, int col) {
-        return matrix[row][col];
+    T get(int x, int y) {
+        return data[x][y];
     };
 
-    void set(int row, int col, T value) {
-        matrix[row][col] = value;
+    void set(int x, int y, T value) {
+        data[x][y] = value;
     };
 
-    int get_rows() {
-        return rows;
+    int getWidth() {
+        return width;
     };
 
-    int get_cols() {
-        return cols;
+    int getHeight() {
+        return height;
+    };
+
+    T ** getData() {
+        return data;
+    };
+
+    void setData(T ** data) {
+        this->data = data;
+    };
+
+    std::vector<T> toVector() {
+        std::vector<T> result;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                result.push_back(data[i][j]);
+            }
+        }
+        return result;
     };
 
     bool empty() {
-        return rows == 0 || cols == 0;
+        return data == nullptr;
     };
 
-    std::vector<T> to_vector() {
-        std::vector<T> result;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result.push_back(matrix[i][j]);
-            }
-        }
-        return result;
-    };
-
-    T* operator[](int row) {
-        return matrix[row];
-    };
-
-    T& operator=(const T& other) {
-        if (this != &other) {
-            for (int i = 0; i < rows; i++) {
-                delete[] matrix[i];
-            }
-            delete[] matrix;
-            rows = other.rows;
-            cols = other.cols;
-            matrix = new T*[rows];
-            for (int i = 0; i < rows; i++) {
-                matrix[i] = new T[cols];
-            }
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    matrix[i][j] = other.matrix[i][j];
-                }
-            }
-        }
-        return *this;
-    };
-
-    T& operator=(T&& other) {
-        if (this != &other) {
-            for (int i = 0; i < rows; i++) {
-                delete[] matrix[i];
-            }
-            delete[] matrix;
-            rows = other.rows;
-            cols = other.cols;
-            matrix = other.matrix;
-            other.rows = 0;
-            other.cols = 0;
-            other.matrix = nullptr;
-        }
-        return *this;
-    };
-
-    T& operator=(std::initializer_list<std::initializer_list<T>> list) {
-        for (int i = 0; i < rows; i++) {
-            delete[] matrix[i];
-        }
-        delete[] matrix;
-        rows = list.size();
-        cols = list.begin()->size();
-        matrix = new T*[rows];
-        for (int i = 0; i < rows; i++) {
-            matrix[i] = new T[cols];
-        }
-        int i = 0;
-        for (auto row : list) {
-            int j = 0;
-            for (auto col : row) {
-                matrix[i][j] = col;
-                j++;
-            }
-            i++;
-        }
-        return *this;
-    };
-
-    T& operator+=(const T& other) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] += other.matrix[i][j];
-            }
-        }
-        return *this;
-    };
-
-    T& operator-(const T& other) {
-        T result(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result.matrix[i][j] = matrix[i][j] - other.matrix[i][j];
-            }
-        }
-        return result;
-    };
-
-    T& operator*(const T& other) {
-        T result(rows, other.cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < other.cols; j++) {
-                result.matrix[i][j] = 0;
-                for (int k = 0; k < cols; k++) {
-                    result.matrix[i][j] += matrix[i][k] * other.matrix[k][j];
-                }
-            }
-        }
-        return result;
-    };
-
-    T& operator*(int scalar) {
-        T result(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result.matrix[i][j] = matrix[i][j] * scalar;
-            }
-        }
-        return result;
-    };
-
-    T& operator/(const T& other) {
-        T result(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result.matrix[i][j] = matrix[i][j] / other.matrix[i][j];
-            }
-        }
-        return result;
-    };
-
-    T& operator/(int scalar) {
-        T result(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result.matrix[i][j] = matrix[i][j] / scalar;
-            }
-        }
-        return result;
-    };
-
-    T& operator++() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j]++;
-            }
-        }
-        return *this;
-    };
-
-    T& operator--() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j]--;
-            }
-        }
-        return *this;
+    T * operator[](int i) {
+        return data[i];
     };
 };
 

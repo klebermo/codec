@@ -1,11 +1,23 @@
 #include "exif.hpp"
 
 bool Exif::encode() {
-    return false;
+    if(pixels.empty()) {
+        return false;
+    } else {
+        int h = pixels.getHeight();
+        int w = pixels.getWidth();
+        return true;
+    }
 }
 
 bool Exif::decode() {
-    return false;
+    if(compressed_data.empty()) {
+        return false;
+    } else {
+        int h = getHeight();
+        int w = getWidth();
+        return true;
+    }
 }
 
 bool Exif::readFile(std::string filename) {
@@ -87,11 +99,6 @@ bool Exif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
         return false;
     }
 
-
-    if(compressed_data.size() == 0) {
-        return false;
-    }
-
     if(pixels.empty()) {
         if(encode()) {
             file.write((char*)&soi, sizeof(SOI));
@@ -102,8 +109,10 @@ bool Exif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
             file.write((char*)&sos, sizeof(SOS));
             file.write((char*)&app0, sizeof(JFIF_APP0));
             file.write((char*)&com, sizeof(COM));
-            file.write((char*)compressed_data.data(), compressed_data.size());
+            for(std::vector<unsigned char>::size_type i = 0; i < compressed_data.size(); i++)
+                file.write((char*)&compressed_data[i], sizeof(unsigned char));
             file.write((char*)&eoi, sizeof(EOI));
+            return true;
         }
     }
 
@@ -111,11 +120,9 @@ bool Exif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
 }
 
 int Exif::getWidth() {
-    int result = (sof0.width[0] - '0') + (sof0.width[1] - '0');
-    return result;
+    return pixels.getWidth();
 }
 
 int Exif::getHeight() {
-    int result = (sof0.height[0] - '0') + (sof0.height[1] - '0');
-    return result;
+    return pixels.getHeight();
 }
