@@ -45,6 +45,40 @@ public:
     HuffmanNode * getRight() {
         return right;
     };
+
+    bool operator==(const HuffmanNode<T> & other) const {
+        return value == other.value;
+    };
+
+    bool operator!=(const HuffmanNode<T> & other) const {
+        return value != other.value;
+    };
+
+    bool operator<(const HuffmanNode<T> & other) const {
+        return frequency < other.frequency;
+    };
+
+    bool operator>(const HuffmanNode<T> & other) const {
+        return frequency > other.frequency;
+    };
+
+    bool operator<=(const HuffmanNode<T> & other) const {
+        return frequency <= other.frequency;
+    };
+
+    bool operator>=(const HuffmanNode<T> & other) const {
+        return frequency >= other.frequency;
+    };
+
+    HuffmanNode<T> operator++() {
+        frequency++;
+        return *this;
+    };
+
+    HuffmanNode<T> operator--() {
+        frequency--;
+        return *this;
+    };
 };
 
 template <class T>
@@ -60,69 +94,86 @@ public:
         this->root = root;
     };
 
-    HuffmanNode<T> * getRoot() {
-        return root;
-    };
-
-    void insert(T value, int frequency) {
-        HuffmanNode<T> * node = new HuffmanNode<T>(value, frequency);
-        if (root == nullptr) {
-            root = node;
-        } else {
-            HuffmanNode<T> * current = root;
-            while (current->getLeft() != nullptr && current->getRight() != nullptr) {
-                if (current->getLeft()->getFrequency() < current->getRight()->getFrequency()) {
-                    current = current->getLeft();
-                } else {
-                    current = current->getRight();
-                }
-                if(current->getValue() == value) {
-                    current->setFrequency(current->getFrequency() + frequency);
-                    return;
-                }
-            }
-            if (current->getLeft() == nullptr) {
-                current->setLeft(node);
-            } else {
-                current->setRight(node);
-            }
-        }
-    };
-
-    std::map<T, std::vector<bool>> getCodes(HuffmanNode<T> * node = nullptr, std::vector<bool> codes = std::vector<bool>()) {
-        std::map<T, std::vector<bool>> table;
-
-        if(node == nullptr) {
-            node = root;
-        }
-
-        if(node->getLeft() == nullptr && node->getRight() == nullptr) {
-            table.insert({node->getValue(), codes});
-        } else {
-            if(node->getLeft() != nullptr) {
-                codes.push_back(false);
-                getCodes(node->getLeft(), codes);
-            }
-            if(node->getRight() != nullptr) {
-                codes.push_back(true);
-                getCodes(node->getRight(), codes);
-            }
-        }
-
-        return table;
-    };
-
-    std::vector<T> compress(std::vector<T> raw_data) {
-        std::vector<T> result;
+    void insert(HuffmanNode<T> * node) {
         //
-        return result;
-    }
+    };
 
-    std::vector<T> decompress(std::vector<T> compressed_data) {
-        std::vector<T> result;
-        //
+    std::vector<HuffmanNode<T>> preOrder() {
+        std::vector<HuffmanNode<T>> result;
+        preOrder(root, result);
         return result;
-    }
+    };
+
+    void preOrder(HuffmanNode<T> * node, std::vector<HuffmanNode<T>> & result) {
+        if (node == nullptr) {
+            return;
+        }
+        result.push_back(*node);
+        preOrder(node->getLeft(), result);
+        preOrder(node->getRight(), result);
+    };
+
+    std::vector<HuffmanNode<T>> inOrder() {
+        std::vector<HuffmanNode<T>> result;
+        inOrder(root, result);
+        return result;
+    };
+
+    void inOrder(HuffmanNode<T> * node, std::vector<HuffmanNode<T>> & result) {
+        if (node == nullptr) {
+            return;
+        }
+        inOrder(node->getLeft(), result);
+        result.push_back(*node);
+        inOrder(node->getRight(), result);
+    };
+
+    std::vector<HuffmanNode<T>> postOrder() {
+        std::vector<HuffmanNode<T>> result;
+        postOrder(root, result);
+        return result;
+    };
+
+    void postOrder(HuffmanNode<T> * node, std::vector<HuffmanNode<T>> & result) {
+        if (node == nullptr) {
+            return;
+        }
+        postOrder(node->getLeft(), result);
+        postOrder(node->getRight(), result);
+        result.push_back(*node);
+    };
 };
+
+template <class T>
+std::map<char,std::vector<bool>> get_huffman_table(std::map<char,std::vector<bool>> * table = std::map<char,std::vector<bool>>(), HuffmanNode<T> * node = nullptr, std::vector<bool> code = std::vector<bool>()) {
+    std::map<char,std::vector<bool>> result;
+
+    if(node->getLeft() == nullptr && node->getRight() == nullptr) {
+        result.insert({node->getValue(), code});
+    } else {
+        if(node->getLeft() != nullptr) {
+            code.push_back(false);
+            result = get_huffman_table(result, node->getLeft(), code);
+        }
+        if(node->getRight() != nullptr) {
+            code.push_back(true);
+            result = get_huffman_table(result, node->getRight(), code);
+        }
+    }
+
+    return result;
+}
+
+template <class T>
+std::vector<T> huffman_encode(std::vector<T> data, std::map<T,std::vector<bool>> table) {
+    std::vector<T> result;
+    return result;
+}
+
+template <class T>
+std::vector<T> huffman_decode(std::vector<T> data, std::map<T,std::vector<bool>> table) {
+    std::vector<T> result;
+    return result;
+}
 
 #endif
