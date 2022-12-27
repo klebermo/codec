@@ -23,29 +23,22 @@ std::vector<YCbCrPixel> reduceChromaResolution(const std::vector<YCbCrPixel>& im
 
     for (std::size_t i = 0; i < image.size(); i++) {
         const YCbCrPixel& pixel = image[i];
-        YCbCrPixel& reduced_pixel = reduced[i];
-        reduced_pixel.y = pixel.y;
-        reduced_pixel.cb = std::round(pixel.cb / n) * n;
-        reduced_pixel.cr = std::round(pixel.cr / n) * n;
+        reduced[i].y = pixel.y;
+        reduced[i].cb = pixel.cb / n;
+        reduced[i].cr = pixel.cr / n;
     }
 
     return reduced;
 }
 
-std::vector<YCbCrPixel> increaseChromaResolution(const std::vector<YCbCrPixel>& image, int width, int height, int n) {
-    std::vector<YCbCrPixel> reversed;
+std::vector<YCbCrPixel> increaseChromaResolution(const std::vector<YCbCrPixel>& image, int n) {
+    std::vector<YCbCrPixel> reversed(image.size());
 
-    for (std::vector<YCbCrPixel>::size_type i = 0; i < image.size(); i += 64) {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                YCbCrPixel pixel = image[i + x + y * width];
-                for (int j = 0; j < n; j++) {
-                    for (int k = 0; k < n; k++) {
-                        reversed.push_back({pixel.y, pixel.cb, pixel.cr});
-                    }
-                }
-            }
-        }
+    for (std::size_t i = 0; i < image.size(); i++) {
+        const YCbCrPixel& pixel = image[i];
+        reversed[i].y = pixel.y;
+        reversed[i].cb = pixel.cb * n;
+        reversed[i].cr = pixel.cr * n;
     }
 
     return reversed;
@@ -83,7 +76,35 @@ std::vector<YCbCrPixel> calculateDCT(const std::vector<YCbCrPixel>& image, int w
 
 std::vector<YCbCrPixel> reverseDCT(const std::vector<YCbCrPixel>& image, int width, int height) {
   std::vector<YCbCrPixel> result(image.size());
-  //
+
+  for (int y = 0; y < height; y += 8) {
+    for (int x = 0; x < width; x += 8) {
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          float sumY = 0.0, sumCb = 0.0, sumCr = 0.0;
+          for (int u = 0; u < 8; u++) {
+            for (int v = 0; v < 8; v++) {
+              float cu = (u == 0) ? 1.0 / sqrt(2.0) : 1.0;
+              float cv = (v == 0) ? 1.0 / sqrt(2.0) : 1.0;
+              float pixelY = image[(y + u) * width + (x + v)].y;
+              float pixelCb = image[(y + u) * width + (x + v)].cb;
+              float pixelCr = image[(y + u) * width + (x + v)].cr;
+              float cosineY = cos((2 * i + 1) * u * M_PI / 16.0) * cos((2 * j + 1) * v * M_PI / 16.0);
+              float cosineCb = cos((2 * i + 1) * u * M_PI / 16.0) * cos((2 * j + 1) * v * M_PI / 16.0);
+              float cosineCr = cos((2 * i + 1) * u * M_PI / 16.0) * cos((2 * j + 1) * v * M_PI / 16.0);
+              sumY += cu * cv * pixelY * cosineY;
+              sumCb += cu * cv * pixelCb * cosineCb;
+              sumCr += cu * cv * pixelCr * cosineCr;
+            }
+          }
+          result[(y + i) * width + (x + j)].y = sumY / 4.0;
+          result[(y + i) * width + (x + j)].cb = sumCb / 4.0;
+          result[(y + i) * width + (x + j)].cr = sumCr / 4.0;
+        }
+      }
+    }
+  }
+
   return result;
 }
 
@@ -121,31 +142,45 @@ std::array<std::array<int, 8>, 8> generateQuantizationMatrix(int quality_factor)
     return quantization_matrix;
 }
 
-std::vector<unsigned char> compressQuantizedImage(const std::vector<YCbCrPixel>& data) {
-  std::vector<unsigned char> result;
-
+std::vector<unsigned char> encodeImage(const std::vector<YCbCrPixel>& data, std::map<unsigned char, std::vector<bool>>& huffman_table) {
   std::vector<unsigned char> raw_data;
+
   for(std::vector<YCbCrPixel>::size_type i = 0; i < data.size(); i++) {
     YCbCrPixel pixel = data[i];
-    std::vector<unsigned char> vec = pixel.data();
+
+    std::vector<unsigned char> vec;
+    unsigned char y = static_cast<unsigned char>(pixel.y);
+    unsigned char cb = static_cast<unsigned char>(pixel.cb);
+    unsigned char cr = static_cast<unsigned char>(pixel.cr);
+    vec.push_back(y);
+    vec.push_back(cb);
+    vec.push_back(cr);
+
     for(std::vector<unsigned char>::size_type j = 0; j < vec.size(); j++) {
       raw_data.push_back(vec[j]);
     }
   }
-  HuffmanTree<unsigned char> tree;
-  std::vector<unsigned char> compressed_data = tree.compress(raw_data);
 
-  return result;
+  HuffmanTree<unsigned char> tree;
+  return huffman_encode(raw_data, huffman_table);
 }
 
-std::vector<YCbCrPixel> decompressQuantizedImage(const std::vector<unsigned char>& data, int width, int height)
-{
+std::vector<YCbCrPixel> decodeImage(const std::vector<unsigned char>& data, std::map<unsigned char, std::vector<bool>> huffman_table, int width, int height) {
   std::vector<YCbCrPixel> result;
 
   HuffmanTree<unsigned char> tree;
-  std::vector<unsigned char> raw_data = tree.decompress(data);
+  std::vector<unsigned char> raw_data = huffman_decode(data, huffman_table);
+
   for(std::vector<unsigned char>::size_type i = 0; i < raw_data.size(); i += 3) {
-    YCbCrPixel pixel = {raw_data[i], raw_data[i + 1], raw_data[i + 2]};
+    float y = static_cast<float>(raw_data[i]);
+    float cb = static_cast<float>(raw_data[i + 1]);
+    float cr = static_cast<float>(raw_data[i + 2]);
+
+    YCbCrPixel pixel;
+    pixel.y = y;
+    pixel.cb = cb;
+    pixel.cr = cr;
+
     result.push_back(pixel);
   }
 

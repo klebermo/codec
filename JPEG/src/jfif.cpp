@@ -4,8 +4,8 @@ bool Jfif::encode() {
     if(pixels.empty())
         return false;
     else {
-        int h = pixels.getHeight();
-        int w = pixels.getWidth();
+        //int h = pixels.getHeight();
+        //int w = pixels.getWidth();
         return true;
     }
 }
@@ -14,8 +14,8 @@ bool Jfif::decode() {
     if(compressed_data.empty())
         return false;
     else {
-        int h = getHeight();
-        int w = getWidth();
+        //int h = getHeight();
+        //int w = getWidth();
         return true;
     }
 }
