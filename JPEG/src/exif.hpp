@@ -6,15 +6,15 @@
 class Exif : public JpegFile {
 private:
     SOI soi;
-    SOF0 sof0;
+    SOF0 sof;
+    JFIF_APP0 app0;
+    JFXX_APP0 app1;
     DHT dht;
     DQT dqt;
     DRI dri;
     SOS sos;
-    JFIF_APP0 app0;
-    JFXX_APP0 app1;
+    std::vector<unsigned char> raw_data;
     COM com;
-    std::vector<unsigned char> compressed_data;
     EOI eoi;
 public:
     bool encode();

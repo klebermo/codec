@@ -46,27 +46,27 @@ public:
         return right;
     };
 
-    bool operator==(const HuffmanNode<T> & other) const {
+    bool operator==(HuffmanNode<T> & other) {
         return value == other.value;
     };
 
-    bool operator!=(const HuffmanNode<T> & other) const {
+    bool operator!=(HuffmanNode<T> & other) {
         return value != other.value;
     };
 
-    bool operator<(const HuffmanNode<T> & other) const {
+    bool operator<(HuffmanNode<T> & other) {
         return frequency < other.frequency;
     };
 
-    bool operator>(const HuffmanNode<T> & other) const {
+    bool operator>(HuffmanNode<T> & other) {
         return frequency > other.frequency;
     };
 
-    bool operator<=(const HuffmanNode<T> & other) const {
+    bool operator<=(HuffmanNode<T> & other) {
         return frequency <= other.frequency;
     };
 
-    bool operator>=(const HuffmanNode<T> & other) const {
+    bool operator>=(HuffmanNode<T> & other) {
         return frequency >= other.frequency;
     };
 
@@ -91,6 +91,14 @@ public:
     };
     
     HuffmanTree(HuffmanNode<T> * root) {
+        this->root = root;
+    };
+
+    HuffmanNode<T> * getRoot() {
+        return root;
+    };
+
+    void setRoot(HuffmanNode<T> * root) {
         this->root = root;
     };
 
@@ -144,7 +152,7 @@ public:
     };
 };
 
-template <class T>
+template <typename T>
 std::map<char,std::vector<bool>> get_huffman_table(std::map<char,std::vector<bool>> * table = std::map<char,std::vector<bool>>(), HuffmanNode<T> * node = nullptr, std::vector<bool> code = std::vector<bool>()) {
     std::map<char,std::vector<bool>> result;
 
@@ -164,15 +172,68 @@ std::map<char,std::vector<bool>> get_huffman_table(std::map<char,std::vector<boo
     return result;
 }
 
-template <class T>
-std::vector<T> huffman_encode(std::vector<T> data, std::map<T,std::vector<bool>> table) {
+template <typename T>
+std::vector<T> huffman_encode(std::vector<T> data, std::map<T,std::vector<bool>>& table) {
     std::vector<T> result;
+
+    std::list<HuffmanNode<T>> priorityQueue;
+    for(auto it = data.begin(); it != data.end(); it++) {
+        HuffmanNode<T> node(*it, 1);
+
+        bool existe = false;
+        for(auto pos = priorityQueue.begin(); pos != priorityQueue.end(); pos++) {
+            if(*pos == node) {
+                *pos++;
+                existe = true;
+                break;
+            }
+        }
+
+        if(!existe)
+            priorityQueue.push_back(node);
+    }
+    priorityQueue.sort();
+
+    while(priorityQueue.size() > 1) {
+        HuffmanNode<T> * left = new HuffmanNode<T>(priorityQueue.front());
+        priorityQueue.pop_front();
+        HuffmanNode<T> * right = new HuffmanNode<T>(priorityQueue.front());
+        priorityQueue.pop_front();
+
+        HuffmanNode<T> * node = new HuffmanNode<T>(left, right);
+        node->setValue(' ');
+        node->setFrequency(left->getFrequency() + right->getFrequency());
+        priorityQueue.push_back(*node);
+    }
+
+    for(auto it = data.begin(); it != data.end(); it++) {
+        std::vector<bool> code = table.at(*it);
+        for(auto it2 = code.begin(); it2 != code.end(); it2++) {
+            result.push_back(*it2 ? 0x1 : 0x0);
+        }
+    }
+
     return result;
 }
 
-template <class T>
+template <typename T>
 std::vector<T> huffman_decode(std::vector<T> data, std::map<T,std::vector<bool>> table) {
     std::vector<T> result;
+
+    for(auto it = data.begin(); it != data.end(); it++) {
+        std::vector<bool> code;
+        while(it != data.end() && *it != 0x0 && *it != 0x1) {
+            code.push_back(*it);
+            it++;
+        }
+        for(auto it2 = table.begin(); it2 != table.end(); it2++) {
+            if(it2->second == code) {
+                result.push_back(it2->first);
+                break;
+            }
+        }
+    }
+
     return result;
 }
 

@@ -108,6 +108,7 @@ std::vector<YCbCrPixel> reverseDCT(const std::vector<YCbCrPixel>& image, int wid
   return result;
 }
 
+/*
 std::vector<YCbCrPixel> quantize(const std::vector<YCbCrPixel>& dct, int width, int height, const std::array<std::array<int, 8>, 8>& quantization_matrix) {
     std::vector<YCbCrPixel> quantized(dct.size());
 
@@ -142,6 +143,75 @@ std::array<std::array<int, 8>, 8> generateQuantizationMatrix(int quality_factor)
     return quantization_matrix;
 }
 
+std::vector<YCbCrPixel> dequantize(const std::vector<YCbCrPixel>& data, int width, int height, const std::array<std::array<int, 8>, 8>& quantization_matrix) {
+    std::vector<YCbCrPixel> result(data.size());
+    return result;
+}
+*/
+
+std::vector<std::vector<int>> generateQuantizationMatrix(int size) {
+  // The quantization matrix for JPEG compression is based on the following formula:
+  // Q[i][j] = (1 + i + j) * K / (size + 1), where K is a constant chosen to scale the matrix.
+  // A common value for K is 8.
+
+  std::vector<std::vector<int>> matrix(size, std::vector<int>(size));
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      matrix[i][j] = (1 + i + j) * 8 / (size + 1);
+    }
+  }
+
+  return matrix;
+}
+
+// Assume that the input image is stored in a 2D vector of integers called "image",
+// and that the size of the image is stored in a pair of integers called "size".
+// Also assume that the quantization matrix is stored in a 2D vector of integers called "matrix".
+std::vector<YCbCrPixel> quantizeImage(std::vector<YCbCrPixel>& image, int width, int height, std::vector<std::vector<int>> matrix) {
+    std::vector<YCbCrPixel> result;
+
+    int index = 0;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            YCbCrPixel pixel;
+            // Quantize the Y component using the quantization matrix.
+            pixel.y = std::round(image[index].y / matrix[i % matrix.size()][j % matrix.size()]);
+
+            // Quantize the Cb and Cr components using the same quantization matrix.
+            pixel.cb = std::round(image[index].cb / matrix[i % matrix.size()][j % matrix.size()]);
+            pixel.cr = std::round(image[index].cr / matrix[i % matrix.size()][j % matrix.size()]);
+
+            result.push_back(pixel);
+        }
+    }
+
+    return result;
+}
+
+// Assume that the input image is stored in a 2D vector of integers called "image",
+// and that the size of the image is stored in a pair of integers called "size".
+// Also assume that the quantization matrix is stored in a 2D vector of integers called "matrix".
+std::vector<YCbCrPixel> dequantizeImage(std::vector<YCbCrPixel>& image, int width, int height, std::vector<std::vector<int>> matrix) {
+    std::vector<YCbCrPixel> result;
+
+    int index = 0;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            YCbCrPixel pixel;
+            // Dequantize the Y component using the quantization matrix.
+            pixel.y = image[index].y * matrix[i % matrix.size()][j % matrix.size()];
+
+            // Dequantize the Cb and Cr components using the same quantization matrix.
+            pixel.cb = image[index].cb * matrix[i % matrix.size()][j % matrix.size()];
+            pixel.cr = image[index].cr * matrix[i % matrix.size()][j % matrix.size()];
+
+            result.push_back(pixel);
+        }
+    }
+
+    return result;
+}
+
 std::vector<unsigned char> encodeImage(const std::vector<YCbCrPixel>& data, std::map<unsigned char, std::vector<bool>>& huffman_table) {
   std::vector<unsigned char> raw_data;
 
@@ -165,7 +235,7 @@ std::vector<unsigned char> encodeImage(const std::vector<YCbCrPixel>& data, std:
   return huffman_encode(raw_data, huffman_table);
 }
 
-std::vector<YCbCrPixel> decodeImage(const std::vector<unsigned char>& data, std::map<unsigned char, std::vector<bool>> huffman_table, int width, int height) {
+std::vector<YCbCrPixel> decodeImage(const std::vector<unsigned char>& data, std::map<unsigned char, std::vector<bool>>& huffman_table, int width, int height) {
   std::vector<YCbCrPixel> result;
 
   HuffmanTree<unsigned char> tree;

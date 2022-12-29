@@ -7,7 +7,6 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
-#include <array>
 #include <map>
 #include <initializer_list>
 #include <queue>
@@ -25,8 +24,9 @@ std::vector<YCbCrPixel> increaseChromaResolution(const std::vector<YCbCrPixel>& 
 std::vector<YCbCrPixel> calculateDCT(const std::vector<YCbCrPixel>& image, int width, int height);
 std::vector<YCbCrPixel> reverseDCT(const std::vector<YCbCrPixel>& image, int width, int height);
 
-std::vector<YCbCrPixel> quantize(const std::vector<YCbCrPixel>& dct, int width, int height, const std::array<std::array<int, 8>, 8>& quantization_matrix);
-std::array<std::array<int, 8>, 8> generateQuantizationMatrix(int quality_factor);
+std::vector<std::vector<int>> generateQuantizationMatrix(int size);
+std::vector<YCbCrPixel> quantizeImage(std::vector<YCbCrPixel>& image, int width, int height, std::vector<std::vector<int>> matrix);
+std::vector<YCbCrPixel> dequantizeImage(std::vector<YCbCrPixel>& image, int width, int height, std::vector<std::vector<int>> matrix);
 
 std::vector<unsigned char> encodeImage(const std::vector<YCbCrPixel>& data, std::map<unsigned char, std::vector<bool>>& huffman_table);
 std::vector<YCbCrPixel> decodeImage(const std::vector<unsigned char>& data, std::map<unsigned char, std::vector<bool>>& huffman_table, int width, int height);
@@ -54,26 +54,13 @@ struct SOF0 {
 };
 typedef struct SOF0 SOF0;
 
-struct SOF2 {
-  unsigned char marker[2] = {0xFF, 0xC2};
-  unsigned char length[2];
-  unsigned char precision;
-  unsigned char height[2];
-  unsigned char width[2];
-  unsigned char num_components;
-  unsigned char component_id;
-  unsigned char sampling_factor;
-  unsigned char quantization_table_id;
-};
-typedef struct SOF2 SOF2;
-
 struct DHT {
   unsigned char marker[2] = {0xFF, 0xC4};
   unsigned char length[2];
   unsigned char table_class;
   unsigned char table_id;
-  unsigned char num_codes[16];
-  unsigned char values[256];
+  std::vector<unsigned char> num_codes;
+  std::vector<unsigned char> table;
 };
 typedef struct DHT DHT;
 
@@ -82,7 +69,7 @@ struct DQT {
   unsigned char length[2];
   unsigned char precision;
   unsigned char table_id;
-  unsigned char table[64];
+  std::vector<unsigned char> table;
 };
 typedef struct DQT DQT;
 
@@ -99,51 +86,8 @@ struct SOS {
   unsigned char num_components;
   unsigned char component_id;
   unsigned char huffman_table_id;
-  unsigned char start_of_spectral_selection;
-  unsigned char end_of_spectral_selection;
-  unsigned char successive_approximation;
 };
 typedef struct SOS SOS;
-
-struct RST0 {
-  unsigned char marker[2] = {0xFF, 0xD0};
-};
-typedef struct RST0 RST0;
-
-struct RST1 {
-  unsigned char marker[2] = {0xFF, 0xD1};
-};
-typedef struct RST1 RST1;
-
-struct RST2 {
-  unsigned char marker[2] = {0xFF, 0xD2};
-};
-typedef struct RST2 RST2;
-
-struct RST3 {
-  unsigned char marker[2] = {0xFF, 0xD3};
-};
-typedef struct RST3 RST3;
-
-struct RST4 {
-  unsigned char marker[2] = {0xFF, 0xD4};
-};
-typedef struct RST4 RST4;
-
-struct RST5 {
-  unsigned char marker[2] = {0xFF, 0xD5};
-};
-typedef struct RST5 RST5;
-
-struct RST6 {
-  unsigned char marker[2] = {0xFF, 0xD6};
-};
-typedef struct RST6 RST6;
-
-struct RST7 {
-  unsigned char marker[2] = {0xFF, 0xD7};
-};
-typedef struct RST7 RST7;
 
 struct JFIF_APP0 {
   unsigned char marker[2] = {0xFF, 0xE0};
@@ -164,7 +108,7 @@ struct JFXX_APP0 {
   unsigned char length[2];
   unsigned char identifier[5] = {'J', 'F', 'X', 'X', 0x00};
   unsigned char extension_code;
-  std::vector<unsigned char> data;
+  std::vector<unsigned char> thumbnail;
 };
 typedef struct JFXX_APP0 JFXX_APP0;
 

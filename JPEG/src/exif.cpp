@@ -4,18 +4,14 @@ bool Exif::encode() {
     if(pixels.empty()) {
         return false;
     } else {
-        //int h = pixels.getHeight();
-        //int w = pixels.getWidth();
         return true;
     }
 }
 
 bool Exif::decode() {
-    if(compressed_data.empty()) {
+    if(!pixels.empty()) {
         return false;
     } else {
-        //int h = getHeight();
-        //int w = getWidth();
         return true;
     }
 }
@@ -36,7 +32,7 @@ bool Exif::readFile(std::string filename) {
 
         if(buffer[0] == 0xFF && buffer[1] == 0xC0) {
             file.seekg(-2, std::ios::cur);
-            file.read((char*)&sof0, sizeof(SOF0));
+            file.read((char*)&sof, sizeof(SOF0));
         }
 
         if(buffer[0] == 0xFF && buffer[1] == 0xC4) {
@@ -66,8 +62,8 @@ bool Exif::readFile(std::string filename) {
                     file.read((char*)&eoi, sizeof(EOI));
                     break;
                 } else {
-                    compressed_data.push_back(marker[0]);
-                    compressed_data.push_back(marker[1]);
+                    //compressed_data.push_back(marker[0]);
+                    //compressed_data.push_back(marker[1]);
                 }
             }
         }
@@ -102,15 +98,14 @@ bool Exif::writeFile(std::string filename, Matrix<RgbPixel> pixels) {
     if(pixels.empty()) {
         if(encode()) {
             file.write((char*)&soi, sizeof(SOI));
-            file.write((char*)&sof0, sizeof(SOF0));
+            file.write((char*)&sof, sizeof(SOF0));
+            file.write((char*)&app0, sizeof(JFIF_APP0));
+            file.write((char*)&app1, sizeof(JFXX_APP0));
             file.write((char*)&dht, sizeof(DHT));
             file.write((char*)&dqt, sizeof(DQT));
             file.write((char*)&dri, sizeof(DRI));
             file.write((char*)&sos, sizeof(SOS));
-            file.write((char*)&app0, sizeof(JFIF_APP0));
             file.write((char*)&com, sizeof(COM));
-            for(std::vector<unsigned char>::size_type i = 0; i < compressed_data.size(); i++)
-                file.write((char*)&compressed_data[i], sizeof(unsigned char));
             file.write((char*)&eoi, sizeof(EOI));
             return true;
         }

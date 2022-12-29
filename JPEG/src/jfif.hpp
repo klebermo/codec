@@ -7,14 +7,13 @@ class Jfif : public JpegFile {
 private:
     SOI soi;
     SOF0 sof0;
+    JFIF_APP0 app0;
+    JFXX_APP0 app1;    
     DQT dqt;
     DHT dht;
-    JFIF_APP0 app0;
-    JFXX_APP0 app1;
-    COM com;
-    DRI dri;
     SOS sos;
-    std::vector<unsigned char> compressed_data;
+    std::vector<unsigned char> raw_data;
+    COM com;
     EOI eoi;
 public:
     bool encode();
