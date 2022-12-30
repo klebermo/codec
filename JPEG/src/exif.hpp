@@ -1,27 +1,22 @@
 #ifndef EXIF_HPP
 #define EXIF_HPP
 
-#include "jpeg_file.hpp"
+#include "jpeg.hpp"
 
-class Exif : public JpegFile {
+class Exif : public JPEG {
 private:
     SOI soi;
-    SOF0 sof;
     JFIF_APP0 app0;
-    JFXX_APP0 app1;
-    DHT dht;
+    SOF sof;
     DQT dqt;
-    DRI dri;
-    SOS sos;
-    std::vector<unsigned char> raw_data;
+    DHT dht;
     COM com;
+    SOS sos;
+    std::vector<bool> raw_data;
     EOI eoi;
 public:
-    bool encode();
-    bool decode();
-
-    bool readFile(std::string filename);
-    bool writeFile(std::string filename, Matrix<RgbPixel> pixels);
+    void readFile(std::string filename);
+    void writeFile(std::string filename);
 
     int getWidth();
     int getHeight();

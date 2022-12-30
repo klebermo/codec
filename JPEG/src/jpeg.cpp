@@ -1,58 +1,25 @@
 #include "jpeg.hpp"
 
-bool JPEG::read(std::string filename) {
-  // Open the file for reading
-  std::ifstream file(filename, std::ios::binary);
-  if (!file.is_open()) {
-    std::cerr << "Error: Could not open file" << std::endl;
-    return false;
-  }
-
-  // Read the first two bytes of the file
-  char bytes[2];
-  file.read(bytes, 2);
-
-  // Check if the first two bytes are 0xFF 0xD8, which indicates that this is a JPEG file
-  if (bytes[0] == (char)0xFF && bytes[1] == (char)0xD8) {
-    // Read the next two bytes to determine if this is a JFIF or EXIF file
-    file.read(bytes, 2);
-
-    if (bytes[0] == (char)0xFF && bytes[1] == (char)0xE0) {
-      std::cout << "This is a JFIF file" << std::endl;
-      this->jpeg_file = new Jfif();
-    } else if (bytes[0] == (char)0xFF && bytes[1] == (char)0xE1) {
-      std::cout << "This is an EXIF file" << std::endl;
-      this->jpeg_file = new Exif();
-    } else {
-      std::cout << "This is a JPEG file, but not a JFIF or EXIF file" << std::endl;
-      return false;
-    }
-  } else {
-    std::cout << "This is not a JPEG file" << std::endl;
-    return false;
-  }
-
-  return this->jpeg_file->readFile(filename);
-}
-
-bool JPEG::write(std::string filename, Matrix<RgbPixel> pixels, jpeg_type type) {
-  if(type == JFIF) {
-    this->jpeg_file = new Jfif();
-  } else {
-    this->jpeg_file = new Exif();
-  }
-
-  return this->jpeg_file->writeFile(filename, pixels);
-}
-
-int JPEG::getWidth() {
-  return this->jpeg_file->getWidth();
-}
-
-int JPEG::getHeight() {
-  return this->jpeg_file->getHeight();
-}
-
 std::vector<float> JPEG::toArray() {
-  return this->jpeg_file->toArray();
+  std::vector<float> array;
+  int h = this->getHeight(), w = this->getWidth();
+
+  for(int i=0; i<h; i++) {
+    for(int j=0; j<w; j++) {
+      float x = (float)j/(float)w, y = (float)i/(float)h;
+      
+      array.push_back(-1 + (2 * x));
+      array.push_back(1 - (2 * y));
+
+      RgbPixel p;
+      p.r = pixels[i][j].r / 255;
+      array.push_back(p.r);
+      p.g = pixels[i][j].g / 255;
+      array.push_back(p.g);
+      p.b = pixels[i][j].b / 255;
+      array.push_back(p.b);
+    }
+  }
+  
+  return array;
 }

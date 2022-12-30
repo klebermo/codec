@@ -8,20 +8,15 @@ struct RgbPixel {};
 struct YCbCrPixel {};
 template<class T> class Matrix {};
 
-class JpegFile {
-private:
-  Matrix<RgbPixel> pixels;
-};
-
 class JPEG {
 private:
-  JpegFile * jpeg_file;
+  Matrix<RgbPixel> pixels;
 public:
-  void read(std::string filename);
-  void write(std::string filename);
+  void read(std::string filename) = 0;
+  void write(std::string filename) = 0;
 
-  int getWidth();
-  int getHeight();
+  int getWidth() = 0;
+  int getHeight() = 0;
 
   std::vector<float> toArray();
 };

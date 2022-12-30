@@ -1,18 +1,17 @@
 #ifndef JPEG_H
 #define JPEG_H
 
-#include "jfif.hpp"
-#include "exif.hpp"
+#include "jpeg_segments.hpp"
 
 class JPEG {
-private:
-  JpegFile * jpeg_file;
+protected:
+  Matrix<RgbPixel> pixels;
 public:
-  bool read(std::string filename);
-  bool write(std::string filename, Matrix<RgbPixel> pixels, jpeg_type type);
+  virtual void read(std::string filename) = 0;
+  virtual void write(std::string filename) = 0;
 
-  int getWidth();
-  int getHeight();
+  virtual int getWidth() = 0;
+  virtual int getHeight() = 0;
 
   std::vector<float> toArray();
 };

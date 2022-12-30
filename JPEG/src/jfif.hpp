@@ -1,26 +1,22 @@
 #ifndef JFIF_HPP
 #define JFIF_HPP
 
-#include "jpeg_file.hpp"
+#include "jpeg.hpp"
 
-class Jfif : public JpegFile {
+class Jfif : public JPEG {
 private:
     SOI soi;
-    SOF0 sof0;
     JFIF_APP0 app0;
-    JFXX_APP0 app1;    
+    SOF sof;
     DQT dqt;
     DHT dht;
-    SOS sos;
-    std::vector<unsigned char> raw_data;
     COM com;
+    SOS sos;
+    std::vector<bool> raw_data;
     EOI eoi;
 public:
-    bool encode();
-    bool decode();
-
-    bool readFile(std::string filename);
-    bool writeFile(std::string filename, Matrix<RgbPixel> pixels);
+    void readFile(std::string filename);
+    void writeFile(std::string filename);
 
     int getWidth();
     int getHeight();
