@@ -17,3 +17,75 @@ YCbCrPixel RgbToYCbCr(const RgbPixel& rgb) {
   ycbcr.cr =  0.5000f * rgb.r - 0.4542f * rgb.g - 0.0458f * rgb.b;
   return ycbcr;
 }
+
+// Function to reduce the resolution of the chroma data
+std::vector<YCbCrPixel> reduce_resolution_chrome_data(std::vector<YCbCrPixel> ycbcr, int factor) {
+  std::vector<YCbCrPixel> result;
+  for(int i=0; i<ycbcr.size(); i+=factor) {
+    result.push_back(ycbcr[i]);
+  }
+  return result;
+}
+
+// Function to increase the resolution of the chroma data
+std::vector<YCbCrPixel> increase_resolution_chrome_data(std::vector<YCbCrPixel> ycbcr, int factor) {
+  std::vector<YCbCrPixel> result;
+  for(int i=0; i<ycbcr.size(); i++) {
+    for(int j=0; j<factor; j++) {
+      result.push_back(ycbcr[i]);
+    }
+  }
+  return result;
+}
+
+// Function to perform the DCT on a vector of YCbCr pixels
+std::vector<YCbCrPixel> dct(std::vector<YCbCrPixel> ycbcr) {
+  std::vector<YCbCrPixel> result;
+  for(int i=0; i<ycbcr.size(); i++) {
+    YCbCrPixel p;
+    p.y = ycbcr[i].y;
+    p.cb = ycbcr[i].cb;
+    p.cr = ycbcr[i].cr;
+    result.push_back(p);
+  }
+  return result;
+}
+
+// Function to perform the inverse DCT on a vector of YCbCr pixels
+std::vector<YCbCrPixel> idct(std::vector<YCbCrPixel> ycbcr) {
+  std::vector<YCbCrPixel> result;
+  for(int i=0; i<ycbcr.size(); i++) {
+    YCbCrPixel p;
+    p.y = ycbcr[i].y;
+    p.cb = ycbcr[i].cb;
+    p.cr = ycbcr[i].cr;
+    result.push_back(p);
+  }
+  return result;
+}
+
+// Function to perform the quantization on a vector of YCbCr pixels
+std::vector<YCbCrPixel> quantize(std::vector<YCbCrPixel> ycbcr, int factor) {
+  std::vector<YCbCrPixel> result;
+  for(int i=0; i<ycbcr.size(); i++) {
+    YCbCrPixel p;
+    p.y = ycbcr[i].y / factor;
+    p.cb = ycbcr[i].cb / factor;
+    p.cr = ycbcr[i].cr / factor;
+    result.push_back(p);
+  }
+  return result;
+}
+
+// Function to perform the dequantization on a vector of YCbCr pixels
+std::vector<YCbCrPixel> dequantize(std::vector<YCbCrPixel> ycbcr, int factor) {
+  std::vector<YCbCrPixel> result;
+  for(int i=0; i<ycbcr.size(); i++) {
+    YCbCrPixel p;
+    p.y = ycbcr[i].y * factor;
+    p.cb = ycbcr[i].cb * factor;
+    p.cr = ycbcr[i].cr * factor;
+    result.push_back(p);
+  }
+  return result;
+}

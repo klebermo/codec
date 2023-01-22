@@ -58,16 +58,4 @@ public:
     }
 };
 
-template<class T>
-std::vector<bool> encode(std::vector<T> raw_data) {
-    std::vector<bool> result;
-    return result;
-}
-
-template<class T>
-std::vector<T> decode(std::vector<bool> encoded_data) {
-    std::vector<T> result;
-    return result;
-}
-
 #endif

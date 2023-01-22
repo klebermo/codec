@@ -12,13 +12,31 @@ class JPEG {
 private:
   Matrix<RgbPixel> pixels;
 public:
-  void read(std::string filename) = 0;
-  void write(std::string filename) = 0;
+  virtual void read(std::string filename) = 0;
+  virtual void write(std::string filename) = 0;
 
-  int getWidth() = 0;
-  int getHeight() = 0;
+  virtual int getWidth() = 0;
+  virtual int getHeight() = 0;
 
   std::vector<float> toArray();
+};
+
+class Jfif : public JPEG {
+public:
+  void read(std::string filename);
+  void write(std::string filename);
+
+  int getWidth();
+  int getHeight();
+};
+
+class Exif : public JPEG {
+public:
+  void read(std::string filename);
+  void write(std::string filename);
+
+  int getWidth();
+  int getHeight();
 };
 
 #endif

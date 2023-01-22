@@ -1,6 +1,6 @@
 #include "jfif.hpp"
 
-void Jfif::readFile(std::string filename) {
+void Jfif::read(std::string filename) {
     std::ifstream file(filename, std::ios::binary);
 
     if(!file.is_open()) {
@@ -8,7 +8,7 @@ void Jfif::readFile(std::string filename) {
     }
 }
 
-void Jfif::writeFile(std::string filename) {
+void Jfif::write(std::string filename) {
     std::ofstream file(filename, std::ios::binary);
 
     if(!file.is_open()) {

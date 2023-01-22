@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <cmath>
 
 #include "../../common/matrix.hpp"
 #include "../../common/pixel.hpp"
@@ -14,66 +15,25 @@
 RgbPixel YCbCrToRgb(const YCbCrPixel& ycbcr);
 YCbCrPixel RgbToYCbCr(const RgbPixel& rgb);
 
-struct SOI {
-  uint16_t marker;
-};
+std::vector<YCbCrPixel> reduce_resolution_chrome_data(std::vector<YCbCrPixel> ycbcr, int factor);
+std::vector<YCbCrPixel> increase_resolution_chrome_data(std::vector<YCbCrPixel> ycbcr, int factor);
 
-struct JFIF_APP0 {
-  uint16_t marker;
-  uint16_t length;
-  uint8_t identifier[5];
-  uint16_t version;
-  uint8_t units;
-  uint16_t x_density;
-  uint16_t y_density;
-  uint8_t x_thumbnail;
-  uint8_t y_thumbnail;
-};
+std::vector<YCbCrPixel> dct(std::vector<YCbCrPixel> ycbcr);
+std::vector<YCbCrPixel> idct(std::vector<YCbCrPixel> ycbcr);
 
-struct SOF {
-  uint16_t marker;
-  uint16_t length;
-  uint8_t precision;
-  uint16_t height;
-  uint16_t width;
-  uint8_t num_components;
-  uint8_t component_id;
-  uint8_t sampling_factor;
-  uint8_t quantization_table;
-};
+std::vector<YCbCrPixel> quantize(std::vector<YCbCrPixel> ycbcr, int quality);
+std::vector<YCbCrPixel> dequantize(std::vector<YCbCrPixel> ycbcr, int quality);
 
-struct DQT {
-  uint16_t marker;
-  uint16_t length;
-  uint8_t precision;
-  uint8_t table_id;
-  std::vector<uint8_t> table;
-};
+template<class T>
+std::vector<bool> encode(std::vector<T> raw_data) {
+    std::vector<bool> result;
+    return result;
+}
 
-struct DHT {
-  uint16_t marker;
-  uint16_t length;
-  uint8_t table_class;
-  uint8_t table_id;
-  std::vector<uint8_t> table;
-};
-
-struct COM {
-  uint16_t marker;
-  uint16_t length;
-  std::vector<uint8_t> comment;
-};
-
-struct SOS {
-  uint16_t marker;
-  uint16_t length;
-  uint8_t num_components;
-  uint8_t component_id;
-  uint8_t huffman_table;
-};
-
-struct EOI {
-  uint16_t marker;
-};
+template<class T>
+std::vector<T> decode(std::vector<bool> encoded_data) {
+    std::vector<T> result;
+    return result;
+}
 
 #endif
