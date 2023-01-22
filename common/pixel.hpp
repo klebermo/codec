@@ -9,6 +9,26 @@ struct RgbPixel {
 // YCbCr pixel struct
 struct YCbCrPixel {
   float y, cb, cr;
+
+  bool operator==(const YCbCrPixel& other) const {
+    return (y == other.y && cb == other.cb && cr == other.cr);
+  }
+
+  bool operator<(const YCbCrPixel& other) const {
+    return (y < other.y && cb < other.cb && cr < other.cr);
+  }
+
+  bool operator>(const YCbCrPixel& other) const {
+    return (y > other.y && cb > other.cb && cr > other.cr);
+  }
+
+  bool operator<=(const YCbCrPixel& other) const {
+    return (y <= other.y && cb <= other.cb && cr <= other.cr);
+  }
+
+  bool operator>=(const YCbCrPixel& other) const {
+    return (y >= other.y && cb >= other.cb && cr >= other.cr);
+  }
 };
 
 RgbPixel YCbCrToRgb(const YCbCrPixel& ycbcr);

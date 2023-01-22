@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <list>
 #include <map>
 #include <cmath>
 
@@ -15,23 +16,27 @@
 RgbPixel YCbCrToRgb(const YCbCrPixel& ycbcr);
 YCbCrPixel RgbToYCbCr(const RgbPixel& rgb);
 
-std::vector<YCbCrPixel> reduce_resolution_chrome_data(std::vector<YCbCrPixel> ycbcr, int factor);
-std::vector<YCbCrPixel> increase_resolution_chrome_data(std::vector<YCbCrPixel> ycbcr, int factor);
+void reduce_resolution_chrome_data(std::vector<std::vector<YCbCrPixel>>& ycbcr, int factor);
+void increase_resolution_chrome_data(std::vector<std::vector<YCbCrPixel>>& ycbcr, int factor);
 
-std::vector<YCbCrPixel> dct(std::vector<YCbCrPixel> ycbcr);
-std::vector<YCbCrPixel> idct(std::vector<YCbCrPixel> ycbcr);
+void dct(std::vector<std::vector<YCbCrPixel>>& ycbcr);
+void idct(std::vector<std::vector<YCbCrPixel>>& ycbcr);
 
-std::vector<YCbCrPixel> quantize(std::vector<YCbCrPixel> ycbcr, int quality);
-std::vector<YCbCrPixel> dequantize(std::vector<YCbCrPixel> ycbcr, int quality);
+void quantize(std::vector<std::vector<YCbCrPixel>>& ycbcr, std::vector<std::vector<int>>& quantization_table);
+void dequantize(std::vector<std::vector<YCbCrPixel>>& ycbcr, std::vector<std::vector<int>>& quantization_table);
+
+int getBlockCount(std::vector<std::vector<YCbCrPixel>>& ycbcr);
+void getBlock(std::vector<std::vector<YCbCrPixel>>& ycbcr, int block_num, std::vector<std::vector<YCbCrPixel>>& block);
+void generate_quantization_table(int quality, std::vector<std::vector<int>>& quantization_table);
 
 template<class T>
-std::vector<bool> encode(std::vector<T> raw_data) {
+std::vector<bool> encode(std::vector<T>& raw_data, std::map<T, std::vector<bool>>& huffman_table) {
     std::vector<bool> result;
     return result;
 }
 
 template<class T>
-std::vector<T> decode(std::vector<bool> encoded_data) {
+std::vector<T> decode(std::vector<bool>& encoded_data, std::map<T, std::vector<bool>>& huffman_table) {
     std::vector<T> result;
     return result;
 }
