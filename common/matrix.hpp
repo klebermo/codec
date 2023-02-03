@@ -1,6 +1,8 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
+#include <vector>
+
 template<class T>
 class Matrix {
 private:

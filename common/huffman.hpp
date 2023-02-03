@@ -1,6 +1,10 @@
 #ifndef HUFFMAN_HPP
 #define HUFFMAN_HPP
 
+#include <list>
+#include <map>
+#include <vector>
+
 template<class T>
 class HuffmanNode {
 private:

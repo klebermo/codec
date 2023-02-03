@@ -3,6 +3,17 @@
 
 #include "jpeg.hpp"
 
+#include "segments/app0.hpp"
+#include "segments/sof0.hpp"
+#include "segments/sof2.hpp"
+#include "segments/dqt.hpp"
+#include "segments/dht.hpp"
+#include "segments/dri.hpp"
+#include "segments/com.hpp"
+#include "segments/sos.hpp"
+
+#include <iostream>
+
 class Jfif : public JPEG {
 private:
     APP0 app0;

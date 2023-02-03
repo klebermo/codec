@@ -23,7 +23,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size-2];
                     file.read(reinterpret_cast<char*>(data), size-2);
-                    app0 = data;
+                    //app0 = data;
                     delete [] data;
                     break;
                 case 0xC0: // SOF0
@@ -32,7 +32,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    sof0 = data;
+                    //sof0 = data;
                     delete [] data;
                     break;
                 case 0xC2: // SOF2
@@ -41,7 +41,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    sof2 = data;
+                    //sof2 = data;
                     delete [] data;
                     break;
                 case 0xC4: // DHT
@@ -51,7 +51,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    dht_temp = data;
+                    //dht_temp = data;
                     dht.push_back(dht_temp);
                     delete [] data;
                     break;
@@ -62,7 +62,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    dqt_temp = data;
+                    //dqt_temp = data;
                     dqt.push_back(dqt_temp);
                     delete [] data;
                     break;
@@ -72,7 +72,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    dri = data;
+                    //dri = data;
                     delete [] data;
                     break;
                 case 0xFE: // COM
@@ -81,7 +81,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    com = data;
+                    //com = data;
                     delete [] data;
                     break;
                 case 0xDA: // SOS
@@ -91,7 +91,7 @@ void Jfif::read(std::string filename) {
                     size = (length[0] << 8) | length[1];
                     data = new unsigned char[size];
                     file.read(reinterpret_cast<char*>(data), size);
-                    sos_temp = data;
+                    //sos_temp = data;
                     sos.push_back(sos_temp);
                     delete [] data;
                     break;
