@@ -12,46 +12,6 @@ private:
   unsigned char vertical_sampling_factor[4];
   unsigned char quantization_table_selector[4];
 public:
-  SOF2() {
-    sample_precision = 0x00;
-    image_height = 0x00;
-    image_width = 0x00;
-    component_count = 0x00;
-    for (int i = 0; i < 4; i++) {
-      component_id[i] = 0x00;
-      horizontal_sampling_factor[i] = 0x00;
-      vertical_sampling_factor[i] = 0x00;
-      quantization_table_selector[i] = 0x00;
-    }
-  }
-
-  SOF2(unsigned char * data) {
-    sample_precision = data[0];
-    image_height = data[1];
-    image_width = data[2];
-    component_count = data[3];
-    for (int i = 0; i < 4; i++) {
-      component_id[i] = data[4 + (i * 3)];
-      horizontal_sampling_factor[i] = data[5 + (i * 3)];
-      vertical_sampling_factor[i] = data[6 + (i * 3)];
-      quantization_table_selector[i] = data[7 + (i * 3)];
-    }
-  }
-
-  SOF2& operator=(unsigned char * data) {
-    sample_precision = data[0];
-    image_height = data[1];
-    image_width = data[2];
-    component_count = data[3];
-    for (int i = 0; i < 4; i++) {
-      component_id[i] = data[4 + (i * 3)];
-      horizontal_sampling_factor[i] = data[5 + (i * 3)];
-      vertical_sampling_factor[i] = data[6 + (i * 3)];
-      quantization_table_selector[i] = data[7 + (i * 3)];
-    }
-    return *this;
-  }
-
   unsigned char getSamplePrecision() {
     return sample_precision;
   }

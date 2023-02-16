@@ -79,6 +79,8 @@ void Jfif::read(std::string filename) {
             }
         }
     }
+
+    file.close();
 }
 
 void Jfif::write(std::string filename) {
