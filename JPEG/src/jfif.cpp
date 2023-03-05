@@ -10,8 +10,14 @@ void Jfif::read(std::string filename) {
 
     unsigned char marker[2], length[2];
     int size;
+
+    APP0 app0_temp;
+    SOF0 sof0_temp;
+    SOF2 sof2_temp;
     DHT dht_temp;
     DQT dqt_temp;
+    DRI dri_temp;
+    COM com_temp;
     SOS sos_temp;
 
     while(file.read((char*)marker, 2)) {
@@ -22,59 +28,84 @@ void Jfif::read(std::string filename) {
                     break;
                 case 0xE0: // APP0
                     std::cout << "APP0" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
-                    file.read(reinterpret_cast<char*>(&app0), size-2);
+                    size = size - 2;
+
+                    file.read(reinterpret_cast<char*>(&app0_temp), size);
                     break;
                 case 0xC0: // SOF0
                     std::cout << "SOF0" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
-                    file.read(reinterpret_cast<char*>(&sof0), size);
+                    size = size - 2;
+
+                    file.read(reinterpret_cast<char*>(&sof0_temp), size);
                     break;
                 case 0xC2: // SOF2
                     std::cout << "SOF2" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
-                    file.read(reinterpret_cast<char*>(&sof2), size);
+                    size = size - 2;
+
+                    file.read(reinterpret_cast<char*>(&sof2_temp), size);
                     break;
                 case 0xC4: // DHT
                     std::cout << "DHT" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
+                    size = size - 2;
+
                     file.read(reinterpret_cast<char*>(&dht_temp), size);
-                    dht.push_back(dht_temp);
+                    //dht.push_back(dht_temp);
                     break;
                 case 0xDB: // DQT
                     std::cout << "DQT" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
+                    size = size - 2;
+
                     file.read(reinterpret_cast<char*>(&dqt_temp), size);
-                    dqt.push_back(dqt_temp);
+                    //dqt.push_back(dqt_temp);
                     break;
                 case 0xDD: // DRI
                     std::cout << "DRI" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
-                    file.read(reinterpret_cast<char*>(&dri), size);
+                    size = size - 2;
+
+                    file.read(reinterpret_cast<char*>(&dri_temp), size);
                     break;
                 case 0xFE: // COM
                     std::cout << "COM" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
-                    file.read(reinterpret_cast<char*>(&com), size);
+                    size = size - 2;
+
+                    file.read(reinterpret_cast<char*>(&com_temp), size);
                     break;
                 case 0xDA: // SOS
                     std::cout << "SOS" << std::endl;
+
                     file.read((char*)length, 2);
                     size = (length[0] << 8) | length[1];
+                    size = size - 2;
+
                     file.read(reinterpret_cast<char*>(&sos_temp), size);
-                    sos.push_back(sos_temp);
+                    //sos.push_back(sos_temp);
                     break;
                 case 0xD9: // EOI
                     std::cout << "EOI" << std::endl;
                     break;
                 default:
+                    std::cout << "Unknown marker: " << std::hex << (int)marker[1] << std::endl;
                     break;
             }
         }
