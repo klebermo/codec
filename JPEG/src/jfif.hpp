@@ -3,7 +3,7 @@
 
 #include "jpeg.hpp"
 
-#include "segments/app0.hpp"
+#include "segments/app.hpp"
 #include "segments/sof0.hpp"
 #include "segments/sof2.hpp"
 #include "segments/dqt.hpp"
@@ -16,7 +16,7 @@
 
 class Jfif : public JPEG {
 private:
-    APP0 app0;
+    std::vector<APP> app;
     SOF0 sof0;
     SOF2 sof2;
     std::vector<DQT> dqt;
@@ -24,8 +24,8 @@ private:
     DRI dri;
     COM com;
     std::vector<SOS> sos;
-    std::vector<std::vector<std::vector<unsigned char>>> raw_data;
-public:
+    std::vector<std::vector<unsigned char>> raw_data;
+public:    
     void read(std::string filename);
     void write(std::string filename);
 
