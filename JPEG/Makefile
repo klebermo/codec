@@ -17,6 +17,9 @@ ${obj_dir}/matrix.o: ${common_dir}/matrix.cpp
 ${obj_dir}/pixel.o: ${common_dir}/pixel.cpp
 	g++ ${cpp_flags} -c ${common_dir}/pixel.cpp -o ${obj_dir}/pixel.o
 
+${obj_dir}/segment.o: ${common_dir}/segment.cpp
+	g++ ${cpp_flags} -c ${common_dir}/segment.cpp -o ${obj_dir}/segment.o
+
 ${obj_dir}/jfif.o: src/jfif.cpp
 	g++ ${cpp_flags} -c src/jfif.cpp -o ${obj_dir}/jfif.o
 

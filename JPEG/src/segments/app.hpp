@@ -1,8 +1,11 @@
 #ifndef APP_H
 #define APP_H
 
-class APP {
-  //
+#include "../segment.hpp"
+
+class APP : public Segment {
+public:
+  APP(std::initializer_list<unsigned char> marker, std::initializer_list<unsigned char> length) : Segment(marker, length) {}
 };
 
 class APP0 : public APP {
@@ -15,22 +18,7 @@ private:
   unsigned char x_thumbnail;
   unsigned char y_thumbnail;
 public:
-  APP0() {
-    identifier[0] = 'J';
-    identifier[1] = 'F';
-    identifier[2] = 'I';
-    identifier[3] = 'F';
-    identifier[4] = '\0';
-    version[0] = 0x01;
-    version[1] = 0x01;
-    units = 0x00;
-    x_density[0] = 0x00;
-    x_density[1] = 0x01;
-    y_density[0] = 0x00;
-    y_density[1] = 0x01;
-    x_thumbnail = 0x00;
-    y_thumbnail = 0x00;
-  }
+  APP0() : APP({0xFF, 0xE0}, {0x00, 0x00}) {}
 
   unsigned char * getIdentifier() {
     return identifier;
@@ -70,24 +58,8 @@ private:
   unsigned char y_density[2];
   unsigned char x_thumbnail;
   unsigned char y_thumbnail;
-  unsigned char thumbnail_data[3 * 16 * 16];
 public:
-  APP1() {
-    identifier[0] = 'E';
-    identifier[1] = 'x';
-    identifier[2] = 'i';
-    identifier[3] = 'f';
-    identifier[4] = '\0';
-    version[0] = 0x00;
-    version[1] = 0x01;
-    units = 0x00;
-    x_density[0] = 0x00;
-    x_density[1] = 0x01;
-    y_density[0] = 0x00;
-    y_density[1] = 0x01;
-    x_thumbnail = 0x00;
-    y_thumbnail = 0x00;
-  }
+  APP1() : APP({0xFF, 0xE1}, {0x00, 0x00}) {}
 
   unsigned char * getIdentifier() {
     return identifier;
@@ -116,248 +88,76 @@ public:
   unsigned char getYthumbnail() {
     return y_thumbnail;
   }
-
-  unsigned char * getThumbnailData() {
-    return thumbnail_data;
-  }
 };
 
 class APP2 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP2() {
-    data = nullptr;
-  }
-
-  APP2(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP2(unsigned char * data) {
-    this->data = data;
-  }
+  APP2() : APP({0xFF, 0xE2}, {0x00, 0x00}) {}
 };
 
 class APP3 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP3() {
-    data = nullptr;
-  }
-
-  APP3(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP3(unsigned char * data) {
-    this->data = data;
-  }
+  APP3() : APP({0xFF, 0xE3}, {0x00, 0x00}) {}
 };
 
 class APP4 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP4() {
-    data = nullptr;
-  }
-
-  APP4(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP4(unsigned char * data) {
-    this->data = data;
-  }
+  APP4() : APP({0xFF, 0xE4}, {0x00, 0x00}) {}
 };
 
 class APP5 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP5() {
-    data = nullptr;
-  }
-
-  APP5(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP5(unsigned char * data) {
-    this->data = data;
-  }
+  APP5() : APP({0xFF, 0xE5}, {0x00, 0x00}) {}
 };
 
 class APP6 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP6() {
-    data = nullptr;
-  }
-
-  APP6(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP6(unsigned char * data) {
-    this->data = data;
-  }
+  APP6() : APP({0xFF, 0xE6}, {0x00, 0x00}) {}
 };
 
 class APP7 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP7() {
-    data = nullptr;
-  }
-
-  APP7(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP7(unsigned char * data) {
-    this->data = data;
-  }
+  APP7() : APP({0xFF, 0xE7}, {0x00, 0x00}) {}
 };
 
 class APP8 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP8() {
-    data = nullptr;
-  }
-
-  APP8(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP8(unsigned char * data) {
-    this->data = data;
-  }
+  APP8() : APP({0xFF, 0xE8}, {0x00, 0x00}) {}
 };
 
 class APP9 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP9() {
-    data = nullptr;
-  }
-
-  APP9(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP9(unsigned char * data) {
-    this->data = data;
-  }
+  APP9() : APP({0xFF, 0xE9}, {0x00, 0x00}) {}
 };
 
 class APP10 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP10() {
-    data = nullptr;
-  }
-
-  APP10(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP10(unsigned char * data) {
-    this->data = data;
-  }
+  APP10() : APP({0xFF, 0xEA}, {0x00, 0x00}) {}
 };
 
 class APP11 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP11() {
-    data = nullptr;
-  }
-
-  APP11(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP11(unsigned char * data) {
-    this->data = data;
-  }
+  APP11() : APP({0xFF, 0xEB}, {0x00, 0x00}) {}
 };
 
 class APP12 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP12() {
-    data = nullptr;
-  }
-
-  APP12(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP12(unsigned char * data) {
-    this->data = data;
-  }
+  APP12() : APP({0xFF, 0xEC}, {0x00, 0x00}) {}
 };
 
 class APP13 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP13() {
-    data = nullptr;
-  }
-
-  APP13(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP13(unsigned char * data) {
-    this->data = data;
-  }
+  APP13() : APP({0xFF, 0xED}, {0x00, 0x00}) {}
 };
 
 class APP14 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP14() {
-    data = nullptr;
-  }
-
-  APP14(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP14(unsigned char * data) {
-    this->data = data;
-  }
+  APP14() : APP({0xFF, 0xEE}, {0x00, 0x00}) {}
 };
 
 class APP15 : public APP {
-private:
-  unsigned char * data;
 public:
-  APP15() {
-    data = nullptr;
-  }
-
-  APP15(int size) {
-    data = new unsigned char[size];
-  }
-
-  APP15(unsigned char * data) {
-    this->data = data;
-  }
+  APP15() : APP({0xFF, 0xEF}, {0x00, 0x00}) {}
 };
 
 #endif

@@ -1,7 +1,9 @@
 #ifndef SOF2_H
 #define SOF2_H
 
-class SOF2 {
+#include "../segment.hpp"
+
+class SOF2 : public Segment {
 private:
   unsigned char sample_precision;
   unsigned char image_height;
@@ -12,6 +14,8 @@ private:
   unsigned char vertical_sampling_factor[4];
   unsigned char quantization_table_selector[4];
 public:
+  SOF2() : Segment({0xFF, 0xC2}, {0x00, 0x00}) {}
+  
   unsigned char getSamplePrecision() {
     return sample_precision;
   }

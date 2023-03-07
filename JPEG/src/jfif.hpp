@@ -24,8 +24,7 @@ private:
     DRI dri;
     COM com;
     std::vector<SOS> sos;
-    std::vector<std::vector<unsigned char>> raw_data;
-public:    
+public:
     void read(std::string filename);
     void write(std::string filename);
 

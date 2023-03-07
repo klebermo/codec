@@ -1,7 +1,9 @@
 #ifndef SOS_H
 #define SOS_H
 
-class SOS {
+#include "../segment.hpp"
+
+class SOS : public Segment {
 private:
   unsigned char component_count;
   unsigned char component_id[4];
@@ -10,6 +12,8 @@ private:
   unsigned char end_of_spectral_selection;
   unsigned char successive_approximation;
 public:
+  SOS() : Segment({0xFF, 0xDA}, {0x00, 0x00}) {}
+  
   unsigned char getComponentCount() {
     return component_count;
   }

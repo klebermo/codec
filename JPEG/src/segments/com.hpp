@@ -1,29 +1,16 @@
 #ifndef COM_H
 #define COM_H
 
-class COM {
+#include "../segment.hpp"
+
+class COM : public Segment {
 private:
-    unsigned char * data;
+    unsigned char comment[65535];
 public:
-    COM() {
-        data = nullptr;
-    }
+    COM() : Segment({0xFF, 0xFE}, {0x00, 0x00}) {}
 
-    COM(unsigned char * data) {
-        this->data = data;
-    }
-
-    ~COM() {
-        delete[] data;
-    }
-
-    COM& operator=(unsigned char * data) {
-        this->data = data;
-        return *this;
-    }
-
-    unsigned char * getData() {
-        return data;
+    unsigned char * getComment() {
+        return comment;
     }
 };
 

@@ -1,6 +1,8 @@
 #ifndef SOF0_H
 #define SOF0_H
 
+#include "../segment.hpp"
+
 class Component {
 private:
   unsigned char identifier;
@@ -20,13 +22,15 @@ public:
   }
 };
 
-class SOF0 {
+class SOF0 : public Segment {
 private:
     unsigned char width;
     unsigned char height;
     unsigned char precision;
     Component components[3];
 public:
+    SOF0() : Segment({0xFF, 0xC0}, {0x00, 0x00}) {}
+    
     unsigned char getWidth() {
       return width;
     }
