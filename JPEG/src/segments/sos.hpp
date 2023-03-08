@@ -37,6 +37,14 @@ public:
   unsigned char getSuccessiveApproximation() {
     return successive_approximation;
   }
+
+  void read(std::ifstream &file) override {
+      //
+  }
+
+  void write (std::ofstream &file) override {
+      //
+  }  
 };
 
 #endif

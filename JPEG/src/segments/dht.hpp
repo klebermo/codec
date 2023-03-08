@@ -27,6 +27,14 @@ public:
   unsigned char * getValues() {
     return values;
   }
+
+  void read(std::ifstream &file) override {
+      //
+  }
+
+  void write (std::ofstream &file) override {
+      //
+  }
 };
 
 #endif

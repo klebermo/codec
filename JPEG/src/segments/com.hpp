@@ -12,6 +12,14 @@ public:
     unsigned char * getComment() {
         return comment;
     }
+
+    void read(std::ifstream &file) override {
+        //
+    }
+
+    void write (std::ofstream &file) override {
+        //
+    }
 };
 
 #endif

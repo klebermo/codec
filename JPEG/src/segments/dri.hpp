@@ -12,6 +12,14 @@ public:
   unsigned char * getRestartInterval() {
     return restart_interval;
   }
+
+  void read(std::ifstream &file) override {
+      //
+  }
+
+  void write (std::ofstream &file) override {
+      //
+  }
 };
 
 #endif

@@ -22,6 +22,14 @@ public:
   unsigned char * getTable() {
     return table;
   }
+
+  void read(std::ifstream &file) override {
+      //
+  }
+
+  void write (std::ofstream &file) override {
+      //
+  }
 };
 
 #endif

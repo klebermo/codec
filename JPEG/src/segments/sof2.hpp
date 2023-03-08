@@ -47,6 +47,14 @@ public:
   unsigned char * getQuantizationTable () {
     return quantization_table_selector;
   }
+
+  void read(std::ifstream &file) override {
+      //
+  }
+
+  void write (std::ofstream &file) override {
+      //
+  }  
 };
 
 #endif

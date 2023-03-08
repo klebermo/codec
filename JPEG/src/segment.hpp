@@ -16,9 +16,11 @@ public:
 
     unsigned char * getLength();
 
-    void read(std::ifstream & file);
+    void setLength(unsigned char length[2]);
 
-    void write(std::ofstream & file);
+    virtual void read(std::ifstream & file) = 0;
+
+    virtual void write(std::ofstream & file) = 0;
 };
 
 #endif

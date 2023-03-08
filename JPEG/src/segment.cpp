@@ -22,17 +22,7 @@ unsigned char * Segment::getLength() {
     return length;
 }
 
-void Segment::read(std::ifstream &file) {
-    unsigned char marker[2], length[2];
-
-    while(file.read((char*)marker, 2)) {
-        if(marker[0] == 0xFF) {
-            file.read((char*)length, 2);
-        }
-    }
-}
-
-void Segment::write(std::ofstream &file) {
-    file.write((char*)marker, 2);
-    file.write((char*)length, 2);
+void Segmentr::setLength(unsigned char length[2]) {
+    this->length[0] = length[0];
+    this->length[1] = length[1];
 }
