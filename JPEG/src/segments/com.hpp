@@ -5,20 +5,17 @@
 
 class COM : public Segment {
 private:
-    unsigned char comment[65535];
+    unsigned char * comment;
 public:
-    COM() : Segment({0xFF, 0xFE}, {0x00, 0x00}) {}
+    COM() : Segment({0xFF, 0xFE}, 0) {}
 
     unsigned char * getComment() {
         return comment;
     }
 
-    void read(std::ifstream &file) override {
-        //
-    }
-
-    void write (std::ofstream &file) override {
-        //
+    void setData(unsigned char * data, int data_length) override {
+        intToUnsignedCharArr(data_length, length);
+        comment = data;
     }
 };
 

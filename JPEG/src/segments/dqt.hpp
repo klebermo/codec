@@ -9,7 +9,7 @@ private:
   unsigned char identifier;
   unsigned char table[64];
 public:
-  DQT() : Segment({0xFF, 0xDB}, {0x00, 0x00}) {}
+  DQT() : Segment({0xFF, 0xDB}, 70) {}
   
   unsigned char getPrecision() {
     return precision;
@@ -23,12 +23,12 @@ public:
     return table;
   }
 
-  void read(std::ifstream &file) override {
-      //
-  }
-
-  void write (std::ofstream &file) override {
-      //
+  void setData(unsigned char * data, int data_length) override {
+    precision = data[0];
+    identifier = data[1];
+    for (int i = 0; i < 64; i++) {
+      table[i] = data[i + 2];
+    }
   }
 };
 

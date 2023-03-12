@@ -13,12 +13,24 @@ public:
     return identifier;
   }
 
+  void setIdentifier(unsigned char identifier) {
+    this->identifier = identifier;
+  }
+
   unsigned char getSamplingFactor() {
     return sampling_factor;
   }
 
+  void setSamplingFactor(unsigned char sampling_factor) {
+    this->sampling_factor = sampling_factor;
+  }
+
   unsigned char getQuantizationTable() {
     return quantization_table;
+  }
+
+  void setQuantizationTable(unsigned char quantization_table) {
+    this->quantization_table = quantization_table;
   }
 };
 
@@ -29,7 +41,7 @@ private:
     unsigned char precision;
     Component components[3];
 public:
-    SOF0() : Segment({0xFF, 0xC0}, {0x00, 0x00}) {}
+    SOF0() : Segment({0xFF, 0xC0}, 13) {}
     
     unsigned char getWidth() {
       return width;
@@ -47,12 +59,15 @@ public:
       return components;
     }
 
-    void read(std::ifstream &file) override {
-        //
-    }
-
-    void write (std::ofstream &file) override {
-        //
+    void setData(unsigned char * data, int data_length) override {
+      height = data[0];
+      width = data[1];
+      precision = data[2];
+      for (int i = 0; i < 3; i++) {
+        components[i].setIdentifier(data[i * 3 + 3]);
+        components[i].setSamplingFactor(data[i * 3 + 4]);
+        components[i].setQuantizationTable(data[i * 3 + 5]);
+      }
     }
 };
 

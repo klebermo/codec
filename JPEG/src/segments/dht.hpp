@@ -10,7 +10,7 @@ private:
   unsigned char codes[16];
   unsigned char values[256];
 public:
-  DHT() : Segment({0xFF, 0xC4}, {0x00, 0x00}) {}
+  DHT() : Segment({0xFF, 0xC4}, 278) {}
 
   unsigned char getClassId() {
     return class_id;
@@ -28,12 +28,15 @@ public:
     return values;
   }
 
-  void read(std::ifstream &file) override {
-      //
-  }
-
-  void write (std::ofstream &file) override {
-      //
+  void setData(unsigned char * data, int data_length) override {
+    class_id = data[0];
+    identifier = data[1];
+    for (int i = 0; i < 16; i++) {
+      codes[i] = data[i + 2];
+    }
+    for (int i = 0; i < 256; i++) {
+      values[i] = data[i + 18];
+    }
   }
 };
 

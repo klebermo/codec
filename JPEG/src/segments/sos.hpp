@@ -12,7 +12,7 @@ private:
   unsigned char end_of_spectral_selection;
   unsigned char successive_approximation;
 public:
-  SOS() : Segment({0xFF, 0xDA}, {0x00, 0x00}) {}
+  SOS() : Segment({0xFF, 0xDA}, 16) {}
   
   unsigned char getComponentCount() {
     return component_count;
@@ -38,13 +38,16 @@ public:
     return successive_approximation;
   }
 
-  void read(std::ifstream &file) override {
-      //
+  void setData(unsigned char * data, int data_length) override {
+    component_count = data[0];
+    for (int i = 0; i < 4; i++) {
+      component_id[i] = data[i * 2 + 1];
+      huffman_table_selector[i] = data[i * 2 + 2];
+    }
+    start_of_spectral_selection = data[9];
+    end_of_spectral_selection = data[10];
+    successive_approximation = data[11];
   }
-
-  void write (std::ofstream &file) override {
-      //
-  }  
 };
 
 #endif

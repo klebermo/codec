@@ -14,7 +14,7 @@ private:
   unsigned char vertical_sampling_factor[4];
   unsigned char quantization_table_selector[4];
 public:
-  SOF2() : Segment({0xFF, 0xC2}, {0x00, 0x00}) {}
+  SOF2() : Segment({0xFF, 0xC2}, 20) {}
   
   unsigned char getSamplePrecision() {
     return sample_precision;
@@ -48,13 +48,18 @@ public:
     return quantization_table_selector;
   }
 
-  void read(std::ifstream &file) override {
-      //
+  void setData(unsigned char * data, int data_length) override {
+    sample_precision = data[0];
+    image_height = data[1];
+    image_width = data[2];
+    component_count = data[3];
+    for (int i = 0; i < 4; i++) {
+      component_id[i] = data[i * 3 + 4];
+      horizontal_sampling_factor[i] = data[i * 3 + 5];
+      vertical_sampling_factor[i] = data[i * 3 + 6];
+      quantization_table_selector[i] = data[i * 3 + 7];
+    }
   }
-
-  void write (std::ofstream &file) override {
-      //
-  }  
 };
 
 #endif

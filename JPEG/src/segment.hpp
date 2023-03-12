@@ -4,7 +4,7 @@
 #include <initializer_list>
 
 class Segment {
-private:
+protected:
     unsigned char marker[2];
     unsigned char length[2];
 public:
@@ -12,15 +12,19 @@ public:
 
     Segment(std::initializer_list<unsigned char> marker, std::initializer_list<unsigned char> length);
 
+    Segment(unsigned char marker[2], int length);
+
+    Segment(std::initializer_list<unsigned char> marker, int length);
+
     unsigned char * getMarker();
 
     unsigned char * getLength();
 
     void setLength(unsigned char length[2]);
 
-    virtual void read(std::ifstream & file) = 0;
+    virtual void setData(unsigned char * data, int data_length) = 0;
 
-    virtual void write(std::ofstream & file) = 0;
+    void intToUnsignedCharArr(int value, unsigned char result[2]);
 };
 
 #endif
