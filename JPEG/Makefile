@@ -1,7 +1,7 @@
 all: libjpeg
 
 export common_dir := ../common
-export cpp_flags := -Wall -pedantic -g -fsanitize=address -fPIC
+export cpp_flags := -Wall -fPIC
 export ld_flags := -lm
 
 libjpeg: ${obj_dir}/huffman.o ${obj_dir}/matrix.o ${obj_dir}/pixel.o ${obj_dir}/jfif.o ${obj_dir}/exif.o ${obj_dir}/libjpeg.o
