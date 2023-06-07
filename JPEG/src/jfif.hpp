@@ -12,11 +12,9 @@
 #include "segments/com.hpp"
 #include "segments/sos.hpp"
 
-#include <iostream>
-
 class Jfif : public JPEG {
 private:
-    std::map<int,APP> app;
+    std::map<int, APP> app;
     SOF0 sof0;
     SOF2 sof2;
     std::vector<DQT> dqt;

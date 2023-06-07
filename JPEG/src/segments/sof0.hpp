@@ -3,36 +3,12 @@
 
 #include "../segment.hpp"
 
-class Component {
-private:
+struct Component {
   unsigned char identifier;
   unsigned char sampling_factor;
   unsigned char quantization_table;
-public:
-  unsigned char getIdentifier() {
-    return identifier;
-  }
-
-  void setIdentifier(unsigned char identifier) {
-    this->identifier = identifier;
-  }
-
-  unsigned char getSamplingFactor() {
-    return sampling_factor;
-  }
-
-  void setSamplingFactor(unsigned char sampling_factor) {
-    this->sampling_factor = sampling_factor;
-  }
-
-  unsigned char getQuantizationTable() {
-    return quantization_table;
-  }
-
-  void setQuantizationTable(unsigned char quantization_table) {
-    this->quantization_table = quantization_table;
-  }
 };
+typedef struct Component Component;
 
 class SOF0 : public Segment {
 private:
@@ -41,33 +17,20 @@ private:
     unsigned char precision;
     Component components[3];
 public:
-    SOF0() : Segment({0xFF, 0xC0}, 13) {}
-    
-    unsigned char getWidth() {
-      return width;
-    }
+    SOF0() : Segment({0xFF, 0xC0}, {0x00, 0x00}) {}
+    ~SOF0() {}
+    void setData(unsigned char * data, int size) {
+        this->precision = data[0];
 
-    unsigned char getHeight() {
-      return height;
-    }
+        this->height = data[1] << 8 | data[2];
 
-    unsigned char getPrecision() {
-      return precision;
-    }
+        this->width = data[3] << 8 | data[4];
 
-    Component * getComponents() {
-      return components;
-    }
-
-    void setData(unsigned char * data, int data_length) override {
-      height = data[0];
-      width = data[1];
-      precision = data[2];
-      for (int i = 0; i < 3; i++) {
-        components[i].setIdentifier(data[i * 3 + 3]);
-        components[i].setSamplingFactor(data[i * 3 + 4]);
-        components[i].setQuantizationTable(data[i * 3 + 5]);
-      }
+        for (int i = 0; i < 3; i++) {
+            this->components[i].identifier = data[5 + 3 * i];
+            this->components[i].sampling_factor = data[6 + 3 * i];
+            this->components[i].quantization_table = data[7 + 3 * i];
+        }
     }
 };
 
