@@ -1,6 +1,6 @@
 all: libpng
 
-export cpp_flags := -Wall -pedantic -g -fsanitize=address -fPIC
+export cpp_flags := -Wall -pedantic -fPIC -std=c++11
 
 libpng: ${obj_dir}/libpng.o
 	ar rcs ${release_dir}/libpng.a ${obj_dir}/libpng.o

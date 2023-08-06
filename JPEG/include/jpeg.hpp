@@ -1,42 +1,24 @@
 #ifndef JPEG_H
 #define JPEG_H
 
-#include <string>
-#include <vector>
+struct Pixel {
+  float r, g, b;
+};
+typedef struct Pixel Pixel;
 
-struct RgbPixel {};
-struct YCbCrPixel {};
 template<class T> class Matrix {};
 
 class JPEG {
-private:
-  Matrix<RgbPixel> pixels;
+protected:
+  Matrix<Pixel> pixels;
 public:
-  virtual void read(std::string filename) = 0;
-  virtual void write(std::string filename) = 0;
+  void read(std::string filename);
+  void write(std::string filename);
 
-  virtual int getWidth() = 0;
-  virtual int getHeight() = 0;
+  int getWidth();
+  int getHeight();
 
   std::vector<float> toArray();
-};
-
-class Jfif : public JPEG {
-public:
-  void read(std::string filename);
-  void write(std::string filename);
-
-  int getWidth();
-  int getHeight();
-};
-
-class Exif : public JPEG {
-public:
-  void read(std::string filename);
-  void write(std::string filename);
-
-  int getWidth();
-  int getHeight();
 };
 
 #endif
