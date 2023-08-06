@@ -1,5 +1,17 @@
 #include "jpeg.hpp"
 
+JPEG::JPEG() {
+  //
+}
+
+JPEG::JPEG(int height, int width) {
+  pixels = Matrix<Pixel>(height, width);
+}
+
+JPEG::JPEG(Matrix<Pixel> pixels) {
+  this->pixels = pixels;
+}
+
 void JPEG::read(std::string filename) {
   //
 }

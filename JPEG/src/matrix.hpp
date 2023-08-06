@@ -1,6 +1,11 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
+struct Pixel {
+  float r, g, b;
+};
+typedef struct Pixel Pixel;
+
 template<class T>
 class Matrix {
 private:
