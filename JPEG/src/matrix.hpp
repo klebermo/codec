@@ -1,17 +1,17 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-struct Pixel {
-  float r, g, b;
-};
-typedef struct Pixel Pixel;
-
 template<class T>
 class Matrix {
 private:
   T **matrix;
   int height, width;
 public:
+  Matrix() {
+    this->matrix = nullptr;
+    this->height = this->width = 0;
+  }
+
   Matrix(int height, int width) {
     this->height = height;
     this->width = width;

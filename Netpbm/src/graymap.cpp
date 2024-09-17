@@ -44,13 +44,13 @@ void Graymap::read_file(std::string file_name) {
   }
 
   if(magicNumber.at(1) == '2') {
-    std::vector<pixel> v;
+    std::vector<Pixel> v;
 
     while(getline(file, line_pixels)) {
       std::stringstream ss(line_pixels);
       int x;
       while(ss >> x) {
-        pixel p;
+        Pixel p;
         p.r = p.g = p.b = (float)x;
         v.push_back(p);
       }
@@ -58,26 +58,26 @@ void Graymap::read_file(std::string file_name) {
 
     int index = 0;
     for(int i=0; i<height; i++) {
-      std::vector<pixel> row;
+      std::vector<Pixel> row;
       for(int j=0; j<width; j++) row.push_back(v[index++]);
       this->pixels.push_back(row);
     }
   }
 
   if(magicNumber.at(1) == '5') {
-    std::vector<pixel> v;
+    std::vector<Pixel> v;
 
     char c;
     while(file.get(c)) {
       int number = (unsigned char)c - '0';
-      pixel p;
+      Pixel p;
       p.r = p.g = p.b = (float)number;
       v.push_back(p);
     }
 
     int counter = 0;
     for(int i=0; i<height; i++) {
-      std::vector<pixel> row;
+      std::vector<Pixel> row;
       for(int j=0; j<width; j++) row.push_back(v[counter++]);
       this->pixels.push_back(row);
     }

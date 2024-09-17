@@ -1,10 +1,18 @@
-#ifndef JPEG_H
-#define JPEG_H
+#include <vector>
+#include <string>
+
+#ifndef PIXEL_H
+#define PIXEL_H
 
 struct Pixel {
   float r, g, b;
 };
 typedef struct Pixel Pixel;
+
+#endif
+
+#ifndef JPEG_H
+#define JPEG_H
 
 template<class T> class Matrix {};
 

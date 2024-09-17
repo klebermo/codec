@@ -37,13 +37,13 @@ void Bitmap::read_file(std::string file_name) {
   this->max_value = 1;
 
   if(magicNumber.at(1) == '1') {
-    std::vector<pixel> v;
+    std::vector<Pixel> v;
 
     while(getline(file, line_pixels)) {
       std::stringstream ss(line_pixels);
       int x;
       while(ss >> x) {
-        pixel p;
+        Pixel p;
         p.r = p.g = p.b = x == 1 ? 0 : 1;
         v.emplace_back(p);
       }
@@ -51,19 +51,19 @@ void Bitmap::read_file(std::string file_name) {
 
     int index = 0;
     for(int i=0; i<height; i++) {
-      std::vector<pixel> row;
+      std::vector<Pixel> row;
       for(int j=0; j<width; j++) row.push_back(v[index++]);
       this->pixels.push_back(row);
     }
   }
 
   if(magicNumber.at(1) == '4') {
-    std::vector<pixel> v;
+    std::vector<Pixel> v;
 
     char c;
     while(file.get(c)) {
         for(int i=0; i<8; i++) {
-            pixel p;
+            Pixel p;
             int x = (c & (1 << (i ^ 7))) != 0;
             if(x == 0)
               p.r = p.g = p.b = 1;
@@ -75,7 +75,7 @@ void Bitmap::read_file(std::string file_name) {
 
     int counter = 0;
     for(int i=0; i<height; i++) {
-        std::vector<pixel> row;
+        std::vector<Pixel> row;
         for(int j=0; j<((width + 7) & -8); j++) row.push_back(v[counter++]);
         pixels.push_back(row);
     }

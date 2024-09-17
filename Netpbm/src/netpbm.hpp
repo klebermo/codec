@@ -13,12 +13,12 @@
 struct Pixel {
     float r, g, b;
 };
-typedef struct Pixel pixel;
+typedef struct Pixel Pixel;
 
 class Netpbm {
 protected:
   int max_value;
-  std::vector<std::vector<pixel>> pixels;
+  std::vector<std::vector<Pixel>> pixels;
 public:
   virtual void read_file(std::string file_name) = 0;
   virtual void write_ascii_file(std::string file_name) = 0;
@@ -26,7 +26,7 @@ public:
 
   int getHeight();
   int getWidth();
-  void setPixels(std::vector<std::vector<pixel>> pixels);
+  void setPixels(std::vector<std::vector<Pixel>> pixels);
   std::vector<float> toArray();
 };
 

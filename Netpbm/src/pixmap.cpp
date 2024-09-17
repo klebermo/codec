@@ -44,7 +44,7 @@ void Pixmap2::read_file(std::string file_name) {
   }
 
   if(magicNumber.at(1) == '3') {
-    std::vector<pixel> v;
+    std::vector<Pixel> v;
 
     while(getline(file, line_pixels)) {
       if(line_pixels.size() > 0 && line_pixels.at(0) != '#') {
@@ -52,7 +52,7 @@ void Pixmap2::read_file(std::string file_name) {
 
         int x;
         while(ss >> x) {
-          pixel p;
+          Pixel p;
           p.r = (float)x;
 
           ss >> x;
@@ -68,18 +68,18 @@ void Pixmap2::read_file(std::string file_name) {
 
     int index = 0;
     for(int i=0; i<height; i++) {
-      std::vector<pixel> row;
+      std::vector<Pixel> row;
       for(int j=0; j<width; j++) row.push_back(v[index++]);
       this->pixels.push_back(row);
     }
   }
 
   if(magicNumber.at(1) == '6') {
-    std::vector<pixel> v;
+    std::vector<Pixel> v;
 
     char c;
     while(file.get(c)) {
-      pixel p;
+      Pixel p;
 
       int number = (unsigned char)c - '0';
       p.r = (float)number;
@@ -99,7 +99,7 @@ void Pixmap2::read_file(std::string file_name) {
 
     int counter = 0;
     for(int i=0; i<height; i++) {
-      std::vector<pixel> row;
+      std::vector<Pixel> row;
       for(int j=0; j<width; j++) row.push_back(v[counter++]);
       this->pixels.push_back(row);
     }

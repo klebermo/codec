@@ -6,6 +6,11 @@
 
 #include <string>
 
+struct Pixel {
+  float r, g, b;
+};
+typedef struct Pixel Pixel;
+
 class JPEG {
 protected:
   Matrix<Pixel> pixels;
